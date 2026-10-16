@@ -11,9 +11,21 @@ __pycache__/
 # Secrets
 .env
 
-# Base de données locale
-db.sqlite3
-db.sqlite3-journal
+# Bases de données (toutes)
+*.sqlite3
+*.sqlite3-journal
+*.bak
+
+# Archives et paquets
+*.zip
+*.tgz
+*.tar.gz
+paquets/
+Claude outputs/
+
+# Vidéos
+*.mp4
+videos-tutoriels/
 
 # Fichiers collectés / uploads
 /staticfiles/
@@ -22,6 +34,6 @@ db.sqlite3-journal
 # Logs
 *.log
 
-# IDE / outils
+# IDE
 .vscode/
 .idea/
