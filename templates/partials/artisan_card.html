@@ -1,0 +1,34 @@
+{% load protection %}<article class="card card-hover artisan-card">
+  <div class="top">
+    {% if artisan.photo %}
+      <img class="avatar" src="{{ artisan.photo.url }}" alt="{{ artisan.full_name }}" loading="lazy">
+    {% else %}
+      <span class="avatar avatar-forest">{{ artisan.initials }}</span>
+    {% endif %}
+    <div style="flex:1;min-width:0">
+      <a href="{{ artisan.get_absolute_url }}" style="font-family:var(--font-display);font-weight:700;color:var(--ink-900);font-size:var(--fs-md)">
+        {{ artisan.full_name }}
+      </a>
+      <div class="small muted">{{ artisan.service_category.name }}</div>
+      {% if artisan.total_reviews %}
+        {% include 'partials/stars.html' with rating=artisan.rating count=artisan.total_reviews %}
+      {% else %}
+        <span class="tiny muted">Nouveau sur {{ SITE.SITE_NAME }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <p class="small">{{ artisan.description|masquer_numeros|truncatechars:110 }}</p>
+
+  <div class="chip-list">
+    <span class="chip"><i class="fas fa-location-dot"></i> {{ artisan.quartier }}</span>
+    {% if artisan.years_experience %}<span class="chip"><i class="fas fa-clock"></i> {{ artisan.years_experience }} ans</span>{% endif %}
+    {% if artisan.is_verified %}<span class="chip" style="background:var(--success-bg);color:var(--success-fg)"><i class="fas fa-circle-check"></i> Vérifié</span>{% endif %}
+    {% if artisan.accepts_urgent %}<span class="chip" style="background:var(--warning-bg);color:var(--warning-fg)"><i class="fas fa-bolt"></i> Urgences</span>{% endif %}
+  </div>
+
+  <div class="row-between" style="margin-top:auto;padding-top:var(--sp-3)">
+    <span class="small bold">{{ artisan.price_range|masquer_numeros }}</span>
+    <a href="{{ artisan.get_absolute_url }}" class="btn btn-outline btn-sm">Voir le profil</a>
+  </div>
+</article>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Retraits — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="row-between mb-6"><h1>Retraits vendeurs</h1><a href="{% url 'admin_dashboard' %}" class="btn btn-ghost btn-sm">Retour au pilotage</a></div>
+
+<div class="tabs">
+  <a href="?etat=requested" class="{% if state == 'requested' %}active{% endif %}">Demandés</a>
+  <a href="?etat=paid" class="{% if state == 'paid' %}active{% endif %}">Versés</a>
+  <a href="?etat=all" class="{% if state == 'all' %}active{% endif %}">Tous</a>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Référence</th><th>Bénéficiaire</th><th class="num">Montant</th><th>Vers</th><th>Statut</th><th></th></tr></thead>
+    <tbody>
+    {% for p in payouts %}
+      <tr>
+        <td><span class="bold small">{{ p.reference }}</span><div class="tiny muted">{{ p.created_at|date:"d/m H:i" }}</div></td>
+        <td class="small">{{ p.wallet.user.username }}<div class="tiny muted">{{ p.wallet.payout_name }}</div></td>
+        <td class="num bold">{{ p.amount|intcomma }}</td>
+        <td class="small">{{ p.get_channel_display }}<div class="tiny muted">{{ p.number }}</div></td>
+        <td><span class="badge badge-{% if p.status == 'paid' %}success{% elif p.status == 'rejected' %}danger{% else %}warning{% endif %}">{{ p.get_status_display }}</span></td>
+        <td>
+          {% if p.status != 'paid' %}
+          <form method="post" action="{% url 'admin_payout_paid' p.reference %}" class="row">{% csrf_token %}
+            <input type="text" name="provider_reference" placeholder="ID transfert" style="width:150px">
+            <button class="btn btn-primary btn-sm" data-confirm="Confirmer l'envoi de {{ p.amount }} FCFA à {{ p.number }} ?">Versé</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="muted">Aucun retrait.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

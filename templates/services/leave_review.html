@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Noter {{ artisan.full_name }} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container-narrow">
+  <h1 class="mb-2">Comment s'est passé le travail ?</h1>
+  <p class="mb-6">Votre avis aide les prochains clients et récompense les professionnels sérieux.</p>
+
+  <form method="post" class="panel">{% csrf_token %}
+    <div class="row mb-6">
+      <span class="avatar avatar-forest">{{ artisan.initials }}</span>
+      <div><div class="bold">{{ artisan.full_name }}</div><div class="tiny muted">{{ artisan.service_category.name }}</div></div>
+    </div>
+
+    <div class="field"><label>Note globale <span class="req">*</span></label>
+      <select name="rating" required>
+        <option value="">Choisir…</option>
+        <option value="5">5 — Excellent</option>
+        <option value="4">4 — Bien</option>
+        <option value="3">3 — Correct</option>
+        <option value="2">2 — Décevant</option>
+        <option value="1">1 — Mauvais</option>
+      </select>
+    </div>
+
+    <div class="form-grid">
+      <div class="field"><label>Ponctualité</label>
+        <select name="punctuality"><option value="">—</option>{% for i in "54321" %}<option value="{{ i }}">{{ i }} / 5</option>{% endfor %}</select>
+      </div>
+      <div class="field"><label>Qualité du travail</label>
+        <select name="quality"><option value="">—</option>{% for i in "54321" %}<option value="{{ i }}">{{ i }} / 5</option>{% endfor %}</select>
+      </div>
+    </div>
+
+    <div class="field"><label>Votre commentaire <span class="req">*</span></label>
+      <textarea name="comment" required placeholder="Le travail a-t-il été fait comme prévu ? Le prix a-t-il été respecté ?"></textarea>
+    </div>
+
+    <button class="btn btn-primary btn-lg btn-block">Publier mon avis</button>
+  </form>
+</div>
+{% endblock %}

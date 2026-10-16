@@ -1,0 +1,69 @@
+{% extends 'base.html' %}{% load static humanize %}
+{% block title %}Mon panier — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<h1 class="mb-6">Mon panier</h1>
+
+{% if cart.items.exists %}
+<div class="checkout-grid">
+  <section class="panel">
+    {% if issues %}
+      <div class="alert warning"><i class="fas fa-triangle-exclamation"></i><span>Certains articles ne sont plus disponibles dans la quantité demandée. Ajustez avant de commander.</span></div>
+    {% endif %}
+
+    {% for item in cart.items_list %}
+      <div class="cart-line">
+        <a href="{{ item.product.get_absolute_url }}" class="thumb">
+          {% if item.product.main_image %}<img src="{{ item.product.main_image.url }}" alt="">
+          {% else %}<img src="{% static 'img/placeholder-product.svg' %}" alt="">{% endif %}
+        </a>
+        <div>
+          <a href="{{ item.product.get_absolute_url }}" class="bold">{{ item.product.name }}</a>
+          <div class="tiny muted">{{ item.product.category.name }}{% if item.product.seller %} · {{ item.product.seller.profile.display_name }}{% endif %}</div>
+          <div class="small bold mt-2">{{ item.product.price|floatformat:0|intcomma }} {{ CURRENCY }} l'unité</div>
+          <div class="row mt-2">
+            <form method="post" action="{% url 'update_cart_quantity' item.id %}" class="row">{% csrf_token %}
+              <div class="qty" data-qty>
+                <button type="button" data-qty-step="-1">−</button>
+                <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.product.stock }}" aria-label="Quantité">
+                <button type="button" data-qty-step="1">+</button>
+              </div>
+              <button class="btn btn-quiet btn-sm">Mettre à jour</button>
+            </form>
+            <form method="post" action="{% url 'remove_from_cart' item.id %}">{% csrf_token %}
+              <button class="btn btn-quiet btn-sm" style="color:var(--danger-fg)"><i class="fas fa-trash"></i></button>
+            </form>
+          </div>
+        </div>
+        <div class="bold" style="font-size:var(--fs-lg);white-space:nowrap">{{ item.subtotal|floatformat:0|intcomma }} F</div>
+      </div>
+    {% endfor %}
+
+    <div class="row-between mt-6">
+      <a href="{% url 'product_list' %}" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Continuer mes achats</a>
+      <form method="post" action="{% url 'clear_cart' %}">{% csrf_token %}
+        <button class="btn btn-quiet btn-sm" data-confirm="Vider tout le panier ?">Vider le panier</button>
+      </form>
+    </div>
+  </section>
+
+  <aside class="summary">
+    <div class="panel">
+      <h3 class="mb-4">Récapitulatif</h3>
+      <div class="summary-line"><span>Sous-total ({{ cart.total_items }} article{{ cart.total_items|pluralize }})</span><span class="bold">{{ cart.subtotal|floatformat:0|intcomma }} F</span></div>
+      <div class="summary-line"><span>Livraison estimée</span><span class="bold">{% if delivery_fee %}{{ delivery_fee|floatformat:0|intcomma }} F{% else %}Offerte{% endif %}</span></div>
+      <div class="summary-line total"><span>Total</span><span>{{ cart.subtotal|add:delivery_fee|floatformat:0|intcomma }} F</span></div>
+
+      <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg btn-block mt-6">Passer commande <i class="fas fa-arrow-right"></i></a>
+
+      <div class="mt-6 stack small muted">
+        <div><i class="fas fa-truck-fast" style="color:var(--brand-500)"></i> Livraison offerte dès {{ PRICING.FREE_DELIVERY_FROM|intcomma }} FCFA.</div>
+        <div><i class="fas fa-mobile-screen-button" style="color:var(--brand-500)"></i> Orange Money, Moov Money, Wave ou espèces.</div>
+        <div><i class="fas fa-rotate-left" style="color:var(--brand-500)"></i> Article non conforme : retour sous 48 h.</div>
+      </div>
+    </div>
+  </aside>
+</div>
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-basket-shopping' title='Votre panier est vide' text="Parcourez la boutique et ajoutez vos premiers articles." cta_url='/produits/' cta_label='Voir les produits' %}
+{% endif %}
+{% endblock %}

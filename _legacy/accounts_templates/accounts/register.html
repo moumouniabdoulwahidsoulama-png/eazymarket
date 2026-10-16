@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription - EazyMarket{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <h1><i class="fas fa-rocket"></i> Créer mon compte</h1>
+    <p class="subtitle">Rejoignez l'écosystème EazyMarket</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label>Je m'inscris en tant que :</label>
+            <div class="radio-group">
+                {% for radio in form.user_type %}
+                    <label>
+                        {{ radio.tag }}
+                        {{ radio.choice_label }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-user"></i> Nom d'utilisateur</label>
+            {{ form.username }}
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email</label>
+            {{ form.email }}
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-phone"></i> Téléphone</label>
+            {{ form.phone }}
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-map-marker-alt"></i> Adresse</label>
+            {{ form.address }}
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-lock"></i> Mot de passe</label>
+            {{ form.password1 }}
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-check-circle"></i> Confirmer</label>
+            {{ form.password2 }}
+        </div>
+        
+        <!-- Champs vendeur -->
+        <div id="seller-fields" style="display:none;">
+            <div class="form-group">
+                <label><i class="fas fa-store"></i> Nom de la boutique</label>
+                {{ form.store_name }}
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-align-left"></i> Description</label>
+                {{ form.store_description }}
+            </div>
+        </div>
+        
+        <!-- Champs livreur -->
+        <div id="delivery-fields" style="display:none;">
+            <div class="form-group">
+                <label><i class="fas fa-motorcycle"></i> Type de véhicule</label>
+                {{ form.vehicle_type }}
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-map-pin"></i> Zone de livraison</label>
+                {{ form.delivery_zone }}
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-user-plus"></i> S'inscrire
+        </button>
+    </form>
+    
+    <div class="footer-link">
+        Déjà inscrit ? <a href="{% url 'login' %}">Se connecter</a>
+    </div>
+</div>
+
+<script>
+    const userTypeInputs = document.querySelectorAll('input[name="user_type"]');
+    const sellerFields = document.getElementById('seller-fields');
+    const deliveryFields = document.getElementById('delivery-fields');
+    
+    function toggleFields() {
+        const selected = document.querySelector('input[name="user_type"]:checked');
+        if (!selected) return;
+        
+        sellerFields.style.display = selected.value === 'seller' ? 'block' : 'none';
+        deliveryFields.style.display = selected.value === 'delivery' ? 'block' : 'none';
+    }
+    
+    userTypeInputs.forEach(input => input.addEventListener('change', toggleFields));
+    toggleFields();
+</script>
+{% endblock %}

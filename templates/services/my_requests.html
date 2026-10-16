@@ -1,0 +1,27 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mes demandes — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<h1 class="mb-6">Mes demandes de service</h1>
+
+{% if requests %}
+<div class="stack">
+  {% for sr in requests %}
+    <a href="{% url 'service_request_detail' sr.id %}" class="card card-pad card-hover" style="display:block">
+      <div class="row-between">
+        <div>
+          <span class="chip">{{ sr.reference }}</span>
+          <div class="bold mt-2">{{ sr.title }}</div>
+          <div class="small muted">{{ sr.artisan.full_name }} · {{ sr.artisan.service_category.name }} · {{ sr.created_at|date:"d/m/Y" }}</div>
+        </div>
+        <div class="center">
+          <span class="badge badge-{% if sr.status == 'completed' %}success{% elif sr.status == 'rejected' or sr.status == 'cancelled' %}danger{% elif sr.status == 'pending' %}warning{% else %}info{% endif %}">{{ sr.get_status_display }}</span>
+          {% with q=sr.quotes.first %}{% if q %}<div class="small bold mt-2">{{ q.total|intcomma }} {{ CURRENCY }}</div>{% endif %}{% endwith %}
+        </div>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-clipboard-list' title='Aucune demande' text="Trouvez un professionnel dans l'annuaire et décrivez-lui votre besoin — c'est gratuit." cta_url='/services/artisans/' cta_label='Trouver un artisan' %}
+{% endif %}
+{% endblock %}

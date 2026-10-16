@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Devenir livreur — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="section-head center">
+  <span class="eyebrow" style="justify-content:center"><i class="fas fa-motorcycle"></i> Livraison</span>
+  <h1>Devenir livreur</h1>
+  <p style="margin-inline:auto">
+    Vous gardez votre compte actuel — on y ajoute simplement l'activité de livraison.
+    C'est gratuit, sans abonnement, et vous prenez les courses qui vous arrangent.
+  </p>
+</div>
+
+<div class="checkout-grid">
+  <form method="post" class="panel">{% csrf_token %}
+    <div class="panel-head"><h3>Vos informations de livreur</h3></div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Moyen de transport <span class="req">*</span></label>
+        <select name="vehicle_type" required>
+          <option value="">Choisir…</option>
+          {% for value, label in vehicles %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Téléphone <span class="req">*</span></label>
+        <input type="tel" name="phone" required value="{{ profile.phone }}" placeholder="{{ COUNTRY.dial_code }} ...">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Zone que vous couvrez <span class="req">*</span></label>
+      <input type="text" name="delivery_zone" required value="{{ profile.delivery_zone }}"
+             placeholder="Ex : {{ CITY }} — Tanghin, Dapoya, Gounghin">
+      <p class="hint">Soyez précis : vous ne recevrez que les courses de votre zone, donc des trajets courts.</p>
+    </div>
+
+    <button class="btn btn-primary btn-lg btn-block mt-4"><i class="fas fa-motorcycle"></i> Créer mon compte livreur</button>
+    <p class="tiny muted center mt-4">Étape suivante : partager le lien de l'application à {{ PRICING.DELIVERY_REQUIRED_SHARES }} personnes.</p>
+  </form>
+
+  <aside class="summary">
+    <div class="panel">
+      <h4 class="mb-4">Comment ça se passe</h4>
+      <div class="steps" style="grid-template-columns:1fr">
+        <div class="step"><h4>Vous vous inscrivez</h4><p class="small">Transport, téléphone, zone. Deux minutes.</p></div>
+        <div class="step"><h4>Vous partagez le lien</h4><p class="small">À {{ PRICING.DELIVERY_REQUIRED_SHARES }} personnes qui vous connaissent, que vous inscrivez dans votre dossier.</p></div>
+        <div class="step"><h4>Nous les appelons</h4><p class="small">Puis nous activons votre compte, sous 48 heures.</p></div>
+        <div class="step"><h4>Vous livrez</h4><p class="small">Vous voyez les courses de votre zone et prenez celles qui vous vont.</p></div>
+      </div>
+      <div class="alert info mt-6"><i class="fas fa-circle-info"></i><span class="small">Aucun frais, aucun abonnement. Vous êtes payé par course, sur votre mobile money.</span></div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

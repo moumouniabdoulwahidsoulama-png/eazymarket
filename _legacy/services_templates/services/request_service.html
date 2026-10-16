@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Demander un service - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 0 auto;">
+    <div class="glass-card" style="max-width: 100%;">
+        <h1><i class="fas fa-paper-plane"></i> Demander un service</h1>
+        <p class="subtitle">ÃFCFA {{ artisan.full_name }} - {{ artisan.service_category.name }}</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label><i class="fas fa-heading"></i> Titre de la demande *</label>
+                <input type="text" name="title" required placeholder="Ex: RÃ©paration de ma voiture, Installation Ã©lectrique..." style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff;">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-align-left"></i> Description dÃ©taillÃ©e *</label>
+                <textarea name="description" required placeholder="DÃ©crivez votre besoin en dÃ©tail..." style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff; min-height: 120px;"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Votre tÃ©lÃ©phone *</label>
+                <input type="text" name="client_phone" required value="{{ user.profile.phone|default:'' }}" placeholder="06 12 34 56 78" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff;">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt"></i> Votre adresse *</label>
+                <textarea name="client_address" required placeholder="Votre adresse complÃ¨te..." style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff; min-height: 60px;">{{ user.profile.address|default:'' }}</textarea>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Date souhaitÃ©e</label>
+                    <input type="date" name="preferred_date" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff;">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Heure souhaitÃ©e</label>
+                    <input type="time" name="preferred_time" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff;">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-money-bill"></i> Budget estimÃ©</label>
+                <input type="text" name="budget" placeholder="Ex: 15000 FCFA" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff;">
+            </div>
+            
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Envoyer la demande
+            </button>
+        </form>
+        
+        <div class="footer-link">
+            <a href="{% url 'artisan_detail' artisan.id %}"><i class="fas fa-arrow-left"></i> Retour au profil</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

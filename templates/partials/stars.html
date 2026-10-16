@@ -1,0 +1,5 @@
+{% comment %}Attend : rating (nombre), count (facultatif){% endcomment %}
+<span class="stars" aria-label="Note {{ rating|floatformat:1 }} sur 5">
+  {% for i in "12345" %}{% if forloop.counter <= rating %}<i class="fas fa-star"></i>{% else %}<i class="fas fa-star empty"></i>{% endif %}{% endfor %}
+</span>
+{% if count %}<span class="tiny muted">({{ count }})</span>{% endif %}

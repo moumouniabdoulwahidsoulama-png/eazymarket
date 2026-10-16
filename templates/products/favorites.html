@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Mes favoris — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<h1 class="mb-6">Mes favoris</h1>
+{% if favorites %}
+  <div class="grid grid-4">
+    {% for fav in favorites %}{% include 'partials/product_card.html' with product=fav.product %}{% endfor %}
+  </div>
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-heart' title='Aucun favori' text="Cliquez sur le cœur d'un produit pour le retrouver ici." cta_url='/produits/' cta_label='Parcourir la boutique' %}
+{% endif %}
+{% endblock %}

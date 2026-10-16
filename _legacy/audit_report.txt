@@ -1,0 +1,42 @@
+RAPPORT D'AUDIT - EazyMarket
+Date: 31/08/2026 19:16:10
+============================================================
+
+TEMPLATES TROUVÉS:
+  - accounts\templates\accounts\admin_dashboard.html
+  - accounts\templates\accounts\delivery_dashboard.html
+  - accounts\templates\accounts\login.html
+  - accounts\templates\accounts\profile.html
+  - accounts\templates\accounts\register.html
+  - accounts\templates\accounts\seller_dashboard.html
+  - accounts\templates\base.html
+  - cart\templates\cart\cart.html
+  - notifications\templates\notifications\list.html
+  - orders\templates\orders\checkout.html
+  - orders\templates\orders\my_orders.html
+  - orders\templates\orders\order_detail.html
+  - orders\templates\orders\payment.html
+  - orders\templates\orders\payment_cancel.html
+  - orders\templates\orders\payment_success.html
+  - products\templates\products\home.html
+  - products\templates\products\product_detail.html
+  - services\templates\services\artisan_dashboard.html
+  - services\templates\services\artisan_detail.html
+  - services\templates\services\artisan_list.html
+  - services\templates\services\leave_review.html
+  - services\templates\services\my_requests.html
+  - services\templates\services\register_artisan.html
+  - services\templates\services\request_service.html
+  - services\templates\services\services_home.html
+  - services\templates\services\subscribe.html
+
+URLS TROUVÉES:
+  - EazyMarket/urls.py
+  - accounts/urls.py
+  - products/urls.py
+  - cart/urls.py
+  - orders/urls.py
+  - services/urls.py
+  - notifications/urls.py
+
+ERREURS:

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mes courses — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<h1 class="mb-6">Mes courses</h1>
+{% if orders %}
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Commande</th><th>Destination</th><th class="num">Montant</th><th>Statut</th></tr></thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td><span class="bold small">{{ order.order_number }}</span><div class="tiny muted">{{ order.created_at|date:"d/m" }}</div></td>
+        <td class="small">{{ order.shipping_quartier }}, {{ order.shipping_city }}<div class="tiny muted">{{ order.shipping_phone }}</div></td>
+        <td class="num bold">{{ order.total|intcomma }}</td>
+        <td><span class="badge badge-{{ order.status_badge }}">{{ order.get_status_display }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-motorcycle' title='Aucune course' text="Acceptez une course depuis votre tableau de bord." cta_url='/compte/livreur/' cta_label='Voir les courses disponibles' %}
+{% endif %}
+{% endblock %}

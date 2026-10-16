@@ -1,0 +1,43 @@
+{% comment %}
+  Lecteur vidéo économe en données.
+
+  Rien ne se télécharge tant que le visiteur n'a pas cliqué : on montre la
+  photo du produit, et la vidéo ne part que sur demande. Au Burkina, la
+  connexion se paie au mégaoctet — une vidéo qui se lance toute seule fait
+  fuir le visiteur avant même qu'il ait vu le prix.
+
+  Attend : videos (liste), et titre (facultatif).
+{% endcomment %}
+{% if videos %}
+<section class="videos-bloc">
+  <div class="row-between mb-3">
+    <h3 class="videos-titre"><i class="fas fa-circle-play"></i> {{ titre|default:"En vidéo" }}</h3>
+    <span class="tiny muted">La vidéo ne se charge qu'au clic</span>
+  </div>
+  <div class="videos-grille">
+    {% for v in videos %}
+      <figure class="video-carte" data-video>
+        <div class="video-cadre">
+          {% if v.poster_url %}
+            <img src="{{ v.poster_url }}" alt="{{ v.title|default:'Aperçu' }}" loading="lazy">
+          {% else %}
+            <div class="video-vide"><i class="fas fa-video"></i></div>
+          {% endif %}
+          <button type="button" class="video-play"
+                  aria-label="Lire la vidéo"
+                  data-type="{% if v.is_hosted %}fichier{% elif v.embed_url %}embed{% else %}lien{% endif %}"
+                  data-src="{% if v.is_hosted %}{{ v.file.url }}{% else %}{{ v.embed_url|default:v.external_url }}{% endif %}">
+            <i class="fas fa-play"></i>
+          </button>
+          {% if v.is_hosted %}
+            {% if v.duree_affichee %}<span class="video-duree">{{ v.duree_affichee }}</span>{% endif %}
+          {% else %}
+            <span class="video-source"><i class="fab {{ v.plateforme_icone }}"></i> {{ v.plateforme_nom }}</span>
+          {% endif %}
+        </div>
+        {% if v.title %}<figcaption class="tiny">{{ v.title }}</figcaption>{% endif %}
+      </figure>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

@@ -1,0 +1,171 @@
+{% extends 'base.html' %}{% load static humanize %}
+{% block title %}{{ SITE.SITE_NAME }} — Achetez malin, trouvez un pro à {{ CITY }}{% endblock %}
+
+{% block hero %}
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="pill"><span class="dot"></span> {{ stats.artisans }} professionnels · {{ stats.products }} produits en ligne</span>
+        <h1>Tout ce dont vous avez besoin,<br><span class="accent">et tous ceux</span> qui savent le faire.</h1>
+        <p class="lead">
+          D'un côté la boutique : des vendeurs d'ici, des prix affichés tout compris, une livraison
+          dans la journée à {{ CITY }}. De l'autre l'annuaire des pros : plombier, menuisier,
+          couturière, électricien — vous décrivez le travail, vous recevez un devis chiffré.
+        </p>
+        <div class="hero-cta">
+          <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg"><i class="fas fa-basket-shopping"></i> Explorer la boutique</a>
+          <a href="{% url 'services_home' %}" class="btn btn-ghost btn-lg"><i class="fas fa-screwdriver-wrench"></i> Trouver un artisan</a>
+          <a href="{% url 'driver_list' %}" class="btn btn-ghost btn-lg"><i class="fas fa-motorcycle"></i> Trouver un livreur</a>
+        </div>
+        <div class="hero-proof">
+          <div><strong>{{ stats.products }}</strong><span>Produits</span></div>
+          <div><strong>{{ stats.artisans }}</strong><span>Artisans</span></div>
+          <div><strong>0 F</strong><span>Pour s'inscrire</span></div>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="tile t1"><div class="tile-art art-shop"><i class="fas fa-basket-shopping"></i><div class="cap"><strong>Boutique</strong><span>Livré chez vous</span></div></div></div>
+        <div class="tile t3"><div class="tile-art art-pay"><i class="fas fa-mobile-screen-button"></i><div class="cap"><strong>Mobile Money</strong><span>Orange · Moov · Wave</span></div></div></div>
+        <div class="tile t2"><div class="tile-art art-serv"><i class="fas fa-screwdriver-wrench"></i><div class="cap"><strong>Artisans</strong><span>Devis en 24 h</span></div></div></div>
+        <div class="hero-badge b1"><i class="fas fa-shield-halved"></i> Paiement à la livraison possible</div>
+        <div class="hero-badge b2"><i class="fas fa-star"></i> Avis clients vérifiés</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="container trust-grid">
+    <div class="trust-item"><i class="fas fa-mobile-screen-button"></i><div><strong>Payez comme vous voulez</strong><span>Orange Money, Moov, Wave ou à la livraison</span></div></div>
+    <div class="trust-item"><i class="fas fa-tags"></i><div><strong>Prix tout compris</strong><span>Ce que vous voyez est ce que vous payez</span></div></div>
+    <div class="trust-item"><i class="fas fa-truck-fast"></i><div><strong>Livraison le jour même</strong><span>Dans {{ CITY }}, dès 1 000 FCFA</span></div></div>
+    <div class="trust-item"><i class="fas fa-user-shield"></i><div><strong>Pros vérifiés</strong><span>Identité contrôlée, avis publics</span></div></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% if categories %}
+<section class="mb-6">
+  <div class="section-head">
+    <span class="eyebrow"><i class="fas fa-grip"></i> Rayons</span>
+    <h2>Par où voulez-vous commencer ?</h2>
+  </div>
+  <div class="cat-grid">
+    {% for c in categories %}
+      <a href="{{ c.get_absolute_url }}" class="cat-tile">
+        <span class="ico"><i class="fas {{ c.icon }}"></i></span>
+        <strong>{{ c.name }}</strong>
+        <span>{{ c.products.count }} article{{ c.products.count|pluralize }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if not stats.products and not stats.artisans %}
+<section class="panel center mt-6">
+  <span class="chip"><i class="fas fa-rocket"></i> Ouverture</span>
+  <h2 class="mt-4">{{ SITE.SITE_NAME }} vient d'ouvrir à {{ CITY }}</h2>
+  <p style="max-width:56ch;margin:12px auto 0">
+    Les premiers vendeurs et artisans sont en train de s'inscrire. Vous pouvez être
+    parmi eux : la vitrine est gratuite au départ, et les premiers inscrits sont ceux
+    que les clients voient en premier.
+  </p>
+  <div class="row row-wrap mt-6" style="justify-content:center">
+    <a href="{% url 'register' %}?role=seller" class="btn btn-primary btn-lg">Ouvrir ma boutique</a>
+    <a href="{% url 'register' %}?role=artisan" class="btn btn-dark btn-lg">Proposer mes services</a>
+    <a href="{% url 'sell' %}" class="btn btn-ghost btn-lg">Voir les tarifs</a>
+  </div>
+</section>
+{% endif %}
+
+{% if featured %}
+<section class="mt-8">
+  <div class="row-between section-head">
+    <div>
+      <span class="eyebrow"><i class="fas fa-star"></i> Sélection</span>
+      <h2>Coups de cœur du moment</h2>
+    </div>
+    <a href="{% url 'product_list' %}" class="btn btn-ghost btn-sm">Tout voir <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="grid grid-4">
+    {% for product in featured %}{% include 'partials/product_card.html' %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="mt-8">
+  <div class="split-grid">
+    <a href="{% url 'product_list' %}" class="split-card shop">
+      <i class="fas fa-store bg-icon"></i>
+      <h3>La boutique</h3>
+      <p>Téléphones, électroménager, mode, produits du terroir. Vendus par des commerçants d'ici, livrés chez vous.</p>
+      <span class="go">Voir les produits <i class="fas fa-arrow-right"></i></span>
+    </a>
+    <a href="{% url 'services_home' %}" class="split-card serv">
+      <i class="fas fa-helmet-safety bg-icon"></i>
+      <h3>Les professionnels</h3>
+      <p>Un robinet qui fuit, un meuble sur mesure, une tenue à coudre ? Décrivez le travail, recevez un devis chiffré.</p>
+      <span class="go">Trouver un pro <i class="fas fa-arrow-right"></i></span>
+    </a>
+  </div>
+</section>
+
+{% if new_products %}
+<section class="mt-8">
+  <div class="row-between section-head">
+    <div><span class="eyebrow"><i class="fas fa-bolt"></i> Nouveautés</span><h2>Tout juste arrivé</h2></div>
+    <a href="{% url 'product_list' %}?tri=recent" class="btn btn-ghost btn-sm">Tout voir <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="grid grid-4">
+    {% for product in new_products %}{% include 'partials/product_card.html' %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if top_artisans %}
+<section class="mt-8">
+  <div class="row-between section-head">
+    <div><span class="eyebrow"><i class="fas fa-award"></i> Artisans</span><h2>Les mieux notés près de chez vous</h2></div>
+    <a href="{% url 'artisan_list' %}" class="btn btn-ghost btn-sm">Voir l'annuaire <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="grid grid-4">
+    {% for artisan in top_artisans %}{% include 'partials/artisan_card.html' %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="mt-8 panel">
+  <div class="section-head center">
+    <span class="eyebrow" style="justify-content:center"><i class="fas fa-route"></i> En trois temps</span>
+    <h2>Comment ça marche</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><h4>Vous cherchez</h4><p>Un produit dans la boutique, ou un professionnel dans l'annuaire. Filtrez par quartier, prix et note.</p></div>
+    <div class="step"><h4>Vous commandez ou décrivez</h4><p>Ajoutez au panier, ou expliquez le travail à faire. L'artisan vous renvoie un devis détaillé.</p></div>
+    <div class="step"><h4>Vous payez comme vous voulez</h4><p>Orange Money, Moov Money, Wave — ou en espèces à la livraison. Chaque étape est tracée.</p></div>
+    <div class="step"><h4>Vous notez</h4><p>Votre avis compte : il aide les prochains clients et récompense les pros sérieux.</p></div>
+  </div>
+</section>
+
+<section class="mt-8 panel" style="background:linear-gradient(140deg,var(--forest-600),var(--forest-500));border:none">
+  <div class="row-between">
+    <div style="max-width:56ch">
+      <h2 style="color:#fff">Vous vendez, ou vous avez un métier entre les mains ?</h2>
+      <p style="color:rgba(255,255,255,.85)">
+        L'inscription est gratuite. Vous ne payez qu'une commission quand vous vendez —
+        et un artisan ne paie aucune commission sur ses chantiers. Votre argent arrive sur votre mobile money.
+      </p>
+    </div>
+    <div class="row row-wrap">
+      <a href="{% url 'sell' %}" class="btn btn-primary btn-lg">Ouvrir ma boutique</a>
+      <a href="{% url 'register' %}?role=artisan" class="btn btn-ghost btn-lg" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff">Devenir artisan</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

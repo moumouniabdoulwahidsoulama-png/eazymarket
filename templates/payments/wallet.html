@@ -1,0 +1,74 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mon portefeuille — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<h1 class="mb-6">Mon portefeuille</h1>
+
+<div class="stat-grid mb-8">
+  <div class="stat forest"><div class="label">Disponible au retrait</div><div class="value">{{ wallet.available|floatformat:0|intcomma }}<small> F</small></div></div>
+  <div class="stat gold"><div class="label">En attente de libération</div><div class="value">{{ wallet.pending|floatformat:0|intcomma }}<small> F</small></div><div class="delta">libéré {{ SITE.PAYOUT_DELAY_DAYS }} j après livraison</div></div>
+  <div class="stat"><div class="label">Total encaissé</div><div class="value">{{ wallet.total_earned|floatformat:0|intcomma }}<small> F</small></div></div>
+</div>
+
+<div class="detail-grid">
+  <section class="panel">
+    <div class="panel-head"><h3>Mouvements</h3></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Date</th><th>Libellé</th><th class="num">Montant</th><th>État</th></tr></thead>
+        <tbody>
+        {% for e in entries %}
+          <tr>
+            <td class="small">{{ e.created_at|date:"d/m/Y" }}</td>
+            <td class="small">{{ e.label }}</td>
+            <td class="num bold" style="color:{% if e.amount < 0 %}var(--danger-fg){% else %}var(--success-fg){% endif %}">{{ e.amount|intcomma }} F</td>
+            <td>{% if e.is_released %}<span class="badge badge-success">Disponible</span>{% else %}<span class="badge badge-warning">En attente</span>{% endif %}</td>
+          </tr>
+        {% empty %}<tr><td colspan="4" class="muted">Aucun mouvement pour l'instant.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <aside class="summary stack">
+    <div class="panel">
+      <h4 class="mb-4">Où recevoir mon argent</h4>
+      <form method="post" action="{% url 'wallet_settings' %}">{% csrf_token %}
+        <div class="field"><label>Opérateur</label>
+          <select name="payout_channel">
+            {% for value, label in channels %}
+              {% if value != 'card' and value != 'cash' and value != 'other' %}
+                <option value="{{ value }}" {% if wallet.payout_channel == value %}selected{% endif %}>{{ label }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field"><label>Numéro</label><input type="tel" name="payout_number" value="{{ wallet.payout_number }}" placeholder="+226 ..."></div>
+        <div class="field"><label>Nom du titulaire</label><input type="text" name="payout_name" value="{{ wallet.payout_name }}"></div>
+        <button class="btn btn-ghost btn-block">Enregistrer</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h4 class="mb-4">Retirer</h4>
+      <p class="small muted mb-4">Retrait minimum : {{ PRICING.PAYOUT_MIN|intcomma }} FCFA. Versement sous 48 h ouvrées.</p>
+      <form method="post" action="{% url 'wallet_withdraw' %}">{% csrf_token %}
+        <div class="field"><label>Montant (vide = tout)</label><input type="number" name="amount" min="{{ PRICING.PAYOUT_MIN }}" max="{{ wallet.available|floatformat:0 }}" placeholder="{{ wallet.available|floatformat:0 }}"></div>
+        <button class="btn btn-primary btn-block" {% if not wallet.can_withdraw %}disabled{% endif %}>Demander un retrait</button>
+      </form>
+      {% if not wallet.payout_number %}<p class="tiny muted mt-2">Enregistrez d'abord votre numéro de retrait.</p>{% endif %}
+    </div>
+
+    {% if payouts %}
+    <div class="panel">
+      <h4 class="mb-4">Mes retraits</h4>
+      {% for p in payouts %}
+        <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--ink-100)">
+          <div><div class="small bold">{{ p.amount|intcomma }} F</div><div class="tiny muted">{{ p.created_at|date:"d/m/Y" }}</div></div>
+          <span class="badge badge-{% if p.status == 'paid' %}success{% elif p.status == 'rejected' %}danger{% else %}warning{% endif %}">{{ p.get_status_display }}</span>
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

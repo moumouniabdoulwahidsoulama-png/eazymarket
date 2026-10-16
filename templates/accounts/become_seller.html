@@ -1,0 +1,69 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Ouvrir ma boutique — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="section-head center">
+  <span class="eyebrow" style="justify-content:center"><i class="fas fa-store"></i> Boutique</span>
+  <h1>Ouvrir ma boutique</h1>
+  <p style="margin-inline:auto">
+    Vous gardez votre compte actuel — on y ajoute votre vitrine.
+    L'ouverture se fait avec le pack de {{ PRICING.SHOP_PACK_SIZE }} annonces
+    à {{ PRICING.SHOP_PACK_PRICE|floatformat:0|intcomma }} {{ CURRENCY }},
+    payé une seule fois et acquis définitivement.
+  </p>
+</div>
+
+<div class="checkout-grid">
+  <form method="post" class="panel">{% csrf_token %}
+    <div class="panel-head"><h3>Votre boutique</h3></div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Nom de la boutique <span class="req">*</span></label>
+        <input type="text" name="store_name" required value="{{ profile.store_name }}" placeholder="Ex : Faso Électro">
+        <p class="hint">C'est ce nom que verront vos clients, pas votre nom d'utilisateur.</p>
+      </div>
+      <div class="field">
+        <label>Téléphone <span class="req">*</span></label>
+        <input type="tel" name="phone" required value="{{ profile.phone }}" placeholder="{{ COUNTRY.dial_code }} ...">
+      </div>
+      <div class="field">
+        <label>Quartier</label>
+        <input type="text" name="quartier" value="{{ profile.quartier }}" placeholder="Ex : Gounghin">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Que vendez-vous ?</label>
+      <textarea name="store_description" rows="3" placeholder="Ex : électroménager et petit matériel, garantie 6 mois, livraison dans toute la ville.">{{ profile.store_description }}</textarea>
+    </div>
+
+    <button class="btn btn-primary btn-lg btn-block mt-4">
+      <i class="fas fa-arrow-right"></i> Continuer vers le paiement
+    </button>
+    <p class="tiny muted center mt-3">
+      Rien n'est prélevé maintenant : vous choisirez votre moyen de paiement
+      à l'étape suivante.
+    </p>
+  </form>
+
+  <aside class="summary">
+    <div class="panel">
+      <h4 class="mb-4">Ce que ça coûte</h4>
+      <div class="spec-list">
+        <div><span class="k">Ouverture</span><span class="v">{{ PRICING.SHOP_PACK_PRICE|floatformat:0|intcomma }} {{ CURRENCY }}</span></div>
+        <div><span class="k">Ce que ça donne</span><span class="v">{{ PRICING.SHOP_PACK_SIZE }} annonces en ligne</span></div>
+        <div><span class="k">Durée</span><span class="v">Définitif, rien n'expire</span></div>
+        <div><span class="k">Commission</span><span class="v">{{ PRICING.COMMISSION_RATE|floatformat:0 }} % par vente</span></div>
+        <div><span class="k">Versement</span><span class="v">{{ SITE.PAYOUT_DELAY_DAYS }} j après livraison</span></div>
+      </div>
+      <p class="small muted mt-4">
+        Ce n'est pas un abonnement : vous payez une fois, les emplacements
+        vous restent. Supprimer une annonce en libère un.
+      </p>
+      <p class="small muted mt-3">La commission est <strong>ajoutée</strong> au prix affiché : vous touchez exactement le prix que vous fixez.</p>
+      <a href="{% url 'sell' %}" class="btn btn-ghost btn-block mt-4">Voir tous les détails</a>
+    </div>
+  </aside>
+</div>
+{% endblock %}

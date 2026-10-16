@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Comment ça marche — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="section-head center">
+  <span class="eyebrow" style="justify-content:center"><i class="fas fa-route"></i> Mode d'emploi</span>
+  <h1>Une plateforme, deux façons de s'en servir</h1>
+  <p style="margin-inline:auto">{{ SITE.SITE_NAME }} réunit deux besoins qui vont souvent ensemble : acheter quelque chose, et trouver quelqu'un qui sait s'en servir, l'installer ou le réparer.</p>
+</div>
+
+<div class="split-grid mb-8">
+  <div class="split-card shop"><i class="fas fa-store bg-icon"></i><h3>Acheter un produit</h3><p>Vous commandez, vous payez, on vous livre. Le prix affiché est le prix final.</p></div>
+  <div class="split-card serv"><i class="fas fa-helmet-safety bg-icon"></i><h3>Faire faire un travail</h3><p>Vous décrivez, l'artisan chiffre, vous décidez. Aucun engagement avant votre accord.</p></div>
+</div>
+
+<section class="panel mb-6">
+  <div class="panel-head"><h3><i class="fas fa-basket-shopping" style="color:var(--brand-500)"></i> Côté boutique</h3></div>
+  <div class="steps">
+    <div class="step"><h4>Trouvez</h4><p>Parcourez les rayons ou tapez ce que vous cherchez. Chaque fiche indique le vendeur, son quartier et ses avis.</p></div>
+    <div class="step"><h4>Commandez</h4><p>Ajoutez au panier, indiquez où livrer — ou choisissez le retrait chez le vendeur, qui est gratuit.</p></div>
+    <div class="step"><h4>Payez</h4><p>Orange Money, Moov Money, Wave, ou en espèces à la livraison. Vous recevez un reçu à chaque étape.</p></div>
+    <div class="step"><h4>Recevez et notez</h4><p>Un livreur prend la course et vous suivez son avancée. À la réception, vous notez le produit.</p></div>
+  </div>
+</section>
+
+<section class="panel mb-6">
+  <div class="panel-head"><h3><i class="fas fa-screwdriver-wrench" style="color:var(--forest-600)"></i> Côté services</h3></div>
+  <div class="steps">
+    <div class="step"><h4>Choisissez un pro</h4><p>Filtrez par métier, quartier et note. Regardez ses réalisations avant de le contacter.</p></div>
+    <div class="step"><h4>Décrivez le travail</h4><p>Ajoutez une photo si vous en avez une : c'est ce qui permet un devis juste du premier coup.</p></div>
+    <div class="step"><h4>Recevez un devis</h4><p>Main-d'œuvre, fournitures, déplacement, durée : tout est détaillé et écrit. Vous acceptez ou refusez.</p></div>
+    <div class="step"><h4>Le travail se fait</h4><p>Vous convenez du rendez-vous dans la messagerie. Une fois fini, vous notez l'artisan.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h3>Pourquoi passer par la plateforme plutôt qu'en direct ?</h3></div>
+  <div class="grid grid-2">
+    <div class="trust-item"><i class="fas fa-file-contract"></i><div><strong>Tout est écrit</strong><span>Devis, prix, échanges : en cas de désaccord, il reste une trace.</span></div></div>
+    <div class="trust-item"><i class="fas fa-star"></i><div><strong>La réputation se construit</strong><span>Les avis sont liés à des travaux réellement terminés. Impossible d'en inventer.</span></div></div>
+    <div class="trust-item"><i class="fas fa-shield-halved"></i><div><strong>Un recours existe</strong><span>Notre équipe intervient en cas de litige sur une commande ou un devis accepté.</span></div></div>
+    <div class="trust-item"><i class="fas fa-hand-holding-dollar"></i><div><strong>Les pros sont payés vite</strong><span>Les gains arrivent sur leur portefeuille et partent vers leur mobile money.</span></div></div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Vendre et proposer ses services sur {{ SITE.SITE_NAME }} — tarifs{% endblock %}
+{% block hero %}
+<section class="hero" style="padding-block:var(--sp-12)">
+  <div class="container" style="max-width:70ch">
+    <span class="pill"><span class="dot"></span> Inscription gratuite</span>
+    <h1>Votre commerce mérite <span class="accent">plus qu'un statut WhatsApp.</span></h1>
+    <p class="lead">Une vitrine qui reste en ligne, des clients qui vous trouvent par la recherche, un suivi de commandes, et votre argent qui arrive sur votre mobile money.</p>
+    <div class="hero-cta">
+      <a href="{% url 'register' %}?role=seller" class="btn btn-primary btn-lg">Ouvrir ma boutique</a>
+      <a href="{% url 'register' %}?role=artisan" class="btn btn-ghost btn-lg">Proposer mes services</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block content %}
+
+<section class="mb-8">
+  <div class="section-head center"><h2>Trois façons de gagner de l'argent ici</h2></div>
+  <div class="grid grid-3">
+
+    <div class="card card-pad">
+      <span class="chip"><i class="fas fa-store"></i> Vendeur</span>
+      <h3 class="mt-4">Vous vendez des produits</h3>
+      <p>Publiez vos articles, gérez votre stock, recevez les commandes. Un livreur s'en charge, ou le client vient retirer.</p>
+      <div class="spec-list mt-4">
+        <div><span class="k">Inscription</span><span class="v">Gratuite</span></div>
+        <div><span class="k">Ouverture de la boutique</span><span class="v">{{ PRICING.SHOP_PACK_PRICE|floatformat:0|intcomma }} {{ CURRENCY }} — {{ PRICING.SHOP_PACK_SIZE }} annonces</span></div>
+        <div><span class="k">Ensuite</span><span class="v">{{ PRICING.SHOP_PACK_PRICE|intcomma }} F les {{ PRICING.SHOP_PACK_SIZE }}</span></div>
+        <div><span class="k">Commission</span><span class="v">{{ PRICING.COMMISSION_RATE|floatformat:0 }} % par vente</span></div>
+        <div><span class="k">Versement</span><span class="v">{{ SITE.PAYOUT_DELAY_DAYS }} j après livraison</span></div>
+      </div>
+      <p class="small muted mt-4">La commission est <strong>ajoutée</strong> au prix affiché : vous touchez exactement le prix que vous avez fixé, jamais moins.</p>
+      <a href="{% url 'register' %}?role=seller" class="btn btn-primary btn-block mt-4">Créer ma boutique</a>
+    </div>
+
+    <div class="card card-pad" style="border-color:var(--brand-300)">
+      <span class="chip chip-active"><i class="fas fa-screwdriver-wrench"></i> Artisan</span>
+      <h3 class="mt-4">Vous avez un métier</h3>
+      <p>Plombier, menuisier, couturière, coiffeuse, mécanicien, aide-ménagère, gardien, cuisinier… Recevez des demandes de votre quartier et répondez par un devis.</p>
+      <div class="spec-list mt-4">
+        <div><span class="k">Inscription</span><span class="v">Gratuite</span></div>
+        <div><span class="k">Pour être visible</span><span class="v">{{ PRICING.ARTISAN_SUB_PRICE|intcomma }} F / {{ PRICING.ARTISAN_SUB_DAYS }} jours</span></div>
+        <div><span class="k">Devis</span><span class="v">Illimités</span></div>
+        <div><span class="k">Commission sur vos chantiers</span><span class="v">0 %</span></div>
+      </div>
+      <p class="small muted mt-4">Moins de {{ PRICING.ARTISAN_SUB_PRICE|floatformat:0 }} F tous les {{ PRICING.ARTISAN_SUB_DAYS }} jours — le prix d'une course en ville. Un seul chantier décroché rembourse plusieurs années.</p>
+      <a href="{% url 'register' %}?role=artisan" class="btn btn-dark btn-block mt-4">Créer mon profil pro</a>
+    </div>
+
+    <div class="card card-pad">
+      <span class="chip"><i class="fas fa-motorcycle"></i> Livreur</span>
+      <h3 class="mt-4">Vous avez une moto</h3>
+      <p>Prenez les courses qui vous arrangent, quand vous voulez. Vous êtes payé par course, l'argent arrive sur votre mobile money.</p>
+      <div class="spec-list mt-4">
+        <div><span class="k">Inscription</span><span class="v">Gratuite</span></div>
+        <div><span class="k">Abonnement</span><span class="v">Aucun</span></div>
+        <div><span class="k">Activation</span><span class="v">Partager le lien à {{ PRICING.DELIVERY_REQUIRED_SHARES }} personnes</span></div>
+        <div><span class="k">Rémunération</span><span class="v">Par course livrée</span></div>
+      </div>
+      <p class="small muted mt-4">Nous appelons vos {{ PRICING.DELIVERY_REQUIRED_SHARES }} contacts, puis nous activons votre compte. C'est ce qui rassure les clients et les vendeurs.</p>
+      <a href="{% url 'register' %}?role=delivery" class="btn btn-ghost btn-block mt-4">Devenir livreur</a>
+    </div>
+  </div>
+</section>
+
+<section class="panel mb-8">
+  <div class="panel-head"><h3>Un exemple concret, côté vendeur</h3></div>
+  <p class="mb-4">Vous vendez un ventilateur et vous voulez toucher <strong>22 000 FCFA</strong>.</p>
+  <div class="steps">
+    <div class="step"><h4>Vous saisissez 22 000</h4><p>C'est ce que vous voulez recevoir, net.</p></div>
+    <div class="step"><h4>Le client voit 23 100</h4><p>Notre commission est ajoutée et le prix arrondi pour rester lisible.</p></div>
+    <div class="step"><h4>Le client paie</h4><p>Orange Money, Moov, Wave, ou espèces à la livraison.</p></div>
+    <div class="step"><h4>Vous recevez 22 000</h4><p>Exactement. Retirable {{ SITE.PAYOUT_DELAY_DAYS }} jours après la livraison.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h3>Les questions que tout le monde pose</h3></div>
+  <div class="stack">
+    <div><strong>Pourquoi payer pour publier ?</strong><p class="small">Parce qu'une boutique en ligne sérieuse coûte à faire tourner : hébergement, modération des annonces, support client, livreurs. {{ PRICING.SHOP_PACK_PRICE|intcomma }} FCFA pour {{ PRICING.SHOP_PACK_SIZE }} annonces, sans échéance, c'est moins qu'une journée de location d'étal au marché — et votre vitrine est ouverte 24 h sur 24.</p></div>
+    <div><strong>Les emplacements expirent-ils ?</strong><p class="small">Non. Un emplacement acheté vous reste acquis. Si vous supprimez une annonce, l'emplacement redevient libre pour une autre.</p></div>
+    <div><strong>Comment je récupère mon argent ?</strong><p class="small">Chaque vente crédite votre portefeuille. {{ SITE.PAYOUT_DELAY_DAYS }} jours après la livraison, la somme devient retirable vers votre Orange Money, Moov Money ou Wave, à partir de {{ PRICING.PAYOUT_MIN|intcomma }} FCFA.</p></div>
+    <div><strong>Pourquoi attendre {{ SITE.PAYOUT_DELAY_DAYS }} jours ?</strong><p class="small">Pour couvrir les retours et les litiges. C'est ce délai qui permet de garantir l'acheteur — et donc de le convaincre d'acheter chez vous plutôt qu'ailleurs.</p></div>
+    <div><strong>Je peux vendre ET proposer mes services ?</strong><p class="small">Oui. Un menuisier peut vendre des meubles finis dans la boutique et prendre des commandes sur mesure dans les services. Un seul compte suffit.</p></div>
+  </div>
+</section>
+{% endblock %}

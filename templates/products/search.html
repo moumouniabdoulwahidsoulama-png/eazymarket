@@ -1,0 +1,42 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Recherche « {{ query }} » — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="mb-6">
+  <h1>{% if query %}« {{ query }} »{% else %}Recherche{% endif %}</h1>
+  <p class="small">{{ page_obj.paginator.count }} produit{{ page_obj.paginator.count|pluralize }}{% if artisans %} · {{ artisans|length }} professionnel{{ artisans|length|pluralize }}{% endif %}</p>
+</div>
+
+<form method="get" class="panel mb-6" style="padding:var(--sp-5)">
+  <div class="form-grid">
+    <div class="field"><label>Mot-clé</label><input type="search" name="q" value="{{ query }}" placeholder="Ex : réfrigérateur, plombier…"></div>
+    <div class="field"><label>Prix minimum</label><input type="number" name="min" value="{{ request.GET.min }}" placeholder="0"></div>
+    <div class="field"><label>Prix maximum</label><input type="number" name="max" value="{{ request.GET.max }}" placeholder="500000"></div>
+    <div class="field"><label>État</label>
+      <select name="etat">
+        <option value="">Peu importe</option>
+        <option value="new" {% if request.GET.etat == 'new' %}selected{% endif %}>Neuf</option>
+        <option value="used" {% if request.GET.etat == 'used' %}selected{% endif %}>Occasion</option>
+        <option value="refurb" {% if request.GET.etat == 'refurb' %}selected{% endif %}>Reconditionné</option>
+      </select>
+    </div>
+  </div>
+  <button class="btn btn-primary"><i class="fas fa-magnifying-glass"></i> Filtrer</button>
+</form>
+
+{% if artisans %}
+<section class="mb-6">
+  <div class="section-head"><span class="eyebrow"><i class="fas fa-screwdriver-wrench"></i> Professionnels</span><h2>Des artisans correspondent aussi</h2></div>
+  <div class="grid grid-4">{% for artisan in artisans %}{% include 'partials/artisan_card.html' %}{% endfor %}</div>
+</section>
+{% endif %}
+
+{% if page_obj.object_list %}
+  <div class="section-head"><h2>Produits</h2></div>
+  <div class="grid grid-4">{% for product in page_obj %}{% include 'partials/product_card.html' %}{% endfor %}</div>
+  {% include 'partials/pagination.html' %}
+{% elif query %}
+  {% include 'partials/empty.html' with icon='fa-magnifying-glass' title='Aucun résultat' text="Essayez un mot plus court, ou parcourez les rayons de la boutique." cta_url='/produits/' cta_label='Parcourir la boutique' %}
+{% endif %}
+
+{% endblock %}

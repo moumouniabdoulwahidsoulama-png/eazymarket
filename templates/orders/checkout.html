@@ -1,0 +1,74 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Validation de commande — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<h1 class="mb-6">Finaliser ma commande</h1>
+
+<form method="post" class="checkout-grid">{% csrf_token %}
+  <div class="stack-lg">
+    <section class="protect">
+      <div class="protect-icon"><i class="fas fa-shield-halved"></i></div>
+      <div>
+        <strong>Votre paiement est protégé.</strong>
+        <p>Nous conservons votre argent le temps que le vendeur confirme qu'il a bien l'article et
+        qu'il peut le livrer. Il ne le reçoit qu'à ce moment-là. Sans confirmation de sa part sous
+        {{ delai_confirmation }} heures, votre commande est annulée et vous êtes remboursé automatiquement.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>Comment souhaitez-vous récupérer votre commande ?</h3></div>
+      <div class="pay-methods">
+        <label class="pay-method">
+          <input type="radio" name="fulfilment" value="delivery" {% if fulfilment == 'delivery' %}checked{% endif %}>
+          <span class="box"><span class="mark" style="background:var(--brand-500)"><i class="fas fa-truck"></i></span><strong>Livraison</strong><span>Chez vous, dès {{ PRICING.DELIVERY_FEE_CITY|intcomma }} FCFA</span></span>
+        </label>
+        <label class="pay-method">
+          <input type="radio" name="fulfilment" value="pickup" {% if fulfilment == 'pickup' %}checked{% endif %}>
+          <span class="box"><span class="mark" style="background:var(--forest-600)"><i class="fas fa-shop"></i></span><strong>Retrait</strong><span>Chez le vendeur, gratuit</span></span>
+        </label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>Coordonnées de livraison</h3></div>
+      <div class="form-grid">
+        <div class="field"><label>Nom du destinataire <span class="req">*</span></label><input type="text" name="shipping_name" required value="{{ form.shipping_name }}"></div>
+        <div class="field"><label>Téléphone <span class="req">*</span></label><input type="tel" name="shipping_phone" required value="{{ form.shipping_phone }}" placeholder="+226 ..."></div>
+        <div class="field"><label>Quartier <span class="req">*</span></label><input type="text" name="shipping_quartier" value="{{ form.shipping_quartier }}" placeholder="Ex : Tanghin"></div>
+        <div class="field"><label>Ville</label><input type="text" name="shipping_city" value="{{ form.shipping_city }}"></div>
+      </div>
+      <div class="field">
+        <label>Adresse / repère <span class="req">*</span></label>
+        <textarea name="shipping_address" rows="2" placeholder="Rue, numéro de porte, repère visible (ex : derrière la station Total)">{{ form.shipping_address }}</textarea>
+        <p class="hint">Un bon repère vaut mieux qu'une adresse : c'est ce que le livreur utilisera vraiment.</p>
+      </div>
+      <div class="field"><label>Instructions pour le livreur</label><textarea name="delivery_notes" rows="2" placeholder="Ex : appeler avant d'arriver, portail bleu"></textarea></div>
+    </section>
+  </div>
+
+  <aside class="summary">
+    <div class="panel">
+      <h3 class="mb-4">Votre commande</h3>
+      {% for item in cart.items_list %}
+        <div class="summary-line"><span>{{ item.quantity }}× {{ item.product.name|truncatechars:26 }}</span><span class="bold">{{ item.subtotal|floatformat:0|intcomma }} F</span></div>
+      {% endfor %}
+      <div class="summary-line" style="border-top:1px solid var(--ink-100);margin-top:8px;padding-top:12px"><span>Sous-total</span><span class="bold">{{ cart.subtotal|floatformat:0|intcomma }} F</span></div>
+      <div class="summary-line"><span>Livraison</span><span class="bold">{% if cart.delivery_fee %}{{ cart.delivery_fee|floatformat:0|intcomma }} F{% else %}Offerte{% endif %}</span></div>
+      <div class="summary-line total"><span>Total</span><span>{{ cart.subtotal|add:cart.delivery_fee|floatformat:0|intcomma }} F</span></div>
+
+      {% if avoir > 0 %}
+      <label class="avoir-box">
+        <input type="checkbox" name="utiliser_avoir" value="1" checked>
+        <span>
+          <strong>Utiliser mon avoir</strong>
+          <span class="tiny muted">{{ avoir|floatformat:0|intcomma }} F disponibles sur votre compte</span>
+        </span>
+      </label>
+      {% endif %}
+
+      <button class="btn btn-primary btn-lg btn-block mt-6">Continuer vers le paiement <i class="fas fa-arrow-right"></i></button>
+      <p class="tiny muted center mt-4"><i class="fas fa-lock"></i> Argent conservé jusqu'à la confirmation du vendeur · Remboursé automatiquement sous {{ delai_confirmation }} h sans réponse</p>
+    </div>
+  </aside>
+</form>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mon atelier — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="row-between mb-6">
+  <div>
+    <h1>Bonjour {{ artisan.full_name|truncatewords:1 }}</h1>
+    <p class="small">{{ artisan.service_category.name }} · {{ artisan.quartier }}</p>
+  </div>
+  <div class="row row-wrap">
+    <form method="post" action="{% url 'toggle_availability' %}">{% csrf_token %}
+      <button class="btn {% if artisan.is_available %}btn-ghost{% else %}btn-primary{% endif %}">
+        <i class="fas fa-power-off"></i> {% if artisan.is_available %}Je suis disponible{% else %}Je suis en pause{% endif %}
+      </button>
+    </form>
+    <a href="{{ artisan.get_absolute_url }}" class="btn btn-ghost"><i class="fas fa-eye"></i> Voir ma fiche publique</a>
+  </div>
+</div>
+
+{% if not artisan.is_subscription_active %}
+<div class="alert warning mb-6">
+  <i class="fas fa-hourglass-half"></i>
+  <span>Formule Découverte — il vous reste <strong>{{ artisan.free_leads_left }} devis gratuit{{ artisan.free_leads_left|pluralize }}</strong>.
+  <a href="{% url 'subscribe_artisan' %}">Passer en Pro</a> pour répondre sans limite.</span>
+</div>
+{% endif %}
+
+<div class="stat-grid mb-8">
+  <div class="stat"><div class="label">Demandes reçues</div><div class="value">{{ stats.total }}</div></div>
+  <div class="stat gold"><div class="label">En attente</div><div class="value">{{ stats.pending }}</div><div class="delta">à traiter</div></div>
+  <div class="stat forest"><div class="label">Devis acceptés</div><div class="value">{{ stats.accepted_quotes }}<small> / {{ stats.quotes }}</small></div></div>
+  <div class="stat forest"><div class="label">Chantiers terminés</div><div class="value">{{ stats.completed }}</div></div>
+  <div class="stat"><div class="label">Note moyenne</div><div class="value">{{ artisan.rating|floatformat:1 }}<small> / 5</small></div><div class="delta">{{ artisan.total_reviews }} avis</div></div>
+</div>
+
+<div class="detail-grid">
+  <div class="stack-lg">
+    <section class="panel">
+      <div class="panel-head"><h3>Nouvelles demandes</h3><span class="badge badge-warning">{{ stats.pending }}</span></div>
+      {% for sr in pending_list %}
+        <a href="{% url 'service_request_detail' sr.id %}" class="card card-pad card-hover mb-2" style="display:block">
+          <div class="row-between">
+            <div>
+              <div class="bold">{{ sr.title }}</div>
+              <div class="small muted">{{ sr.client.username }} · {{ sr.created_at|timesince }} · {{ sr.get_urgency_display }}</div>
+            </div>
+            <span class="btn btn-outline btn-sm">Chiffrer <i class="fas fa-arrow-right"></i></span>
+          </div>
+        </a>
+      {% empty %}
+        <p class="muted">Aucune nouvelle demande. Complétez votre portfolio : les profils avec réalisations reçoivent bien plus de sollicitations.</p>
+      {% endfor %}
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>Chantiers en cours</h3></div>
+      {% for sr in active_list %}
+        <a href="{% url 'service_request_detail' sr.id %}" class="row-between" style="padding:12px 0;border-bottom:1px solid var(--ink-100)">
+          <div><div class="bold small">{{ sr.title }}</div><div class="tiny muted">{{ sr.reference }} · {{ sr.client.username }}</div></div>
+          <span class="badge badge-info">{{ sr.get_status_display }}</span>
+        </a>
+      {% empty %}
+        <p class="muted">Rien en cours.</p>
+      {% endfor %}
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>Mon travail en vidéo</h3></div>
+      <p class="small muted mb-4">
+        Une photo se copie n'importe où ; une vidéo de votre chantier, non.
+        C'est ce qui vous distingue des profils qui se contentent de photos
+        trouvées sur internet — et c'est ce qui décide un client à vous appeler.
+      </p>
+      {% include 'partials/video_manager.html' with cible='artisan' mes_videos=mes_videos etat=video %}
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>Mes réalisations</h3><span class="small muted">{{ portfolios|length }} publiée{{ portfolios|length|pluralize }}</span></div>
+      {% if portfolios %}
+        <div class="portfolio-grid mb-6">
+          {% for item in portfolios %}
+            <div class="portfolio-item">
+              <div class="img">{% if item.display_image %}<img src="{{ item.display_image }}" alt="">{% else %}<i class="fas fa-image" style="color:var(--ink-300);font-size:2rem"></i>{% endif %}</div>
+              <div class="cap"><strong class="small">{{ item.title }}</strong></div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <details>
+        <summary class="btn btn-outline"><i class="fas fa-plus"></i> Ajouter une réalisation</summary>
+        <form method="post" action="{% url 'add_portfolio' %}" enctype="multipart/form-data" class="mt-4">{% csrf_token %}
+          <div class="form-grid">
+            <div class="field"><label>Titre</label><input type="text" name="title" required placeholder="Ex : Portail métallique 3 m"></div>
+            <div class="field"><label>Photo</label><input type="file" name="image" accept="image/*"></div>
+          </div>
+          <div class="field"><label>Description</label><textarea name="description" rows="2" placeholder="Matériaux, durée, particularité du chantier"></textarea></div>
+          <button class="btn btn-primary btn-sm">Publier</button>
+        </form>
+      </details>
+    </section>
+  </div>
+
+  <aside class="summary stack">
+    <div class="panel">
+      <h4 class="mb-4">Mon abonnement</h4>
+      {% if artisan.is_subscription_active %}
+        <span class="badge badge-success">{{ artisan.get_plan_display }}</span>
+        <p class="small mt-2">Actif jusqu'au {{ artisan.subscription_end|date:"d/m/Y" }} ({{ artisan.days_left }} j).</p>
+      {% else %}
+        <span class="badge badge-warning">Découverte</span>
+        <p class="small mt-2">{{ artisan.free_leads_left }} devis gratuit{{ artisan.free_leads_left|pluralize }} restant{{ artisan.free_leads_left|pluralize }}.</p>
+      {% endif %}
+      <a href="{% url 'subscribe_artisan' %}" class="btn btn-primary btn-block mt-4">
+        {% if artisan.is_subscription_active %}Prolonger{% else %}Passer en Pro{% endif %}
+      </a>
+    </div>
+
+    <div class="panel">
+      <h4 class="mb-4">Conseils pour être choisi</h4>
+      <ul class="stack small">
+        <li><i class="fas fa-camera" style="color:var(--brand-500)"></i> Publiez au moins 3 photos de chantiers finis.</li>
+        <li><i class="fas fa-bolt" style="color:var(--brand-500)"></i> Répondez dans l'heure : le premier devis reçu emporte souvent la décision.</li>
+        <li><i class="fas fa-file-lines" style="color:var(--brand-500)"></i> Détaillez le devis — un prix seul fait peur, un prix expliqué rassure.</li>
+        <li><i class="fas fa-star" style="color:var(--brand-500)"></i> Demandez un avis après chaque chantier terminé.</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+{% endblock %}

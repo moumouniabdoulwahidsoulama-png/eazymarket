@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Validation - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="font-family: 'Orbitron', sans-serif; font-size: 28px; background: linear-gradient(135deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;">
+        <i class="fas fa-check-circle"></i> Validation de commande
+    </h1>
+    
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+        <!-- Formulaire -->
+        <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255,255,255,0.08);">
+            <h3 style="color: rgba(255,255,255,0.7); font-size: 16px; margin-bottom: 20px;">Adresse de livraison</h3>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Adresse complète</label>
+                    <textarea name="shipping_address" required placeholder="Numéro, rue, complément..." style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff; min-height: 80px;">{{ user_profile.address }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="text" name="shipping_phone" required placeholder="06 12 34 56 78" value="{{ user_profile.phone }}" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Ville</label>
+                        <input type="text" name="shipping_city" required placeholder="Paris" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Code postal</label>
+                        <input type="text" name="shipping_postal_code" required placeholder="75001" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #ffffff;">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check"></i> Confirmer la commande
+                </button>
+            </form>
+        </div>
+        
+        <!-- Résumé -->
+        <div>
+            <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; border: 1px solid rgba(255,255,255,0.08);">
+                <h3 style="color: rgba(255,255,255,0.7); font-size: 16px; margin-bottom: 15px;">Résumé</h3>
+                
+                {% for item in cart.items.all %}
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px;">
+                        <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                        <span style="color: #00ffff;">{{ item.subtotal }}€</span>
+                    </div>
+                {% endfor %}
+                
+                <div style="display: flex; justify-content: space-between; padding-top: 15px; margin-top: 15px; border-top: 2px solid rgba(0,255,255,0.1); font-size: 18px; font-weight: 700;">
+                    <span>Total</span>
+                    <span style="color: #00ffff;">{{ cart.total }}€</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

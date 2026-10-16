@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}{% if category %}{{ category.name }}{% else %}Tous les artisans{% endif %} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<nav class="crumbs">
+  <a href="{% url 'home' %}">Accueil</a><span class="sep">/</span>
+  <a href="{% url 'services_home' %}">Services</a>
+  {% if category %}<span class="sep">/</span><span>{{ category.name }}</span>{% endif %}
+</nav>
+
+<div class="row-between mb-6">
+  <div>
+    <h1>{% if category %}{{ category.name }}{% else %}Tous les professionnels{% endif %}</h1>
+    <p class="small">{{ page_obj.paginator.count }} professionnel{{ page_obj.paginator.count|pluralize }} disponible{{ page_obj.paginator.count|pluralize }}</p>
+  </div>
+</div>
+
+<form method="get" class="panel mb-6" style="padding:var(--sp-5)">
+  <div class="form-grid">
+    <div class="field"><label>Métier ou nom</label><input type="search" name="q" value="{{ query }}" placeholder="Ex : soudeur"></div>
+    <div class="field"><label>Quartier</label><input type="text" name="quartier" value="{{ quartier }}" placeholder="Ex : Tanghin"></div>
+    <div class="field"><label>Trier par</label>
+      <select name="tri">
+        <option value="recommande" {% if sort == 'recommande' %}selected{% endif %}>Recommandés</option>
+        <option value="note" {% if sort == 'note' %}selected{% endif %}>Les mieux notés</option>
+        <option value="experience" {% if sort == 'experience' %}selected{% endif %}>Les plus expérimentés</option>
+        <option value="recent" {% if sort == 'recent' %}selected{% endif %}>Nouveaux profils</option>
+      </select>
+    </div>
+  </div>
+  <div class="row row-wrap">
+    <label class="chip"><input type="checkbox" name="urgence" value="1" {% if request.GET.urgence %}checked{% endif %}> Accepte les urgences</label>
+    <label class="chip"><input type="checkbox" name="verifie" value="1" {% if request.GET.verifie %}checked{% endif %}> Identité vérifiée</label>
+    <button class="btn btn-primary btn-sm"><i class="fas fa-filter"></i> Appliquer</button>
+    {% if query or quartier %}<a href="{% url 'artisan_list' %}" class="btn btn-quiet btn-sm">Réinitialiser</a>{% endif %}
+  </div>
+</form>
+
+<div class="chip-list mb-6">
+  <a href="{% url 'artisan_list' %}" class="chip {% if not category %}chip-active{% endif %}">Tous les métiers</a>
+  {% for c in categories %}
+    <a href="{{ c.get_absolute_url }}" class="chip {% if category.id == c.id %}chip-active{% endif %}"><i class="fas {{ c.icon }}"></i> {{ c.name }}</a>
+  {% endfor %}
+</div>
+
+{% if page_obj.object_list %}
+  <div class="grid grid-4">{% for artisan in page_obj %}{% include 'partials/artisan_card.html' %}{% endfor %}</div>
+  {% include 'partials/pagination.html' %}
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-user-slash' title='Aucun professionnel trouvé' text="Élargissez votre recherche, ou invitez un artisan que vous connaissez à s'inscrire." cta_url='/services/artisans/' cta_label="Voir tout l'annuaire" %}
+{% endif %}
+
+{% endblock %}

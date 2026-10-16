@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes demandes - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <h1 style="font-family: 'Orbitron', sans-serif; font-size: 28px; background: linear-gradient(135deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px;">
+        <i class="fas fa-list"></i> Mes demandes de service
+    </h1>
+    
+    {% if requests %}
+        {% for req in requests %}
+            <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.08);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="color: #ffffff; font-size: 16px;">{{ req.title }}</h3>
+                        <p style="color: rgba(255,255,255,0.3); font-size: 13px;">
+                            <i class="fas fa-user"></i> {{ req.artisan.full_name }} | 
+                            <i class="fas fa-clock"></i> {{ req.created_at|date:"d/m/Y H:i" }}
+                        </p>
+                    </div>
+                    <span class="badge 
+                        {% if req.status == 'pending' %}badge-warning
+                        {% elif req.status == 'accepted' %}badge-success
+                        {% elif req.status == 'rejected' %}badge-danger
+                        {% elif req.status == 'completed' %}badge-success
+                        {% elif req.status == 'cancelled' %}badge-danger
+                        {% endif %}">
+                        {{ req.get_status_display }}
+                    </span>
+                </div>
+                
+                <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 10px;">{{ req.description|truncatechars:150 }}</p>
+                
+                {% if req.admin_message %}
+                    <div style="background: rgba(0,255,255,0.05); border-radius: 8px; padding: 10px; margin-top: 10px; border-left: 3px solid #00ffff;">
+                        <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0;">{{ req.admin_message }}</p>
+                    </div>
+                {% endif %}
+                
+                <a href="{% url 'artisan_detail' req.artisan.id %}" style="color: #00ffff; text-decoration: none; font-size: 13px; display: inline-block; margin-top: 10px;">
+                    <i class="fas fa-eye"></i> Voir le profil de l'artisan
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
+            <i class="fas fa-inbox" style="font-size: 48px; color: rgba(255,255,255,0.1); display: block; margin-bottom: 15px;"></i>
+            <h2 style="color: rgba(255,255,255,0.3);">Aucune demande</h2>
+            <p style="color: rgba(255,255,255,0.2);">Vous n'avez pas encore fait de demande de service.</p>
+            <a href="{% url 'services_home' %}" class="nav-btn btn-primary" style="display: inline-block; margin-top: 15px; border: none;">
+                <i class="fas fa-search"></i> Trouver un artisan
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

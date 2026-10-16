@@ -1,0 +1,67 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Sécurité du compte — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="row-between mb-6">
+  <h1>Sécurité de mon compte</h1>
+  <a href="{% url 'profile' %}" class="btn btn-ghost btn-sm">Retour au profil</a>
+</div>
+
+<div class="detail-grid">
+  <section class="panel">
+    <div class="panel-head"><h3>Double authentification</h3></div>
+    {% if profil.two_factor_enabled %}
+      <div class="alert success">
+        <i class="fas fa-shield-halved"></i>
+        <span><strong>Activée.</strong> Un code vous est demandé à chaque connexion,
+          envoyé par {% if profil.two_factor_channel == 'sms' %}SMS{% else %}e-mail{% endif %}.</span>
+      </div>
+      <form method="post" class="mt-4">{% csrf_token %}
+        <input type="hidden" name="action" value="desactiver">
+        <button class="btn btn-quiet" data-confirm="Désactiver la double authentification ?">Désactiver</button>
+      </form>
+    {% else %}
+      <p class="small mb-4">
+        Une protection en plus du mot de passe : même si quelqu'un le devine,
+        il lui faudra le code envoyé sur votre téléphone ou votre e-mail.
+        Vivement conseillé si vous gérez une boutique ou de l'argent.
+      </p>
+      <form method="post">{% csrf_token %}
+        <input type="hidden" name="action" value="activer">
+        <div class="field">
+          <label>Recevoir le code par</label>
+          <select name="canal">
+            {% if a_email %}<option value="email">E-mail</option>{% endif %}
+            {% if a_numero %}<option value="sms">SMS / WhatsApp</option>{% endif %}
+          </select>
+        </div>
+        {% if a_email or a_numero %}
+          <button class="btn btn-primary"><i class="fas fa-shield-halved"></i> Activer</button>
+        {% else %}
+          <p class="alert warning"><i class="fas fa-triangle-exclamation"></i>
+            <span>Ajoutez un e-mail ou un numéro à votre profil pour pouvoir l'activer.</span></p>
+        {% endif %}
+      </form>
+    {% endif %}
+  </section>
+
+  <aside class="panel">
+    <div class="panel-head"><h3>Dernières connexions</h3></div>
+    <div class="stack">
+      {% for c in connexions %}
+        <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--ink-100)">
+          <div>
+            <span class="badge badge-{% if c.succes %}success{% else %}danger{% endif %}">
+              {% if c.succes %}Réussie{% else %}Échec{% endif %}
+            </span>
+            <span class="tiny muted">{{ c.adresse_ip }}</span>
+          </div>
+          <span class="tiny muted">{{ c.date|date:"d/m à H:i" }}</span>
+        </div>
+      {% empty %}
+        <p class="muted small">Aucune connexion enregistrée pour l'instant.</p>
+      {% endfor %}
+    </div>
+    <p class="tiny muted mt-3">Une connexion que vous ne reconnaissez pas ? Changez votre mot de passe et activez la double authentification.</p>
+  </aside>
+</div>
+{% endblock %}

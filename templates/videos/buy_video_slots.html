@@ -1,0 +1,47 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Emplacements vidéo — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="row-between mb-6">
+  <h1>Plus de vidéos</h1>
+  <a href="{% url 'seller_dashboard' %}" class="btn btn-ghost btn-sm">Retour</a>
+</div>
+
+<div class="alert info mb-6">
+  <i class="fas fa-lightbulb"></i>
+  <span>
+    <strong>Avant de payer, essayez le lien.</strong>
+    Si votre vidéo est déjà sur TikTok, YouTube, Facebook ou Instagram, collez
+    simplement son adresse : c'est gratuit, sans limite, et ça n'occupe aucun
+    emplacement. Les packs ci-dessous ne servent que pour les vidéos que vous
+    voulez héberger directement chez nous.
+  </span>
+</div>
+
+<div class="card card-pad mb-6">
+  <div class="bold">Emplacements vidéo : {{ etat.utilises }} / {{ etat.total }}</div>
+  <div class="small muted">
+    {{ etat.gratuits }} offert{{ etat.gratuits|pluralize }} à l'ouverture du compte.
+    Vous pouvez aussi libérer de la place en supprimant une ancienne vidéo.
+  </div>
+</div>
+
+<form method="post" class="pay-methods">{% csrf_token %}
+  {% for o in options %}
+  <label class="pay-method">
+    <input type="radio" name="packs" value="{{ o.packs }}" {% if forloop.first %}checked{% endif %}>
+    <span class="box">
+      <span class="mark" style="background:var(--brand-500)"><i class="fas fa-circle-play"></i></span>
+      <strong>+ {{ o.slots }} vidéos</strong>
+      <span>{{ o.amount|intcomma }} FCFA</span>
+    </span>
+  </label>
+  {% endfor %}
+  <div style="grid-column:1/-1">
+    <button class="btn btn-primary btn-lg mt-4">Payer <i class="fas fa-arrow-right"></i></button>
+    <p class="tiny muted mt-3">
+      Les emplacements sont définitifs : ils restent acquis à votre compte,
+      il n'y a rien à renouveler.
+    </p>
+  </div>
+</form>
+{% endblock %}

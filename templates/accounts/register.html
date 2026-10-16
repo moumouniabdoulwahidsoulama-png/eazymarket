@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Créer un compte — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="section-head center">
+  <h1>{{ page_title|default:"Rejoignez EazyMarket" }}</h1>
+  <p style="margin-inline:auto">
+    {{ page_intro }} Gratuit, en deux minutes — et vous pourrez ajouter une autre activité plus tard,
+    sans créer un second compte.
+  </p>
+</div>
+
+<form method="post" class="panel container-narrow" novalidate>{% csrf_token %}
+
+  {% if form.non_field_errors %}<div class="alert error"><i class="fas fa-circle-exclamation"></i><div>{{ form.non_field_errors }}</div></div>{% endif %}
+
+  <div class="panel-head"><h3>Je m'inscris en tant que</h3></div>
+  <div class="role-grid mb-6">
+    {% for value, label in form.fields.user_type.choices %}
+      <label class="role-card">
+        <input type="radio" name="user_type" value="{{ value }}" data-role-input {% if form.user_type.value == value or preselected_role == value %}checked{% endif %}>
+        <span class="box">
+          <i class="fas {% if value == 'buyer' %}fa-basket-shopping{% elif value == 'seller' %}fa-store{% elif value == 'delivery' %}fa-motorcycle{% else %}fa-screwdriver-wrench{% endif %}"></i>
+          <strong>{{ label }}</strong>
+          <span>{% if value == 'buyer' %}J'achète et je cherche des pros{% elif value == 'seller' %}Je vends mes produits{% elif value == 'delivery' %}Je livre les commandes{% else %}Je propose mon savoir-faire{% endif %}</span>
+        </span>
+      </label>
+    {% endfor %}
+  </div>
+
+  <div class="panel-head"><h3>Mes informations</h3></div>
+  <div class="form-grid">
+    <div class="field"><label>Nom d'utilisateur <span class="req">*</span></label>{{ form.username }}{{ form.username.errors }}<p class="hint">C'est ce nom qui vous identifiera sur le site.</p></div>
+    <div class="field"><label>Adresse e-mail <span class="req">*</span></label>{{ form.email }}{{ form.email.errors }}</div>
+    <div class="field"><label>Prénom</label>{{ form.first_name }}</div>
+    <div class="field"><label>Nom</label>{{ form.last_name }}</div>
+    <div class="field"><label>Téléphone <span class="req">*</span></label>{{ form.phone }}{{ form.phone.errors }}</div>
+    <div class="field"><label>Pays</label>{{ form.country }}{{ form.country.errors }}</div>
+    <div class="field"><label>Ville</label>{{ form.city }}</div>
+    <div class="field"><label>Quartier</label>{{ form.quartier }}</div>
+  </div>
+  <div class="field"><label>Adresse / repère</label>{{ form.address }}</div>
+
+  <div data-role-block="seller" class="hidden">
+    <div class="panel-head mt-6"><h3>Ma boutique</h3></div>
+    <div class="field"><label>Nom de la boutique <span class="req">*</span></label>{{ form.store_name }}{{ form.store_name.errors }}</div>
+    <div class="field"><label>Que vendez-vous ?</label>{{ form.store_description }}</div>
+  </div>
+
+  <div data-role-block="delivery" class="hidden">
+    <div class="panel-head mt-6"><h3>Ma livraison</h3></div>
+    <div class="form-grid">
+      <div class="field"><label>Moyen de transport <span class="req">*</span></label>{{ form.vehicle_type }}{{ form.vehicle_type.errors }}</div>
+      <div class="field"><label>Zone couverte <span class="req">*</span></label>{{ form.delivery_zone }}{{ form.delivery_zone.errors }}</div>
+    </div>
+  </div>
+
+  <div data-role-block="artisan" class="hidden">
+    <div class="alert info mt-6"><i class="fas fa-circle-info"></i><span>Après la création du compte, nous vous demanderons votre métier, votre zone et vos réalisations.</span></div>
+  </div>
+
+  <div class="panel-head mt-6"><h3>Mon mot de passe</h3></div>
+  <div class="form-grid">
+    <div class="field"><label>Mot de passe <span class="req">*</span></label>{{ form.password1 }}{{ form.password1.errors }}<p class="hint">8 caractères minimum, pas seulement des chiffres.</p></div>
+    <div class="field"><label>Confirmation <span class="req">*</span></label>{{ form.password2 }}{{ form.password2.errors }}</div>
+  </div>
+
+  <button class="btn btn-primary btn-lg btn-block mt-6">Créer mon compte</button>
+  <p class="center small mt-4">Déjà inscrit ? <a href="{% url 'login' %}" class="bold">Se connecter</a></p>
+</form>
+{% endblock %}

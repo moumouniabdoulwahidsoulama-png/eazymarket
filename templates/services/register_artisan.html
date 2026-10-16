@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Devenir artisan référencé — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="section-head center mb-6">
+  <span class="eyebrow" style="justify-content:center"><i class="fas fa-toolbox"></i> Profil professionnel</span>
+  <h1>Mettez votre métier en vitrine</h1>
+  <p style="margin-inline:auto">Créez votre profil, puis activez-le pour <strong>{{ PRICING.ARTISAN_SUB_PRICE|floatformat:0 }} FCFA tous les {{ PRICING.ARTISAN_SUB_DAYS }} jours</strong>. Aucune commission sur vos chantiers : ce que le client vous paie vous revient entièrement.</p>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="panel container-narrow">{% csrf_token %}
+
+  <div class="panel-head"><h3>Qui êtes-vous ?</h3></div>
+  <div class="form-grid">
+    <div class="field"><label>Nom complet <span class="req">*</span></label><input type="text" name="full_name" required placeholder="Ex : Ousmane Sawadogo"></div>
+    <div class="field"><label>Métier principal <span class="req">*</span></label>
+      <select name="service_category" required>
+        <option value="">Choisir votre métier…</option>
+        {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field"><label>Téléphone <span class="req">*</span></label><input type="tel" name="phone" required placeholder="+226 ..."></div>
+    <div class="field"><label>WhatsApp</label><input type="tel" name="whatsapp" placeholder="+226 ..."></div>
+    <div class="field"><label>E-mail</label><input type="email" name="email"></div>
+    <div class="field"><label>Années d'expérience</label><input type="number" name="years_experience" min="0" value="0"></div>
+  </div>
+  <div class="field"><label>Photo de profil</label><input type="file" name="photo" accept="image/*"><p class="hint">Un visage inspire confiance. Les profils avec photo reçoivent nettement plus de demandes.</p></div>
+
+  <div class="panel-head mt-6"><h3>Où travaillez-vous ?</h3></div>
+  <div class="form-grid">
+    <div class="field"><label>Quartier <span class="req">*</span></label><input type="text" name="quartier" required placeholder="Ex : Tanghin"></div>
+    <div class="field"><label>Ville</label><input type="text" name="city" value="{{ CITY }}"></div>
+  </div>
+  <div class="field"><label>Adresse de l'atelier <span class="req">*</span></label><textarea name="address" required rows="2" placeholder="Rue, repère visible"></textarea></div>
+  <div class="field"><label>Zone d'intervention</label><input type="text" name="intervention_radius" placeholder="Ex : Ouaga centre, Zogona, Dapoya"></div>
+
+  <div class="panel-head mt-6"><h3>Votre savoir-faire</h3></div>
+  <div class="field">
+    <label>Présentation <span class="req">*</span></label>
+    <textarea name="description" required placeholder="Que savez-vous faire ? Depuis combien de temps ? Quels types de chantiers ? Avez-vous été formé quelque part ?"></textarea>
+    <p class="hint">Écrivez comme vous parleriez à un client dans votre atelier. C'est le texte qui décide s'il vous contacte.</p>
+  </div>
+  <div class="field"><label>Fourchette de prix <span class="req">*</span></label><input type="text" name="price_range" required placeholder="Ex : 5 000 – 25 000 FCFA selon le travail"></div>
+  <label class="chip"><input type="checkbox" name="accepts_urgent" value="1"> J'accepte les interventions urgentes (sous 24 h)</label>
+
+  <div class="panel-head mt-6"><h3>Montrez ce que vous savez faire</h3></div>
+  <div class="alert info mb-4">
+    <i class="fas fa-camera"></i>
+    <span>Ajoutez jusqu'à <strong>6 photos</strong> de vos réalisations : un portail que vous avez soudé, une tenue que vous avez cousue, une installation que vous avez posée. C'est ce que le client regarde en premier — les profils avec photos reçoivent beaucoup plus de demandes.</span>
+  </div>
+  <div class="field">
+    <label>Photos de vos réalisations</label>
+    <input type="file" name="works" accept="image/*" multiple>
+    <p class="hint">Sélectionnez plusieurs photos d'un coup. Vous pourrez en ajouter d'autres et les nommer depuis votre atelier.</p>
+  </div>
+
+  <button class="btn btn-primary btn-lg btn-block mt-6"><i class="fas fa-rocket"></i> Créer mon profil professionnel</button>
+  <p class="tiny muted center mt-4">En vous inscrivant, vous acceptez les <a href="{% url 'terms' %}">conditions d'utilisation</a>.</p>
+</form>
+{% endblock %}

@@ -1,0 +1,18 @@
+# EazyMarket — dépendances
+# Django 4.2 LTS suffit : l'application n'utilise rien de plus récent.
+# pip installera la version la plus élevée compatible avec le Python
+# disponible sur l'hébergement (4.2 sur Python 3.8-3.11, 5.x sur 3.10+).
+Django>=4.2,<6.2
+Pillow>=10.0            # images envoyées par les vendeurs et les artisans
+requests>=2.31          # API de paiement (CinetPay)
+whitenoise>=6.6         # fichiers statiques servis par l'application
+
+# --- Base de données ---
+# MySQL / MariaDB (cPanel) — PyMySQL s'installe sans compilation
+PyMySQL>=1.1
+
+# PostgreSQL — décommenter si DB_ENGINE=postgresql
+# psycopg[binary]>=3.1
+
+# --- Serveur (VPS uniquement, inutile sur cPanel/Passenger) ---
+# gunicorn>=21.2 ; sys_platform != "win32"

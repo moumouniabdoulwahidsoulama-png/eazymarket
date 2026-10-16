@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Paiement - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="glass-card" style="max-width: 100%;">
+        <h1><i class="fas fa-credit-card"></i> Paiement</h1>
+        <p class="subtitle">Commande #{{ order.order_number }}</p>
+        
+        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                <span style="color: rgba(255,255,255,0.5);">Total</span>
+                <span style="font-family: 'Orbitron', sans-serif; font-size: 24px; color: #00ffff;">{{ order.total }} FCFA</span>
+            </div>
+        </div>
+        
+        <!-- Formulaire Stripe -->
+        <form id="payment-form">
+            {% csrf_token %}
+            <div id="payment-element">
+                <!-- Stripe Elements s'affichera ici -->
+            </div>
+            <button type="submit" id="submit-btn" class="btn-submit" style="margin-top: 20px;">
+                <i class="fas fa-lock"></i> Payer {{ order.total }} FCFA
+            </button>
+            <div id="payment-message" style="display: none; margin-top: 15px; padding: 12px; border-radius: 8px; text-align: center;"></div>
+        </form>
+        
+        <div class="footer-link" style="margin-top: 15px;">
+            <a href="{% url 'order_detail' order.id %}"><i class="fas fa-arrow-left"></i> Retour à la commande</a>
+        </div>
+    </div>
+</div>
+
+<!-- Stripe JS -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    const stripe = Stripe('{{ stripe_publishable_key }}');
+    const clientSecret = '{{ client_secret }}';
+    const orderId = {{ order.id }};
+
+    
+    const elements = stripe.elements({ clientSecret });
+    const paymentElement = elements.create('payment', {
+        style: {
+            base: {
+                color: '#ffffff',
+                fontSize: '16px',
+                '::placeholder': { color: 'rgba(255,255,255,0.3)' },
+            },
+        },
+    });
+    paymentElement.mount('#payment-element');
+    
+    const form = document.getElementById('payment-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const messageEl = document.getElementById('payment-message');
+    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
+        
+        const { error } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: window.location.origin + '/orders/payment-success/' + orderId + '/',
+            },
+        });
+        
+        if (error) {
+            messageEl.style.display = 'block';
+            messageEl.style.background = 'rgba(255,68,68,0.15)';
+            messageEl.style.border = '1px solid rgba(255,68,68,0.3)';
+            messageEl.style.color = '#ff4444';
+            messageEl.textContent = error.message;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-lock"></i> Payer {{ order.total }} FCFA';
+        }
+    });
+</script>
+{% endblock %}

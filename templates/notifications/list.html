@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Notifications — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="row-between mb-6">
+  <h1>Notifications</h1>
+  {% if notifications %}
+  <form method="post" action="{% url 'notification_clear_all' %}">{% csrf_token %}
+    <button class="btn btn-quiet btn-sm" data-confirm="Supprimer toutes les notifications ?">Tout effacer</button>
+  </form>
+  {% endif %}
+</div>
+
+{% if notifications %}
+<div class="stack">
+  {% for n in notifications %}
+    <div class="card card-pad {% if not n.is_read %}" style="border-left:3px solid var(--brand-500){% endif %}">
+      <div class="row-between">
+        <div>
+          <div class="bold">{{ n.title }}</div>
+          <p class="small">{{ n.message }}</p>
+          <div class="tiny muted mt-2">{{ n.created_at|timesince }}</div>
+        </div>
+        <div class="row">
+          {% if n.link %}<a href="{{ n.link }}" class="btn btn-ghost btn-sm">Ouvrir</a>{% endif %}
+          <form method="post" action="{% url 'notification_delete' n.id %}">{% csrf_token %}
+            <button class="btn btn-quiet btn-sm"><i class="fas fa-trash"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-bell-slash' title='Aucune notification' text="Vous serez prévenu ici des devis reçus, des paiements confirmés et du suivi de vos commandes." %}
+{% endif %}
+{% endblock %}

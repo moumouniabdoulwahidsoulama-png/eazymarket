@@ -1,0 +1,27 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Connexion — {{ SITE.SITE_NAME }}{% endblock %}
+{% block page_class %}page-tight{% endblock %}
+{% block content %}
+<div class="container-narrow" style="max-width:440px">
+  <div class="center mb-6">
+    <img src="{% static 'img/logo-mark.svg' %}" alt="" style="height:56px;margin:0 auto 16px">
+    <h1>Content de vous revoir</h1>
+    <p>Connectez-vous pour retrouver votre panier, vos commandes et vos devis.</p>
+  </div>
+
+  <form method="post" class="panel">{% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <div class="field">
+      <label>Nom d'utilisateur ou e-mail</label>
+      <input type="text" name="username" required autofocus autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" name="password" required autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary btn-lg btn-block">Se connecter</button>
+  </form>
+
+  <p class="center mt-6 small">Pas encore de compte ? <a href="{% url 'register' %}" class="bold">Créer un compte gratuitement</a></p>
+</div>
+{% endblock %}

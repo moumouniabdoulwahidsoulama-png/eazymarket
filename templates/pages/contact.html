@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Contact — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="section-head center"><h1>Une question ? Écrivez-nous</h1><p style="margin-inline:auto">Nous répondons sous 24 heures ouvrées.</p></div>
+
+<div class="checkout-grid">
+  <form method="post" class="panel">{% csrf_token %}
+    <div class="form-grid">
+      <div class="field"><label>Votre nom <span class="req">*</span></label><input type="text" name="name" required value="{{ user.get_full_name|default:user.username }}"></div>
+      <div class="field"><label>Votre e-mail <span class="req">*</span></label><input type="email" name="email" required value="{{ user.email }}"></div>
+    </div>
+    <div class="field"><label>Sujet</label>
+      <select name="subject">
+        <option>Question générale</option>
+        <option>Problème avec une commande</option>
+        <option>Problème avec un artisan</option>
+        <option>Paiement ou retrait</option>
+        <option>Devenir vendeur ou artisan</option>
+        <option>Partenariat</option>
+      </select>
+    </div>
+    <div class="field"><label>Votre message <span class="req">*</span></label><textarea name="message" required placeholder="Décrivez votre situation. Si cela concerne une commande, indiquez son numéro."></textarea></div>
+    <button class="btn btn-primary btn-lg btn-block">Envoyer le message</button>
+  </form>
+
+  <aside class="summary">
+    <div class="panel stack">
+      <div><div class="tiny muted">Téléphone</div><div class="bold">{{ SUPPORT_PHONE }}</div></div>
+      <div><div class="tiny muted">E-mail</div><div class="bold">{{ SITE.SUPPORT_EMAIL }}</div></div>
+      <div><div class="tiny muted">Où nous sommes</div><div class="bold">{{ CITY }}, {{ COUNTRY.name|default:SITE.COUNTRY }}</div></div>
+      {% if SITE.WHATSAPP %}<a href="https://wa.me/{{ SITE.WHATSAPP }}" class="btn btn-dark btn-block"><i class="fab fa-whatsapp"></i> Écrire sur WhatsApp</a>{% endif %}
+      <div class="alert info"><i class="fas fa-circle-info"></i><span class="small">Pour un litige sur une commande, passez plutôt par la page de la commande : nous aurons directement le dossier sous les yeux.</span></div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

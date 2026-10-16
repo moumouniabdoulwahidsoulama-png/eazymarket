@@ -1,0 +1,111 @@
+{% load static %}
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="{% url 'home' %}" class="brand" aria-label="{{ SITE.SITE_NAME }} — accueil">
+      <img src="{% static 'img/logo-mark.svg' %}" alt="">
+      <span class="wordmark">Eazy<em>Market</em></span>
+    </a>
+
+    <form class="nav-search" action="{% url 'search' %}" method="get" role="search">
+      <i class="fas fa-magnifying-glass"></i>
+      <input type="search" name="q" value="{{ request.GET.q|default:'' }}"
+             placeholder="Chercher un produit, un plombier, un menuisier…" aria-label="Rechercher">
+    </form>
+
+    <button class="nav-toggle" data-nav-toggle aria-label="Menu" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="nav-links" data-nav-links>
+      {% if COUNTRIES|length > 1 %}
+      <div class="dropdown" data-dropdown>
+        <a href="#" data-dropdown-btn role="button" aria-haspopup="true" title="Changer de pays">
+          <span style="font-size:1.1rem">{{ COUNTRY.flag|default:"🌍" }}</span>
+          <span class="tiny bold">{{ COUNTRY.code }}</span>
+          <i class="fas fa-chevron-down tiny"></i>
+        </a>
+        <div class="dropdown-menu">
+          <div class="head">Pays</div>
+          {% for c in COUNTRIES %}
+            <a href="{% url 'choose_country' c.code %}">{{ c.flag }} {{ c.name }}{% if COUNTRY.code == c.code %} <i class="fas fa-check" style="margin-left:auto;color:var(--brand-500)"></i>{% endif %}</a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      <a href="{% url 'product_list' %}"><i class="fas fa-store"></i> Boutique</a>
+      <a href="{% url 'services_home' %}"><i class="fas fa-screwdriver-wrench"></i> Services</a>
+      <a href="{% url 'driver_list' %}"><i class="fas fa-motorcycle"></i> Livreurs</a>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'favorites' %}" aria-label="Favoris"><i class="fas fa-heart"></i></a>
+
+        <a href="{% url 'notification_list' %}" aria-label="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="count-dot {% if not unread_notifications %}hidden{% endif %}"
+                data-notif-count data-url="{% url 'notification_count' %}">{{ unread_notifications }}</span>
+        </a>
+
+        <a href="{% url 'cart' %}" aria-label="Panier">
+          <i class="fas fa-basket-shopping"></i>
+          <span class="count-dot {% if not cart_count %}hidden{% endif %}">{{ cart_count }}</span>
+        </a>
+
+        <div class="dropdown" data-dropdown>
+          <a href="#" data-dropdown-btn role="button" aria-haspopup="true">
+            <span class="avatar avatar-sm">{{ user.profile.initials }}</span>
+            <i class="fas fa-chevron-down tiny"></i>
+          </a>
+          <div class="dropdown-menu">
+            <div class="head">{{ user.profile.display_name }}</div>
+            <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Mon profil</a>
+            <a href="{% url 'my_orders' %}"><i class="fas fa-box"></i> Mes commandes</a>
+            <a href="{% url 'my_service_requests' %}"><i class="fas fa-clipboard-list"></i> Mes demandes</a>
+            <div class="sep"></div>
+            {% if user.profile.can_sell %}
+              <a href="{% url 'seller_dashboard' %}"><i class="fas fa-chart-line"></i> Ma boutique</a>
+              <a href="{% url 'seller_orders' %}"><i class="fas fa-receipt"></i> Mes ventes</a>
+            {% endif %}
+            {% if is_artisan %}
+              <a href="{% url 'artisan_dashboard' %}"><i class="fas fa-toolbox"></i> Mon atelier</a>
+              <a href="{% url 'subscribe_artisan' %}"><i class="fas fa-crown"></i> Mon abonnement</a>
+            {% endif %}
+            {% if user.profile.can_deliver %}
+              <a href="{% url 'delivery_dashboard' %}"><i class="fas fa-motorcycle"></i> Mes livraisons</a>
+              <a href="{% url 'referral_dashboard' %}"><i class="fas fa-id-badge"></i> Mon dossier livreur</a>
+            {% endif %}
+            {% if user.profile.is_pro %}
+              <a href="{% url 'wallet' %}"><i class="fas fa-wallet"></i> Mon portefeuille</a>
+            {% endif %}
+
+            <div class="sep"></div>
+            <div class="head">Ajouter une activité</div>
+            {% if not user.profile.can_sell %}
+              <a href="{% url 'become_seller' %}"><i class="fas fa-store"></i> Ouvrir ma boutique</a>
+            {% endif %}
+            {% if not is_artisan %}
+              <a href="{% url 'register_artisan' %}"><i class="fas fa-screwdriver-wrench"></i> Proposer mes services</a>
+            {% endif %}
+            {% if not user.profile.can_deliver %}
+              <a href="{% url 'become_delivery' %}"><i class="fas fa-motorcycle"></i> Devenir livreur</a>
+            {% endif %}
+            {% if user.is_staff %}
+              <div class="sep"></div>
+              <a href="{% url 'admin_dashboard' %}"><i class="fas fa-gauge-high"></i> Pilotage</a>
+              <a href="{% url 'admin_transactions' %}"><i class="fas fa-money-check-dollar"></i> Paiements à valider</a>
+              <a href="{% url 'referral_list' %}"><i class="fas fa-id-badge"></i> Dossiers livreurs</a>
+            {% endif %}
+            <div class="sep"></div>
+            <form action="{% url 'logout' %}" method="post">{% csrf_token %}
+              <button type="submit"><i class="fas fa-arrow-right-from-bracket"></i> Se déconnecter</button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <a href="{% url 'how_it_works' %}"><i class="fas fa-circle-question"></i> Comment ça marche</a>
+        <a href="{% url 'cart' %}" aria-label="Panier"><i class="fas fa-basket-shopping"></i></a>
+        <a href="{% url 'login' %}" class="btn btn-ghost btn-sm">Connexion</a>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Créer un compte</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

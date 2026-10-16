@@ -1,0 +1,70 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Instructions de paiement — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container-narrow">
+
+  <div class="center mb-6">
+    <span class="chip">{{ tx.reference }}</span>
+    <h1 class="mt-2">{{ tx.amount|floatformat:0|intcomma }} {{ CURRENCY }} par {{ tx.get_channel_display }}</h1>
+  </div>
+
+  {% for account in accounts %}
+    <div class="panel center mb-4">
+      <div class="row-between mb-4">
+        <span class="chip"><i class="fas fa-mobile-screen-button"></i> {{ account.label }}</span>
+        {% if accounts|length > 1 %}<span class="tiny muted">Numéro {{ forloop.counter }} sur {{ accounts|length }} — l'un ou l'autre</span>{% endif %}
+      </div>
+
+      {% if account.ussd %}
+        <div class="tiny muted">Composez ce code sur votre téléphone</div>
+        <div class="pay-code mt-2">{{ account.ussd }}</div>
+        <div class="row" style="justify-content:center;margin-top:12px">
+          <a href="tel:{{ account.ussd|urlencode }}" class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> Composer</a>
+          <button class="btn btn-ghost btn-sm" data-copy="{{ account.ussd }}" type="button"><i class="fas fa-copy"></i> Copier le code</button>
+        </div>
+        <p class="small muted mt-4">Le montant et le numéro sont déjà dans le code. Il ne vous reste qu'à valider avec votre code secret Orange Money.</p>
+      {% endif %}
+
+      <div class="spec-list mt-4" style="text-align:left">
+        <div><span class="k">Numéro</span><span class="v">{{ account.number }}</span></div>
+        {% if account.name %}<div><span class="k">Au nom de</span><span class="v">{{ account.name }}</span></div>{% endif %}
+        {% if account.menu %}<div><span class="k">Menu opérateur</span><span class="v">{{ account.menu }}</span></div>{% endif %}
+        <div><span class="k">Montant exact</span><span class="v">{{ tx.amount|floatformat:0|intcomma }} FCFA</span></div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="alert error"><i class="fas fa-circle-exclamation"></i><span>Aucun numéro d'encaissement n'est configuré. Renseignez-le dans le fichier .env.</span></div>
+  {% endfor %}
+
+  <div class="pay-instructions mb-6">
+    <h3 style="color:inherit;margin-bottom:12px">Si le code ne se compose pas tout seul</h3>
+    <ol>
+      <li>Ouvrez le clavier de votre téléphone et tapez le code affiché ci-dessus.</li>
+      <li>Appuyez sur appel, puis validez avec votre <strong>code secret Orange Money</strong>.</li>
+      <li>Vous recevez un <strong>SMS de confirmation</strong> avec un identifiant de transaction.</li>
+      <li>Recopiez cet identifiant dans le formulaire ci-dessous.</li>
+    </ol>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="panel">{% csrf_token %}
+    <div class="panel-head"><h3>Confirmer mon paiement</h3></div>
+    <div class="field">
+      <label>Identifiant de transaction <span class="req">*</span></label>
+      <input type="text" name="operator_id" required placeholder="Ex : MP260903.1425.A12345">
+      <p class="hint">Il figure dans le SMS de confirmation de votre opérateur.</p>
+    </div>
+    <div class="field"><label>Numéro qui a payé</label><input type="tel" name="payer_number" value="{{ tx.payer_number }}"></div>
+    <div class="field"><label>Capture d'écran du SMS (facultatif)</label><input type="file" name="proof" accept="image/*"><p class="hint">Elle accélère la vérification.</p></div>
+    <button class="btn btn-primary btn-lg btn-block"><i class="fas fa-check"></i> J'ai payé</button>
+    <p class="tiny muted center mt-4">Nous vérifions et confirmons généralement en moins de 30 minutes.</p>
+  </form>
+
+  {% if SITE.WHATSAPP %}
+  <p class="center mt-6">
+    <a href="https://wa.me/{{ SITE.WHATSAPP }}?text=Bonjour,%20j'ai%20payé%20la%20transaction%20{{ tx.reference }}" class="btn btn-ghost">
+      <i class="fab fa-whatsapp"></i> Prévenir sur WhatsApp
+    </a>
+  </p>
+  {% endif %}
+</div>
+{% endblock %}

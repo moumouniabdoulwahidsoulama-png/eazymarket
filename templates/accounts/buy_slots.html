@@ -1,0 +1,65 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Agrandir ma boutique — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="section-head center">
+  {% if profile.boutique_en_attente %}
+    <span class="eyebrow" style="justify-content:center"><i class="fas fa-store"></i> Dernière étape</span>
+    <h1>Ouvrir « {{ profile.store_name }} »</h1>
+    <p style="margin-inline:auto">
+      Votre fiche est enregistrée. Le pack ci-dessous ouvre votre boutique et
+      vous donne vos premiers emplacements d'annonces.
+    </p>
+  {% else %}
+    <span class="eyebrow" style="justify-content:center"><i class="fas fa-store"></i> Emplacements d'annonces</span>
+    <h1>Agrandir ma boutique</h1>
+    <p style="margin-inline:auto">Un emplacement = une annonce en ligne. Vous en occupez actuellement <strong>{{ profile.used_slots }} sur {{ profile.total_slots }}</strong>.</p>
+  {% endif %}
+</div>
+
+<div class="card card-pad mb-8 center" style="max-width:560px;margin-inline:auto">
+  {% if profile.boutique_en_attente %}
+    <span class="badge badge-warning"><i class="fas fa-lock"></i> Boutique pas encore ouverte</span>
+    <p class="mt-2 small">
+      Tant que le pack n'est pas réglé, vos articles ne sont visibles de
+      personne. Une fois le paiement validé, votre boutique s'ouvre et vous
+      publiez immédiatement.
+    </p>
+  {% elif profile.slots_left %}
+    <span class="badge badge-success">{{ profile.slots_left }} emplacement{{ profile.slots_left|pluralize }} libre{{ profile.slots_left|pluralize }}</span>
+  {% else %}
+    <span class="badge badge-warning"><i class="fas fa-triangle-exclamation"></i> Boutique pleine</span>
+    <p class="mt-2 small">Pour publier une nouvelle annonce, achetez un pack ou supprimez une annonce existante.</p>
+  {% endif %}
+</div>
+
+<form method="post"><div class="plans">{% csrf_token %}
+  {% for option in options %}
+    <div class="plan {% if option.packs == 1 %}featured{% endif %}">
+      <h3>{{ option.slots }} annonces</h3>
+      <div class="amount">{{ option.amount|intcomma }} <small>{{ CURRENCY }}</small></div>
+      <p class="small muted">{{ option.amount|floatformat:0 }} F pour {{ option.slots }} emplacements</p>
+      <ul>
+        <li><i class="fas fa-check"></i> {% if profile.boutique_en_attente %}Ouverture de votre boutique{% else %}{{ option.slots }} annonces supplémentaires{% endif %}</li>
+        <li><i class="fas fa-check"></i> {{ option.slots }} annonces en ligne</li>
+        <li><i class="fas fa-check"></i> Emplacements <strong>définitifs</strong>, sans échéance</li>
+        <li><i class="fas fa-check"></i> Supprimer une annonce libère son emplacement</li>
+        <li><i class="fas fa-check"></i> Photos, stock et prix modifiables à volonté</li>
+      </ul>
+      <button name="packs" value="{{ option.packs }}" class="btn {% if option.packs == 1 %}btn-primary{% else %}btn-ghost{% endif %} btn-block">
+        Acheter — {{ option.amount|intcomma }} FCFA
+      </button>
+    </div>
+  {% endfor %}
+</div></form>
+
+<div class="panel mt-8">
+  <h3 class="mb-4">Comment ça marche</h3>
+  <div class="stack">
+    <div><strong>Après le paiement, combien de temps ?</strong><p class="small">Vous payez par mobile money puis vous déclarez le versement. Nous le vérifions à la main — comptez quelques heures. Vous recevez une notification dès que votre boutique est ouverte.</p></div>
+    <div><strong>C'est un achat, pas un abonnement.</strong><p class="small">Les emplacements vous restent acquis. Rien n'expire, rien n'est prélevé automatiquement.</p></div>
+    <div><strong>Et la commission sur les ventes ?</strong><p class="small">Elle reste de {{ PRICING.COMMISSION_RATE|floatformat:0 }} %, ajoutée au prix affiché à l'acheteur. Vous touchez exactement le prix que vous avez saisi — jamais moins.</p></div>
+    <div><strong>Je peux libérer un emplacement ?</strong><p class="small">Oui : supprimez une annonce depuis votre tableau de bord et l'emplacement redevient libre. Les produits déjà vendus sont conservés pour l'historique.</p></div>
+  </div>
+</div>
+{% endblock %}

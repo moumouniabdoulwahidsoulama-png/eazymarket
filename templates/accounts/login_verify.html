@@ -1,0 +1,29 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Code de connexion — {{ SITE.SITE_NAME }}{% endblock %}
+{% block page_class %}page-tight{% endblock %}
+{% block content %}
+<div class="container-narrow" style="max-width:440px">
+  <div class="center mb-6">
+    <img src="{% static 'img/logo-mark.svg' %}" alt="" style="height:56px;margin:0 auto 16px">
+    <h1>Vérification en deux étapes</h1>
+    <p>Nous venons d'envoyer un code à 6 chiffres sur {{ canal }}. Saisissez-le pour continuer.</p>
+  </div>
+
+  <form method="post" class="panel">{% csrf_token %}
+    <div class="field">
+      <label>Code reçu</label>
+      <input type="text" name="code" required autofocus inputmode="numeric"
+             pattern="[0-9]*" maxlength="6" autocomplete="one-time-code"
+             placeholder="000000" style="font-size:1.6rem;letter-spacing:.4rem;text-align:center">
+    </div>
+    <button class="btn btn-primary btn-lg btn-block">Valider et me connecter</button>
+  </form>
+
+  <form method="post" class="center mt-4">{% csrf_token %}
+    <input type="hidden" name="action" value="renvoyer">
+    <button class="btn btn-ghost btn-sm">Je n'ai rien reçu — renvoyer le code</button>
+  </form>
+
+  <p class="center mt-4 small"><a href="{% url 'login' %}">Revenir à la connexion</a></p>
+</div>
+{% endblock %}

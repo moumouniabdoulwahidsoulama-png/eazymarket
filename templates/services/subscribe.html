@@ -1,0 +1,73 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mon abonnement — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="section-head center">
+  <span class="eyebrow" style="justify-content:center"><i class="fas fa-crown"></i> Abonnement artisan</span>
+  <h1>{% if artisan.subscription_active %}Prolongez votre visibilité{% else %}Activez votre profil{% endif %}</h1>
+  <p style="margin-inline:auto">
+    {{ price|intcomma }} FCFA pour {{ months }} mois. C'est tout : <strong>aucune commission</strong> sur vos chantiers,
+    vous encaissez 100 % de ce que vous facturez à vos clients.
+  </p>
+</div>
+
+<div class="card card-pad mb-8 center" style="max-width:560px;margin-inline:auto">
+  {% if free_launch %}
+    <span class="badge badge-success"><i class="fas fa-gift"></i> Lancement — visibilité offerte</span>
+    <p class="mt-2 small">Votre profil est visible gratuitement pendant la période de lancement. Vous pourrez vous abonner plus tard.</p>
+  {% elif artisan.subscription_active %}
+    <span class="badge badge-success"><i class="fas fa-circle-check"></i> Abonnement actif</span>
+    <p class="mt-2">Votre profil est visible jusqu'au <strong>{{ artisan.subscription_end|date:"d/m/Y" }}</strong> — {{ artisan.days_left }} jour{{ artisan.days_left|pluralize }} restant{{ artisan.days_left|pluralize }}.</p>
+  {% else %}
+    <span class="badge badge-warning"><i class="fas fa-eye-slash"></i> Profil non visible</span>
+    <p class="mt-2">Votre fiche existe mais <strong>n'apparaît pas dans les recherches</strong> tant que l'abonnement n'est pas actif. Personne ne peut vous trouver.</p>
+  {% endif %}
+</div>
+
+<form method="post"><div class="plans">{% csrf_token %}
+  {% for option in options %}
+    <div class="plan {% if option.periods == 1 %}featured{% endif %}">
+      <h3>{{ option.label }}</h3>
+      <div class="amount">{{ option.amount|intcomma }} <small>{{ CURRENCY }}</small></div>
+      <p class="small muted">
+        soit {{ price|intcomma }} FCFA tous les {{ months }} mois
+        {% if option.periods == 6 %}<br><span style="color:var(--success-fg)">Le plus simple : une seule démarche par an</span>{% endif %}
+      </p>
+      <ul>
+        <li><i class="fas fa-check"></i> Profil visible dans l'annuaire et les recherches</li>
+        <li><i class="fas fa-check"></i> Demandes et devis illimités</li>
+        <li><i class="fas fa-check"></i> Portfolio de réalisations illimité</li>
+        <li><i class="fas fa-check"></i> Avis clients publics sur votre fiche</li>
+        <li><i class="fas fa-check"></i> <strong>0 % de commission</strong> sur vos chantiers</li>
+      </ul>
+      <button name="periods" value="{{ option.periods }}" class="btn {% if option.periods == 1 %}btn-primary{% else %}btn-ghost{% endif %} btn-block">
+        {% if artisan.subscription_active %}Prolonger{% else %}Activer{% endif %} — {{ option.amount|intcomma }} FCFA
+      </button>
+    </div>
+  {% endfor %}
+</div></form>
+
+<div class="panel mt-8">
+  <h3 class="mb-4">Ce qu'il faut savoir</h3>
+  <div class="stack">
+    <div><strong>Comment je paie ?</strong><p class="small">Par Orange Money, depuis votre téléphone. Un code s'affiche, vous le composez, vous validez avec votre code secret. Votre profil est activé dès que nous confirmons le paiement.</p></div>
+    <div><strong>Est-ce que vous prenez un pourcentage sur mes chantiers ?</strong><p class="small">Non, jamais. Ce que vous facturez au client vous appartient entièrement. L'abonnement est notre seule rémunération sur les services.</p></div>
+    <div><strong>Et si je n'ai pas de client ?</strong><p class="small">Pas de reconduction automatique : à l'échéance, vous décidez de prolonger ou non. Rien n'est prélevé sans votre action.</p></div>
+    <div><strong>Comment avoir plus de demandes ?</strong><p class="small">Trois choses comptent : une photo de profil, au moins trois réalisations en image, et un temps de réponse court. Les artisans qui répondent dans l'heure décrochent la majorité des chantiers.</p></div>
+  </div>
+</div>
+
+{% if artisan.subscription_active %}
+<div class="panel mt-6" style="background:linear-gradient(140deg,var(--brand-600),var(--brand-400));border:none">
+  <div class="row-between">
+    <div style="max-width:52ch">
+      <h3 style="color:#fff">Passer en tête de la page d'accueil</h3>
+      <p style="color:rgba(255,255,255,.9)">{{ SITE.ARTISAN_BOOST_PRICE|intcomma }} FCFA pour {{ SITE.ARTISAN_BOOST_DAYS }} jours de mise en avant, tous métiers confondus.</p>
+    </div>
+    <form method="post" action="{% url 'boost_artisan' %}">{% csrf_token %}
+      <button class="btn btn-dark btn-lg"><i class="fas fa-bolt"></i> Me mettre en avant</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

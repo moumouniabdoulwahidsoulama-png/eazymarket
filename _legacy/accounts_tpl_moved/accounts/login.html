@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion - EazyMarket{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <h1><i class="fas fa-sign-in-alt"></i> Connexion</h1>
+    <p class="subtitle">Retrouvez votre espace EazyMarket</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label><i class="fas fa-user"></i> Nom d'utilisateur</label>
+            <input type="text" name="username" required placeholder="Entrez votre nom d'utilisateur">
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-lock"></i> Mot de passe</label>
+            <input type="password" name="password" required placeholder="Entrez votre mot de passe">
+        </div>
+        
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-arrow-right"></i> Se connecter
+        </button>
+    </form>
+    
+    <div class="footer-link">
+        Pas encore inscrit ? <a href="{% url 'register' %}">Créer un compte</a>
+    </div>
+</div>
+{% endblock %}

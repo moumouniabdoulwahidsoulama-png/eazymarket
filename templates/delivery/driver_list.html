@@ -1,0 +1,34 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Trouver un livreur — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="section-head">
+  <span class="eyebrow"><i class="fas fa-motorcycle"></i> Livraison</span>
+  <h1>Trouver un livreur</h1>
+  <p>Besoin de faire livrer un colis, un repas, un document ? Contactez directement
+     un livreur de votre zone — {{ total }} disponible{{ total|pluralize }} près de chez vous.</p>
+</div>
+
+<form method="get" class="panel mb-6">
+  <div class="row">
+    <input type="search" name="q" value="{{ query }}" placeholder="Quartier, ville, nom du livreur…" style="flex:1">
+    <button class="btn btn-primary"><i class="fas fa-magnifying-glass"></i> Chercher</button>
+  </div>
+</form>
+
+{% if page_obj %}
+<div class="grid grid-4">
+  {% for d in page_obj %}
+    {% include 'partials/driver_card.html' with d=d %}
+  {% endfor %}
+</div>
+{% include 'partials/pagination.html' with page_obj=page_obj %}
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-motorcycle' title='Aucun livreur pour l’instant' text="Aucun livreur validé dans votre zone pour le moment. Revenez bientôt — ou devenez le premier." cta_url='/compte/devenir-livreur/' cta_label='Devenir livreur' %}
+{% endif %}
+
+<section class="panel mt-8 center">
+  <h3>Vous avez une moto, un tricycle, une voiture ?</h3>
+  <p class="small muted">Gagnez de l'argent en livrant dans votre quartier. L'inscription est gratuite.</p>
+  <a href="{% url 'become_delivery' %}" class="btn btn-primary mt-3"><i class="fas fa-motorcycle"></i> Devenir livreur</a>
+</section>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Commande #{{ order.order_number }} - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 24px; color: #ffffff;">
+            <i class="fas fa-receipt"></i> Commande #{{ order.order_number }}
+        </h1>
+        <span class="badge 
+            {% if order.status == 'pending' %}badge-warning
+            {% elif order.status == 'paid' %}badge-success
+            {% elif order.status == 'processing' %}badge-info
+            {% elif order.status == 'shipped' %}badge-info
+            {% elif order.status == 'delivered' %}badge-success
+            {% elif order.status == 'cancelled' %}badge-danger
+            {% endif %}" style="font-size: 16px; padding: 8px 20px;">
+            {{ order.get_status_display }}
+        </span>
+    </div>
+    
+    <div style="display: grid; gap: 20px;">
+        <!-- Articles -->
+        <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; border: 1px solid rgba(255,255,255,0.08);">
+            <h3 style="color: rgba(255,255,255,0.7); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">
+                <i class="fas fa-boxes"></i> Articles
+            </h3>
+            
+            {% for item in order.items.all %}
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div>
+                        <span style="color: #ffffff;">{{ item.product_name }}</span>
+                        <span style="color: rgba(255,255,255,0.3); font-size: 13px; margin-left: 10px;">x {{ item.quantity }}</span>
+                    </div>
+                    <span style="color: #00ffff;">{{ item.subtotal }} FCFA</span>
+                </div>
+            {% endfor %}
+            
+            <div style="display: flex; justify-content: space-between; padding-top: 15px; margin-top: 15px; border-top: 2px solid rgba(0,255,255,0.1); font-size: 20px; font-weight: 700;">
+                <span>Total</span>
+                <span style="color: #00ffff;">{{ order.total }} FCFA</span>
+            </div>
+        </div>
+        
+        <!-- Livraison -->
+        <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; border: 1px solid rgba(255,255,255,0.08);">
+            <h3 style="color: rgba(255,255,255,0.7); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">
+                <i class="fas fa-truck"></i> Livraison
+            </h3>
+            <div style="color: rgba(255,255,255,0.5); line-height: 1.8;">
+                <p>{{ order.shipping_address }}</p>
+                <p>{{ order.shipping_postal_code }} {{ order.shipping_city }}, {{ order.shipping_country }}</p>
+                <p><strong>Téléphone :</strong> {{ order.shipping_phone }}</p>
+                {% if order.delivery_driver %}
+                    <p><strong>Livreur :</strong> {{ order.delivery_driver.username }}</p>
+                {% endif %}
+                {% if order.tracking_number %}
+                    <p><strong>Numéro de suivi :</strong> {{ order.tracking_number }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="{% url 'my_orders' %}" class="nav-btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Mes commandes
+            </a>
+            {% if order.status == 'pending' %}
+                <a href="#" class="nav-btn btn-danger-outline" onclick="return confirm('Annuler cette commande ?')">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- SUPPRIME OU COMMENTE CETTE PARTIE
+{% if not order.is_paid and order.status == 'pending' %}
+    <div style="margin-top: 15px;">
+        <a href="{% url 'payment' order.id %}" class="nav-btn btn-primary" style="display: inline-block; padding: 12px 30px;">
+            <i class="fas fa-credit-card"></i> Payer maintenant ({{ order.total }} FCFA)
+        </a>
+    </div>
+{% endif %}            -->
+
+{% endblock %}

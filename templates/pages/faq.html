@@ -1,0 +1,40 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Questions fréquentes — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container-narrow">
+  <div class="section-head"><span class="eyebrow"><i class="fas fa-circle-question"></i> Aide</span><h1>Questions fréquentes</h1></div>
+
+  <section class="panel mb-6">
+    <div class="panel-head"><h3>Acheter</h3></div>
+    <div class="stack">
+      <details class="card card-pad"><summary class="bold">Comment puis-je payer ?</summary><p class="small mt-2">Orange Money, Moov Money, Wave, et selon le vendeur, en espèces à la livraison. Vous choisissez au moment de valider la commande.</p></details>
+      <details class="card card-pad"><summary class="bold">Le prix affiché est-il le prix final ?</summary><p class="small mt-2">Oui. Notre commission est déjà incluse dans le prix que vous voyez. Seuls les frais de livraison s'ajoutent, et ils sont annoncés avant le paiement — offerts au-delà de {{ PRICING.FREE_DELIVERY_FROM|intcomma }} FCFA.</p></details>
+      <details class="card card-pad"><summary class="bold">En combien de temps suis-je livré ?</summary><p class="small mt-2">Dans {{ CITY }}, le plus souvent le jour même ou le lendemain, selon la disponibilité des livreurs. Hors ville, comptez 2 à 4 jours.</p></details>
+      <details class="card card-pad"><summary class="bold">Le produit ne correspond pas. Que faire ?</summary><p class="small mt-2">Signalez-le depuis la page de votre commande dans les 48 heures suivant la réception. Nous suspendons le versement au vendeur le temps d'examiner le dossier.</p></details>
+    </div>
+  </section>
+
+  <section class="panel mb-6">
+    <div class="panel-head"><h3>Faire appel à un artisan</h3></div>
+    <div class="stack">
+      <details class="card card-pad"><summary class="bold">Le devis est-il payant ?</summary><p class="small mt-2">Non. Demander un devis est gratuit et sans engagement, autant de fois que vous voulez, à autant d'artisans que vous voulez.</p></details>
+      <details class="card card-pad"><summary class="bold">Pourquoi le numéro de l'artisan est-il masqué ?</summary><p class="small mt-2">Vous avez deux façons de joindre un professionnel. La demande de devis est <strong>gratuite</strong> : vous décrivez le travail, il vous répond par écrit avec un prix détaillé. Si vous préférez l'appeler directement tout de suite, le déblocage du numéro coûte {{ PRICING.CONTACT_UNLOCK_PRICE }} FCFA, une seule fois, valable {{ PRICING.CONTACT_UNLOCK_DAYS }} jours. Votre premier contact est offert.</p></details>
+      <details class="card card-pad"><summary class="bold">Que paie exactement l'artisan ?</summary><p class="small mt-2">{{ PRICING.ARTISAN_SUB_PRICE }} FCFA tous les {{ PRICING.ARTISAN_SUB_DAYS }} jours pour rester visible dans l'annuaire. Nous ne prenons aucun pourcentage sur ses chantiers.</p></details>
+      <details class="card card-pad"><summary class="bold">Comment payer l'artisan ?</summary><p class="small mt-2">Directement entre vous, selon ce que vous convenez dans le devis. {{ SITE.SITE_NAME }} ne prélève rien sur les prestations de service.</p></details>
+      <details class="card card-pad"><summary class="bold">Comment savoir si un artisan est sérieux ?</summary><p class="small mt-2">Regardez trois choses : ses réalisations en photo, ses avis clients — qui ne peuvent venir que de travaux réellement terminés — et le badge « Vérifié », qui signifie que nous avons contrôlé son identité.</p></details>
+      <details class="card card-pad"><summary class="bold">L'artisan me demande un acompte. C'est normal ?</summary><p class="small mt-2">Pour des fournitures, oui, c'est courant. Mais ne versez jamais rien avant d'avoir un devis écrit accepté sur la plateforme — c'est votre preuve en cas de problème.</p></details>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h3>Vendre et être payé</h3></div>
+    <div class="stack">
+      <details class="card card-pad"><summary class="bold">Combien coûte l'inscription ?</summary><p class="small mt-2">Créer un compte et acheter ne coûte rien. Pour vendre, l'ouverture de la boutique se fait avec un pack de {{ PRICING.SHOP_PACK_SIZE }} annonces à {{ PRICING.SHOP_PACK_PRICE }} FCFA, payé une seule fois et acquis définitivement. Un artisan crée son profil gratuitement et paie {{ PRICING.ARTISAN_SUB_PRICE }} FCFA tous les {{ PRICING.ARTISAN_SUB_DAYS }} jours pour être visible. Un livreur ne paie rien.</p></details>
+      <details class="card card-pad"><summary class="bold">Un emplacement d'annonce, c'est quoi ?</summary><p class="small mt-2">Une annonce en ligne occupe un emplacement. Si vous supprimez une annonce, l'emplacement redevient libre. Les emplacements achetés n'expirent jamais.</p></details>
+      <details class="card card-pad"><summary class="bold">Quand est-ce que je reçois mon argent ?</summary><p class="small mt-2">Vos gains sont crédités à la commande payée, puis libérés {{ SITE.PAYOUT_DELAY_DAYS }} jours après la livraison. Vous demandez ensuite un retrait vers votre mobile money, à partir de {{ PRICING.PAYOUT_MIN|intcomma }} FCFA.</p></details>
+      <details class="card card-pad"><summary class="bold">Puis-je fixer librement mes prix ?</summary><p class="small mt-2">Oui. Vous indiquez ce que vous voulez toucher ; la commission est ajoutée par-dessus, puis le total est arrondi pour afficher un prix propre (22 000 F saisis deviennent 23 100 F affichés). Ce que vous saisissez est exactement ce que vous encaissez.</p></details>
+      <details class="card card-pad"><summary class="bold">Comment devenir livreur ?</summary><p class="small mt-2">Créez un compte livreur, partagez le lien de l'application à {{ PRICING.DELIVERY_REQUIRED_SHARES }} personnes et inscrivez-les dans votre dossier. Nous les appelons, puis nous activons votre compte. C'est gratuit.</p></details>
+    </div>
+  </section>
+</div>
+{% endblock %}

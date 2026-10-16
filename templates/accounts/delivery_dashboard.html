@@ -1,0 +1,64 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mes livraisons — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="row-between mb-6">
+  <div><h1>Mes livraisons</h1><p class="small">{{ user.profile.get_vehicle_type_display }} · {{ user.profile.delivery_zone }}</p></div>
+  <div class="row row-wrap">
+    <form method="post" action="{% url 'toggle_delivery_status' %}">{% csrf_token %}
+      <button class="btn {% if user.profile.is_available %}btn-primary{% else %}btn-ghost{% endif %}">
+        <i class="fas fa-circle" style="font-size:.6rem"></i> {% if user.profile.is_available %}En ligne{% else %}Hors ligne{% endif %}
+      </button>
+    </form>
+    <a href="{% url 'referral_dashboard' %}" class="btn btn-ghost"><i class="fas fa-id-badge"></i> Mon dossier</a>
+    <a href="{% url 'wallet' %}" class="btn btn-ghost"><i class="fas fa-wallet"></i> {{ wallet.available|floatformat:0|intcomma }} F</a>
+  </div>
+</div>
+
+<div class="stat-grid mb-8">
+  <div class="stat"><div class="label">Courses en cours</div><div class="value">{{ stats.in_progress }}</div></div>
+  <div class="stat forest"><div class="label">Livraisons terminées</div><div class="value">{{ stats.done }}</div></div>
+  <div class="stat gold"><div class="label">Note moyenne</div><div class="value">{{ user.profile.delivery_rating|floatformat:1 }}<small>/5</small></div></div>
+</div>
+
+<section class="panel mb-8">
+  <div class="panel-head"><h3>Courses disponibles</h3><span class="badge badge-warning">{{ available_orders|length }}</span></div>
+  {% for order in available_orders %}
+    <div class="row-between" style="padding:14px 0;border-bottom:1px solid var(--ink-100)">
+      <div>
+        <div class="bold">{{ order.order_number }} · {{ order.total|intcomma }} {{ CURRENCY }}</div>
+        <div class="small muted"><i class="fas fa-location-dot"></i> {{ order.shipping_quartier }}, {{ order.shipping_city }} · {{ order.items.count }} article{{ order.items.count|pluralize }}</div>
+      </div>
+      <form method="post" action="{% url 'accept_delivery' order.id %}">{% csrf_token %}
+        <button class="btn btn-primary btn-sm">Prendre la course</button>
+      </form>
+    </div>
+  {% empty %}
+    <p class="muted">Aucune course disponible pour le moment. Restez en ligne, elles arrivent.</p>
+  {% endfor %}
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h3>Mes courses en cours</h3></div>
+  {% for order in my_deliveries %}
+    <div class="card card-pad mb-2">
+      <div class="row-between">
+        <div>
+          <div class="bold">{{ order.order_number }}</div>
+          <div class="small muted">{{ order.shipping_name }} · {{ order.shipping_phone }}</div>
+          <div class="small"><i class="fas fa-location-dot"></i> {{ order.shipping_address }}, {{ order.shipping_quartier }}</div>
+        </div>
+        <div class="center">
+          <span class="badge badge-{{ order.status_badge }}">{{ order.get_status_display }}</span>
+          <form method="post" action="{% url 'update_order_status' order.id %}" class="mt-2">{% csrf_token %}
+            <input type="hidden" name="status" value="delivered">
+            <button class="btn btn-primary btn-sm" data-confirm="Confirmer la livraison de {{ order.order_number }} ?">Marquer livrée</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="muted">Aucune course en cours.</p>
+  {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends 'base.html' %}{% load static humanize %}
+{% block title %}{{ product.name }} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ product.short_description|default:product.description|truncatechars:150 }}{% endblock %}
+{% block content %}
+
+<nav class="crumbs">
+  <a href="{% url 'home' %}">Accueil</a><span class="sep">/</span>
+  <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a><span class="sep">/</span>
+  <span>{{ product.name|truncatechars:40 }}</span>
+</nav>
+
+<div class="detail-grid">
+  <div>
+    <div class="gallery">
+      <div class="main">
+        {% if product.main_image %}<img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+        {% else %}<img src="{% static 'img/placeholder-product.svg' %}" alt="">{% endif %}
+      </div>
+    </div>
+    {% if gallery %}
+    <div class="grid grid-4 mt-4" style="gap:10px">
+      {% for image in gallery %}
+        <img src="{{ image.image.url }}" alt="{{ image.alt }}" style="aspect-ratio:1;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--ink-200)">
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="stack">
+    <div>
+      <span class="chip"><i class="fas {{ product.category.icon }}"></i> {{ product.category.name }}</span>
+      {% if product.condition != 'new' %}<span class="chip">{{ product.get_condition_display }}</span>{% endif %}
+      <h1 class="mt-2">{{ product.name }}</h1>
+      {% if product.num_reviews %}
+        <div class="row mt-2">{% include 'partials/stars.html' with rating=product.rating count=product.num_reviews %}<span class="small muted">· {{ product.sold_count }} vendu{{ product.sold_count|pluralize }}</span></div>
+      {% endif %}
+    </div>
+
+    <div class="price-block">
+      {{ product.price|floatformat:0|intcomma }} {{ CURRENCY }}
+      <small>Prix tout compris — aucun frais ajouté au moment de payer</small>
+    </div>
+
+    <div class="row">
+      <span class="badge badge-{{ product.stock_badge }}"><i class="fas fa-circle-check"></i> {{ product.stock_label }}</span>
+      {% if product.warranty_months %}<span class="badge badge-info"><i class="fas fa-shield"></i> Garantie {{ product.warranty_months }} mois</span>{% endif %}
+      {% if product.delivery_available %}<span class="badge badge-neutral"><i class="fas fa-truck"></i> Livraison possible</span>{% endif %}
+    </div>
+
+    <div class="protect protect-slim">
+      <div class="protect-icon"><i class="fas fa-shield-halved"></i></div>
+      <div>
+        <strong>Achat protégé.</strong>
+        <p>Votre argent reste chez {{ SITE.SITE_NAME }} jusqu'à ce que le vendeur confirme qu'il a
+        l'article et peut le livrer. Sans confirmation sous 24 h, vous êtes remboursé automatiquement.</p>
+      </div>
+    </div>
+
+    {% if product.in_stock %}
+    <form action="{% url 'add_to_cart' product.id %}" method="post" class="row row-wrap">{% csrf_token %}
+      <div class="qty" data-qty>
+        <button type="button" data-qty-step="-1" aria-label="Diminuer">−</button>
+        <input type="number" name="quantity" value="1" min="1" max="{{ product.max_quantity }}" aria-label="Quantité">
+        <button type="button" data-qty-step="1" aria-label="Augmenter">+</button>
+      </div>
+      <button class="btn btn-primary btn-lg" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter au panier</button>
+      <button class="btn btn-dark btn-lg" type="submit" name="next" value="cart">Acheter maintenant</button>
+    </form>
+    {% endif %}
+
+    {% if product.seller %}
+    <div class="card card-pad">
+      <div class="row-between">
+        <div class="row">
+          <span class="avatar">{{ product.seller.profile.initials }}</span>
+          <div>
+            <div class="bold">{{ product.seller.profile.display_name }}</div>
+            <div class="tiny muted">
+              {% if product.seller.profile.is_official %}<span style="color:var(--forest-600)"><i class="fas fa-medal"></i> Boutique officielle</span>
+              {% else %}Vendeur{% endif %}
+              {% if product.seller.profile.is_verified %}· <span style="color:var(--success-fg)"><i class="fas fa-circle-check"></i> vérifié</span>{% endif %}
+              {% if product.seller.profile.quartier %}· {{ product.seller.profile.quartier }}{% endif %}
+              {% if product.country %}· {{ product.country.flag }} {{ product.country.name }}{% endif %}
+            </div>
+            <div class="mt-2">
+              <span class="badge badge-{{ product.seller.profile.reliability_badge }}">{{ product.seller.profile.reliability_label }}</span>
+              {% if product.seller.profile.orders_handled %}
+                <span class="tiny muted">{{ product.seller.profile.confirmation_rate }} % de commandes confirmées{% if product.seller.profile.avg_confirmation_delay %} · répond en {{ product.seller.profile.avg_confirmation_delay }}{% endif %}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% if product.seller.profile.store_slug %}
+          <a href="{% url 'store_front' product.seller.profile.store_slug %}" class="btn btn-ghost btn-sm">Sa boutique</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="spec-list">
+      <div><span class="k">Référence</span><span class="v">#{{ product.id }}</span></div>
+      <div><span class="k">État</span><span class="v">{{ product.get_condition_display }}</span></div>
+      {% if product.weight %}<div><span class="k">Poids</span><span class="v">{{ product.weight }} kg</span></div>{% endif %}
+      {% if product.dimensions %}<div><span class="k">Dimensions</span><span class="v">{{ product.dimensions }}</span></div>{% endif %}
+      {% if product.pickup_address %}<div><span class="k">Retrait sur place</span><span class="v">{{ product.pickup_address }}</span></div>{% endif %}
+    </div>
+  </div>
+</div>
+
+{% include 'partials/video_player.html' with videos=videos titre="Le produit en vidéo" %}
+
+<section class="panel mt-8">
+  <div class="panel-head"><h3>Description</h3></div>
+  <p style="white-space:pre-line">{{ product.description }}</p>
+</section>
+
+<section class="panel mt-6">
+  <div class="panel-head">
+    <h3>Avis clients {% if product.num_reviews %}({{ product.num_reviews }}){% endif %}</h3>
+    {% if product.num_reviews %}{% include 'partials/stars.html' with rating=product.rating %}{% endif %}
+  </div>
+
+  {% if can_review %}
+  <form action="{% url 'add_product_review' product.slug %}" method="post" class="card card-pad mb-6" style="background:var(--sand-50)">{% csrf_token %}
+    <div class="field"><label>Votre note</label>
+      <select name="rating" required>
+        <option value="">Choisir…</option>
+        {% for i in "54321" %}<option value="{{ i }}">{{ i }} / 5</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field"><label>Votre avis</label><textarea name="comment" required placeholder="Le produit correspond-il à la description ? La livraison s'est-elle bien passée ?"></textarea></div>
+    <button class="btn btn-primary">Publier mon avis</button>
+  </form>
+  {% endif %}
+
+  {% for review in reviews %}
+    <div class="review">
+      <div class="row-between">
+        <div class="row">
+          <span class="avatar avatar-sm">{{ review.user.username|slice:":2"|upper }}</span>
+          <div>
+            <div class="bold small">{{ review.user.username }}</div>
+            {% include 'partials/stars.html' with rating=review.rating %}
+          </div>
+        </div>
+        <span class="tiny muted">{{ review.created_at|date:"d/m/Y" }}</span>
+      </div>
+      <p class="mt-2">{{ review.comment }}</p>
+    </div>
+  {% empty %}
+    <p class="muted">Aucun avis pour l'instant. Soyez le premier à donner le vôtre après achat.</p>
+  {% endfor %}
+</section>
+
+{% if related %}
+<section class="mt-8">
+  <div class="section-head"><h2>Vous aimerez aussi</h2></div>
+  <div class="grid grid-4">{% for product in related %}{% include 'partials/product_card.html' %}{% endfor %}</div>
+</section>
+{% endif %}
+
+{% endblock %}

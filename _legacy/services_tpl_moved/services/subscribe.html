@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Abonnement - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <div class="glass-card" style="max-width: 100%; text-align: center;">
+        <div style="font-size: 60px; color: #ffd700; margin-bottom: 15px;">
+            <i class="fas fa-crown"></i>
+        </div>
+        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 24px; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            Abonnement Artisan
+        </h1>
+        <p class="subtitle">Restez visible et trouvez de nouveaux clients</p>
+        
+        <div style="background: rgba(255,215,0,0.05); border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,215,0,0.15);">
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <span style="color: rgba(255,255,255,0.5);">Durée</span>
+                <span style="color: #ffffff;">{{ duration }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                <span style="color: rgba(255,255,255,0.5);">Prix</span>
+                <span style="font-family: 'Orbitron', sans-serif; font-size: 24px; color: #ffd700;">{{ amount }} FCFA</span>
+            </div>
+        </div>
+        
+        <div style="text-align: left; margin: 20px 0; color: rgba(255,255,255,0.4); font-size: 14px;">
+            <p><i class="fas fa-check" style="color: #00ff64;"></i> Apparaître dans les recherches</p>
+            <p><i class="fas fa-check" style="color: #00ff64;"></i> Recevoir des demandes de clients</p>
+            <p><i class="fas fa-check" style="color: #00ff64;"></i> Être contacté directement</p>
+            <p><i class="fas fa-check" style="color: #00ff64;"></i> Possibilité d'être en vedette</p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #ffd700, #ff8c00);">
+                <i class="fas fa-crown"></i> Payer {{ amount }} FCFA et activer
+            </button>
+        </form>
+        
+        <div class="footer-link" style="margin-top: 15px;">
+            <a href="{% url 'artisan_dashboard' %}"><i class="fas fa-arrow-left"></i> Retour au dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

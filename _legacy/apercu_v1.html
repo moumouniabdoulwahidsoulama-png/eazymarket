@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#EE6C2B">
+<title>EazyMarket — Achetez malin, trouvez un pro à Ouagadougou</title>
+<meta name="description" content="EazyMarket : achetez auprès de vendeurs vérifiés et trouvez un artisan de confiance à Ouagadougou. Paiement mobile money, livraison rapide.">
+
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImYiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRjc5NDIwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRDk0ODFGIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9InVybCgjZikiLz4KICA8cGF0aCBkPSJNMzIgMTBjLTYuMiAwLTExLjIgNS0xMS4yIDExLjJWMjRoNi4xdi0yLjhjMC0yLjggMi4zLTUuMSA1LjEtNS4xczUuMSAyLjMgNS4xIDUuMVYyNGg2LjF2LTIuOEM0My4yIDE1IDM4LjIgMTAgMzIgMTB6IiBmaWxsPSIjZmZmIi8+CiAgPHBhdGggZD0iTTE1LjQgMjRoMzMuMmEzIDMgMCAwIDEgMyAzLjNsLTIuNiAyMy40YTUgNSAwIDAgMS01IDQuNEgyMGE1IDUgMCAwIDEtNS00LjRsLTIuNi0yMy40YTMgMyAwIDAgMSAzLTMuM3oiIGZpbGw9IiNmZmYiLz4KICA8cGF0aCBkPSJNMzIgMzBsMi44IDYuNiA2LjYgMi44LTYuNiAyLjhMMzIgNDguOGwtMi44LTYuNi02LjYtMi44IDYuNi0yLjh6IiBmaWxsPSIjMEY0NTM0Ii8+Cjwvc3ZnPgo=" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+
+
+
+
+<style>/* =========================================================
+   EazyMarket — Design tokens
+   Toute la charte graphique tient dans ce fichier.
+   Changer une valeur ici met à jour tout le site.
+   ========================================================= */
+
+:root {
+  /* ---------- Couleurs de marque ---------- */
+  --brand-50:  #FFF4EC;
+  --brand-100: #FFE3D0;
+  --brand-200: #FFC6A3;
+  --brand-300: #FBA36F;
+  --brand-400: #F5843F;
+  --brand-500: #EE6C2B;   /* orange principal */
+  --brand-600: #D9481F;
+  --brand-700: #B3360F;
+  --brand-800: #8A2A0C;
+
+  --forest-50:  #ECF6F1;
+  --forest-100: #CFE9DD;
+  --forest-500: #17694F;
+  --forest-600: #0F4534;  /* vert profond — confiance */
+  --forest-700: #0A3226;
+
+  --gold-400: #F7C948;
+  --gold-500: #F2B705;
+
+  /* ---------- Neutres ---------- */
+  --ink-900: #101A16;
+  --ink-800: #1C2A25;
+  --ink-700: #2E3D37;
+  --ink-600: #4A5B54;
+  --ink-500: #6B7C76;
+  --ink-400: #94A39D;
+  --ink-300: #C2CCC8;
+  --ink-200: #E1E7E4;
+  --ink-100: #EFF3F1;
+  --sand-50: #FBF8F4;   /* fond de page */
+  --white: #FFFFFF;
+
+  /* ---------- Sémantique ---------- */
+  --success-bg: #E9F7EF; --success-fg: #10794A; --success-br: #B9E6CD;
+  --warning-bg: #FFF6E0; --warning-fg: #9A6B00; --warning-br: #FBE2A8;
+  --danger-bg:  #FDECEC; --danger-fg:  #B3261E; --danger-br: #F6C7C4;
+  --info-bg:    #EAF2FD; --info-fg:    #1B4F9C; --info-br:   #C3DAF7;
+
+  /* ---------- Typographie ---------- */
+  --font-display: 'Outfit', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --fs-xs: .75rem;    --fs-sm: .8125rem;  --fs-base: .9375rem;
+  --fs-md: 1rem;      --fs-lg: 1.125rem;  --fs-xl: 1.375rem;
+  --fs-2xl: 1.75rem;  --fs-3xl: 2.25rem;  --fs-4xl: 3rem;
+
+  /* ---------- Espacement ---------- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+  --sp-12: 48px; --sp-16: 64px; --sp-20: 80px;
+
+  /* ---------- Rayons ---------- */
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-full: 999px;
+
+  /* ---------- Ombres ---------- */
+  --sh-xs: 0 1px 2px rgba(16, 26, 22, .06);
+  --sh-sm: 0 2px 6px rgba(16, 26, 22, .07);
+  --sh-md: 0 6px 18px rgba(16, 26, 22, .08);
+  --sh-lg: 0 16px 40px rgba(16, 26, 22, .12);
+  --sh-brand: 0 10px 26px rgba(238, 108, 43, .28);
+
+  /* ---------- Divers ---------- */
+  --container: 1200px;
+  --nav-h: 72px;
+  --t-fast: 140ms cubic-bezier(.4,0,.2,1);
+  --t: 220ms cubic-bezier(.4,0,.2,1);
+}
+
+/* =========================================================
+   EazyMarket — Reset, typographie, mise en page
+   ========================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--ink-800);
+  background: var(--sand-50);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg, video { display: block; max-width: 100%; height: auto; }
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  color: var(--ink-900);
+  line-height: 1.18;
+  letter-spacing: -.02em;
+  font-weight: 700;
+}
+h1 { font-size: var(--fs-3xl); }
+h2 { font-size: var(--fs-2xl); }
+h3 { font-size: var(--fs-xl); }
+h4 { font-size: var(--fs-lg); }
+
+p { color: var(--ink-600); }
+
+a { color: var(--brand-600); text-decoration: none; transition: color var(--t-fast); }
+a:hover { color: var(--brand-700); }
+
+ul, ol { list-style: none; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: none; }
+
+:focus-visible {
+  outline: 3px solid rgba(238, 108, 43, .45);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ---------- Layout ---------- */
+.container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--sp-5); }
+.container-narrow { max-width: 760px; }
+
+.page { flex: 1; padding-block: var(--sp-10) var(--sp-16); }
+.page-tight { padding-block: var(--sp-8) var(--sp-12); }
+
+.stack > * + * { margin-top: var(--sp-4); }
+.stack-lg > * + * { margin-top: var(--sp-8); }
+
+.grid { display: grid; gap: var(--sp-5); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+
+.row { display: flex; gap: var(--sp-3); align-items: center; }
+.row-between { display: flex; gap: var(--sp-4); align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.row-wrap { flex-wrap: wrap; }
+
+/* ---------- Utilitaires ---------- */
+.muted { color: var(--ink-500); }
+.small { font-size: var(--fs-sm); }
+.tiny  { font-size: var(--fs-xs); }
+.bold  { font-weight: 700; }
+.center { text-align: center; }
+.mt-0 { margin-top: 0 !important; }
+.mt-2 { margin-top: var(--sp-2); }
+.mt-4 { margin-top: var(--sp-4); }
+.mt-6 { margin-top: var(--sp-6); }
+.mt-8 { margin-top: var(--sp-8); }
+.mb-4 { margin-bottom: var(--sp-4); }
+.mb-6 { margin-bottom: var(--sp-6); }
+.full { width: 100%; }
+.hidden { display: none !important; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ---------- Titre de section ---------- */
+.section-head { margin-bottom: var(--sp-6); }
+.section-head .eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--brand-600); margin-bottom: var(--sp-2);
+}
+.section-head h2 { margin-bottom: var(--sp-2); }
+.section-head p { max-width: 62ch; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* =========================================================
+   EazyMarket — Composants réutilisables
+   ========================================================= */
+
+/* ============ BOUTONS ============ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 20px; border-radius: var(--r-full);
+  font-size: var(--fs-base); font-weight: 600; line-height: 1;
+  border: 1.5px solid transparent; cursor: pointer;
+  transition: transform var(--t-fast), box-shadow var(--t), background var(--t), color var(--t);
+  white-space: nowrap; text-decoration: none;
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled, .btn.is-disabled { opacity: .5; pointer-events: none; }
+
+.btn-primary { background: var(--brand-500); color: #fff; box-shadow: var(--sh-brand); }
+.btn-primary:hover { background: var(--brand-600); color: #fff; box-shadow: 0 12px 30px rgba(217,72,31,.32); }
+
+.btn-dark { background: var(--forest-600); color: #fff; }
+.btn-dark:hover { background: var(--forest-700); color: #fff; }
+
+.btn-ghost { background: var(--white); color: var(--ink-800); border-color: var(--ink-200); box-shadow: var(--sh-xs); }
+.btn-ghost:hover { border-color: var(--brand-300); color: var(--brand-600); }
+
+.btn-outline { background: transparent; color: var(--brand-600); border-color: var(--brand-300); }
+.btn-outline:hover { background: var(--brand-50); color: var(--brand-700); }
+
+.btn-danger { background: var(--danger-fg); color: #fff; }
+.btn-danger:hover { background: #8f1d17; color: #fff; }
+
+.btn-quiet { background: transparent; color: var(--ink-600); padding: 8px 12px; }
+.btn-quiet:hover { background: var(--ink-100); color: var(--ink-900); }
+
+.btn-sm { padding: 8px 14px; font-size: var(--fs-sm); }
+.btn-lg { padding: 15px 30px; font-size: var(--fs-md); }
+.btn-block { width: 100%; }
+.btn-icon { padding: 10px; width: 40px; height: 40px; border-radius: var(--r-full); }
+
+/* ============ CARTES ============ */
+.card {
+  background: var(--white); border: 1px solid var(--ink-200);
+  border-radius: var(--r-lg); box-shadow: var(--sh-xs);
+  transition: box-shadow var(--t), transform var(--t), border-color var(--t);
+}
+.card-pad { padding: var(--sp-6); }
+.card-hover:hover { box-shadow: var(--sh-md); transform: translateY(-3px); border-color: var(--brand-200); }
+
+.panel {
+  background: var(--white); border: 1px solid var(--ink-200);
+  border-radius: var(--r-xl); padding: var(--sp-8); box-shadow: var(--sh-sm);
+}
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
+  padding-bottom: var(--sp-4); margin-bottom: var(--sp-5); border-bottom: 1px solid var(--ink-100); flex-wrap: wrap; }
+.panel-head h3 { margin: 0; }
+
+/* ============ CARTE PRODUIT ============ */
+.product-card { display: flex; flex-direction: column; overflow: hidden; height: 100%; }
+.product-card .thumb {
+  position: relative; aspect-ratio: 4 / 3; background: var(--ink-100);
+  display: grid; place-items: center; overflow: hidden;
+}
+.product-card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 400ms ease; }
+.product-card:hover .thumb img { transform: scale(1.05); }
+.product-card .thumb .placeholder { font-size: 2.5rem; color: var(--ink-300); }
+.product-card .body { padding: var(--sp-4); display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.product-card .cat { font-size: var(--fs-xs); color: var(--brand-600); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.product-card .name { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-md); color: var(--ink-900); line-height: 1.3; }
+.product-card .price { font-family: var(--font-display); font-size: var(--fs-lg); font-weight: 800; color: var(--forest-600); margin-top: auto; }
+.product-card .price small { font-size: var(--fs-xs); font-weight: 600; color: var(--ink-500); }
+.product-card .foot { padding: 0 var(--sp-4) var(--sp-4); display: flex; gap: 8px; }
+
+.ribbon {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  padding: 5px 11px; border-radius: var(--r-full);
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .03em;
+  background: var(--forest-600); color: #fff; box-shadow: var(--sh-sm);
+}
+.ribbon-brand { background: var(--brand-500); }
+.ribbon-gold  { background: var(--gold-500); color: var(--ink-900); }
+.ribbon-right { left: auto; right: 10px; }
+
+/* ============ CARTE ARTISAN ============ */
+.artisan-card { display: flex; flex-direction: column; padding: var(--sp-5); gap: var(--sp-3); height: 100%; }
+.artisan-card .top { display: flex; gap: var(--sp-3); align-items: flex-start; }
+.avatar {
+  width: 54px; height: 54px; border-radius: var(--r-full); flex: 0 0 auto;
+  display: grid; place-items: center; font-family: var(--font-display);
+  font-weight: 800; font-size: var(--fs-lg); color: #fff;
+  background: linear-gradient(135deg, var(--brand-400), var(--brand-600));
+  object-fit: cover; overflow: hidden;
+}
+.avatar-lg { width: 84px; height: 84px; font-size: var(--fs-2xl); }
+.avatar-sm { width: 36px; height: 36px; font-size: var(--fs-sm); }
+.avatar-forest { background: linear-gradient(135deg, var(--forest-500), var(--forest-700)); }
+
+.stars { color: var(--gold-500); font-size: var(--fs-sm); letter-spacing: 1px; }
+.stars .empty { color: var(--ink-300); }
+
+.chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: var(--r-full);
+  background: var(--ink-100); color: var(--ink-700);
+  font-size: var(--fs-xs); font-weight: 600;
+  border: 1px solid transparent; transition: all var(--t-fast);
+}
+a.chip:hover { background: var(--brand-50); color: var(--brand-700); border-color: var(--brand-200); }
+.chip-active { background: var(--brand-500); color: #fff; }
+a.chip-active:hover { background: var(--brand-600); color: #fff; }
+
+/* ============ BADGES ============ */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: var(--r-full);
+  font-size: var(--fs-xs); font-weight: 700; border: 1px solid;
+}
+.badge-success { background: var(--success-bg); color: var(--success-fg); border-color: var(--success-br); }
+.badge-warning { background: var(--warning-bg); color: var(--warning-fg); border-color: var(--warning-br); }
+.badge-danger  { background: var(--danger-bg);  color: var(--danger-fg);  border-color: var(--danger-br); }
+.badge-info    { background: var(--info-bg);    color: var(--info-fg);    border-color: var(--info-br); }
+.badge-neutral { background: var(--ink-100);    color: var(--ink-600);    border-color: var(--ink-200); }
+
+/* ============ FORMULAIRES ============ */
+.field { margin-bottom: var(--sp-4); }
+.field > label, .label {
+  display: block; margin-bottom: 6px;
+  font-size: var(--fs-sm); font-weight: 650; color: var(--ink-700);
+}
+.field .req { color: var(--brand-600); }
+.hint { font-size: var(--fs-xs); color: var(--ink-500); margin-top: 5px; }
+
+.input, .select, .textarea,
+input[type="text"], input[type="email"], input[type="password"], input[type="number"],
+input[type="tel"], input[type="date"], input[type="time"], input[type="search"],
+input[type="url"], select, textarea {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--ink-200); border-radius: var(--r-md);
+  background: var(--white); color: var(--ink-900);
+  font-size: var(--fs-base); transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--brand-400);
+  box-shadow: 0 0 0 4px rgba(238,108,43,.14);
+}
+textarea { min-height: 120px; resize: vertical; }
+select { appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7C76' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; background-size: 12px; padding-right: 38px; }
+
+.input-group { display: flex; gap: var(--sp-2); }
+.input-group input { flex: 1; }
+
+.errorlist { list-style: none; margin: 6px 0 0; padding: 0; }
+.errorlist li { font-size: var(--fs-xs); color: var(--danger-fg); font-weight: 600; }
+
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 var(--sp-4); }
+
+/* Cartes-radio (choix du rôle) */
+.role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--sp-3); }
+.role-card { position: relative; }
+.role-card input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.role-card .box {
+  border: 2px solid var(--ink-200); border-radius: var(--r-lg);
+  padding: var(--sp-4); text-align: center; background: var(--white);
+  transition: all var(--t); height: 100%; cursor: pointer;
+}
+.role-card .box i { font-size: 1.5rem; color: var(--ink-400); display: block; margin-bottom: 8px; transition: color var(--t); }
+.role-card .box strong { display: block; font-size: var(--fs-base); color: var(--ink-900); }
+.role-card .box span { font-size: var(--fs-xs); color: var(--ink-500); }
+.role-card input:checked + .box { border-color: var(--brand-500); background: var(--brand-50); box-shadow: var(--sh-sm); }
+.role-card input:checked + .box i { color: var(--brand-500); }
+.role-card input:focus-visible + .box { outline: 3px solid rgba(238,108,43,.4); }
+
+/* ============ ALERTES / MESSAGES ============ */
+.alerts { margin-bottom: var(--sp-6); display: grid; gap: var(--sp-2); }
+.alert {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 13px 16px; border-radius: var(--r-md);
+  border: 1px solid; font-size: var(--fs-base); font-weight: 500;
+}
+.alert i { margin-top: 3px; }
+.alert.success { background: var(--success-bg); color: var(--success-fg); border-color: var(--success-br); }
+.alert.error, .alert.danger { background: var(--danger-bg); color: var(--danger-fg); border-color: var(--danger-br); }
+.alert.warning { background: var(--warning-bg); color: var(--warning-fg); border-color: var(--warning-br); }
+.alert.info, .alert.debug { background: var(--info-bg); color: var(--info-fg); border-color: var(--info-br); }
+
+/* ============ TABLEAUX ============ */
+.table-wrap { overflow-x: auto; border: 1px solid var(--ink-200); border-radius: var(--r-lg); background: var(--white); }
+table.table { width: 100%; border-collapse: collapse; min-width: 560px; }
+table.table th {
+  text-align: left; padding: 13px 16px; background: var(--ink-100);
+  font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--ink-600); white-space: nowrap;
+}
+table.table td { padding: 14px 16px; border-top: 1px solid var(--ink-100); font-size: var(--fs-base); vertical-align: middle; }
+table.table tbody tr:hover { background: var(--sand-50); }
+table.table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ============ STATISTIQUES ============ */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-4); }
+.stat {
+  background: var(--white); border: 1px solid var(--ink-200);
+  border-radius: var(--r-lg); padding: var(--sp-5); position: relative; overflow: hidden;
+}
+.stat::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--brand-500); }
+.stat.forest::after { background: var(--forest-600); }
+.stat.gold::after { background: var(--gold-500); }
+.stat .label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-500); font-weight: 700; }
+.stat .value { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 800; color: var(--ink-900); margin-top: 4px; line-height: 1.1; }
+.stat .value small { font-size: var(--fs-sm); font-weight: 600; color: var(--ink-500); }
+.stat .delta { font-size: var(--fs-xs); color: var(--ink-500); margin-top: 4px; }
+
+/* ============ ÉTAT VIDE ============ */
+.empty { text-align: center; padding: var(--sp-16) var(--sp-5); }
+.empty i { font-size: 3rem; color: var(--ink-300); margin-bottom: var(--sp-4); }
+.empty h3 { margin-bottom: var(--sp-2); }
+.empty p { max-width: 46ch; margin-inline: auto; margin-bottom: var(--sp-5); }
+
+/* ============ NAVBAR ============ */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.88); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--ink-200);
+}
+.nav-inner { display: flex; align-items: center; gap: var(--sp-5); height: var(--nav-h); }
+.brand { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+.brand img { height: 38px; width: auto; }
+.brand .wordmark { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; color: var(--ink-900); letter-spacing: -.02em; }
+.brand .wordmark em { font-style: normal; color: var(--brand-500); }
+
+.nav-search { flex: 1; max-width: 460px; position: relative; }
+.nav-search input { padding-left: 40px; border-radius: var(--r-full); background: var(--sand-50); }
+.nav-search i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--ink-400); pointer-events: none; }
+
+.nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.nav-links > a {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 13px; border-radius: var(--r-full);
+  color: var(--ink-700); font-weight: 600; font-size: var(--fs-sm);
+  position: relative; transition: all var(--t-fast);
+}
+.nav-links > a:hover { background: var(--ink-100); color: var(--ink-900); }
+.nav-links > a.active { color: var(--brand-600); background: var(--brand-50); }
+
+.count-dot {
+  position: absolute; top: 1px; right: 2px;
+  min-width: 17px; height: 17px; padding: 0 4px;
+  border-radius: var(--r-full); background: var(--brand-500); color: #fff;
+  font-size: 10px; font-weight: 800; display: grid; place-items: center; line-height: 1;
+  border: 2px solid var(--white);
+}
+
+.nav-toggle { display: none; font-size: 1.35rem; color: var(--ink-800); padding: 8px; }
+
+/* Menu déroulant */
+.dropdown { position: relative; }
+.dropdown-menu {
+  position: absolute; right: 0; top: calc(100% + 8px); min-width: 224px;
+  background: var(--white); border: 1px solid var(--ink-200);
+  border-radius: var(--r-lg); box-shadow: var(--sh-lg); padding: 6px;
+  opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: all var(--t); z-index: 120;
+}
+.dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+.dropdown-menu a, .dropdown-menu button {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 10px 12px; border-radius: var(--r-sm);
+  color: var(--ink-700); font-size: var(--fs-sm); font-weight: 600; text-align: left;
+}
+.dropdown-menu a:hover, .dropdown-menu button:hover { background: var(--ink-100); color: var(--ink-900); }
+.dropdown-menu .sep { height: 1px; background: var(--ink-100); margin: 6px 0; }
+.dropdown-menu .head { padding: 10px 12px 6px; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-400); font-weight: 700; }
+
+/* ============ PIED DE PAGE ============ */
+.footer { background: var(--forest-700); color: rgba(255,255,255,.72); padding: var(--sp-16) 0 var(--sp-6); margin-top: auto; }
+.footer h4 { color: #fff; font-size: var(--fs-base); margin-bottom: var(--sp-4); letter-spacing: .04em; text-transform: uppercase; }
+.footer-grid { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: var(--sp-8); }
+.footer a { color: rgba(255,255,255,.72); font-size: var(--fs-sm); display: block; padding: 4px 0; }
+.footer a:hover { color: var(--gold-400); }
+.footer p { color: rgba(255,255,255,.6); font-size: var(--fs-sm); }
+.footer .socials { display: flex; gap: 10px; margin-top: var(--sp-4); }
+.footer .socials a {
+  width: 38px; height: 38px; border-radius: var(--r-full);
+  background: rgba(255,255,255,.09); display: grid; place-items: center; padding: 0;
+}
+.footer .socials a:hover { background: var(--brand-500); color: #fff; }
+.footer-bottom {
+  margin-top: var(--sp-10); padding-top: var(--sp-5);
+  border-top: 1px solid rgba(255,255,255,.12);
+  display: flex; justify-content: space-between; gap: var(--sp-4); flex-wrap: wrap;
+  font-size: var(--fs-xs); color: rgba(255,255,255,.5);
+}
+
+/* ============ FIL D'ARIANE ============ */
+.crumbs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: var(--fs-sm); color: var(--ink-500); margin-bottom: var(--sp-5); }
+.crumbs a { color: var(--ink-500); }
+.crumbs a:hover { color: var(--brand-600); }
+.crumbs .sep { color: var(--ink-300); }
+
+/* ============ ONGLETS ============ */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--ink-200); margin-bottom: var(--sp-6); overflow-x: auto; }
+.tabs a, .tabs button {
+  padding: 11px 16px; font-weight: 650; font-size: var(--fs-sm);
+  color: var(--ink-500); border-bottom: 2.5px solid transparent; white-space: nowrap;
+}
+.tabs a:hover, .tabs button:hover { color: var(--ink-900); }
+.tabs .active { color: var(--brand-600); border-bottom-color: var(--brand-500); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 980px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 860px) {
+  .nav-toggle { display: block; }
+  .nav-search { display: none; }
+  .nav-links {
+    position: fixed; inset: var(--nav-h) 0 auto 0;
+    flex-direction: column; align-items: stretch;
+    background: var(--white); border-bottom: 1px solid var(--ink-200);
+    padding: var(--sp-4); gap: 2px; box-shadow: var(--sh-lg);
+    max-height: calc(100vh - var(--nav-h)); overflow-y: auto;
+    display: none;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links > a { padding: 12px 14px; font-size: var(--fs-base); }
+  .dropdown-menu { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: none; padding: 0 0 0 var(--sp-4); display: none; }
+  .dropdown.open .dropdown-menu { display: block; }
+  .panel { padding: var(--sp-5); }
+}
+@media (max-width: 600px) {
+  h1 { font-size: var(--fs-2xl); }
+  .footer-grid { grid-template-columns: 1fr; gap: var(--sp-6); }
+  .page { padding-block: var(--sp-6) var(--sp-10); }
+}
+
+/* =========================================================
+   EazyMarket — Styles spécifiques aux pages
+   ========================================================= */
+
+/* ============ HERO ACCUEIL ============ */
+.hero {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(1000px 480px at 88% -8%, rgba(247,201,72,.30), transparent 62%),
+    radial-gradient(760px 420px at 4% 108%, rgba(238,108,43,.20), transparent 60%),
+    linear-gradient(155deg, #0A3226 0%, #0F4534 46%, #17694F 100%);
+  color: #fff; padding: var(--sp-16) 0 var(--sp-20);
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; opacity: .16; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 0l6 24 24 6-24 6-6 24-6-24-24-6 24-6z' fill='%23ffffff' fill-opacity='.10'/%3E%3C/svg%3E");
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: var(--sp-12); align-items: center; }
+.hero h1 { color: #fff; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.06; margin-bottom: var(--sp-5); }
+.hero h1 .accent { color: var(--gold-400); }
+.hero .lead { color: rgba(255,255,255,.86); font-size: var(--fs-lg); max-width: 54ch; margin-bottom: var(--sp-8); }
+.hero .pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 15px; border-radius: var(--r-full); margin-bottom: var(--sp-5);
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.20);
+  font-size: var(--fs-sm); font-weight: 650; color: #fff; backdrop-filter: blur(6px);
+}
+.hero .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold-400); box-shadow: 0 0 0 4px rgba(247,201,72,.25); }
+.hero-cta { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-8); }
+.hero-cta .btn-ghost { background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.28); color: #fff; box-shadow: none; }
+.hero-cta .btn-ghost:hover { background: rgba(255,255,255,.18); color: #fff; border-color: rgba(255,255,255,.4); }
+
+.hero-proof { display: flex; gap: var(--sp-8); flex-wrap: wrap; }
+.hero-proof div strong { display: block; font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 800; color: #fff; line-height: 1; }
+.hero-proof div span { font-size: var(--fs-xs); color: rgba(255,255,255,.68); text-transform: uppercase; letter-spacing: .1em; font-weight: 650; }
+
+/* Collage visuel du hero */
+.hero-art { position: relative; min-height: 380px; }
+.hero-art .tile {
+  position: absolute; border-radius: var(--r-xl); overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,.35); border: 3px solid rgba(255,255,255,.14);
+  background: var(--white);
+}
+.hero-art .t1 { width: 62%; aspect-ratio: 4/5; top: 0; left: 0; z-index: 2; animation: floaty 7s ease-in-out infinite; }
+.hero-art .t2 { width: 52%; aspect-ratio: 1/1; bottom: 4%; right: 0; z-index: 3; animation: floaty 7s ease-in-out infinite 1.6s; }
+.hero-art .t3 { width: 40%; aspect-ratio: 3/4; top: 12%; right: 6%; z-index: 1; opacity: .95; animation: floaty 8s ease-in-out infinite .8s; }
+.hero-art .tile img { width: 100%; height: 100%; object-fit: cover; }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+.hero-badge {
+  position: absolute; z-index: 4; background: #fff; color: var(--ink-900);
+  border-radius: var(--r-lg); padding: 11px 15px; box-shadow: var(--sh-lg);
+  display: flex; align-items: center; gap: 10px; font-size: var(--fs-sm); font-weight: 700;
+}
+.hero-badge i { color: var(--brand-500); font-size: 1.1rem; }
+.hero-badge.b1 { bottom: 18%; left: -4%; }
+.hero-badge.b2 { top: 4%; right: -2%; }
+
+/* ============ BANDE DE RÉASSURANCE ============ */
+.trust-bar { background: var(--white); border-bottom: 1px solid var(--ink-200); padding: var(--sp-5) 0; }
+.trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: var(--sp-5); }
+.trust-item { display: flex; gap: 12px; align-items: flex-start; }
+.trust-item i { color: var(--brand-500); font-size: 1.25rem; margin-top: 3px; }
+.trust-item strong { display: block; font-size: var(--fs-base); color: var(--ink-900); }
+.trust-item span { font-size: var(--fs-xs); color: var(--ink-500); }
+
+/* ============ DOUBLE ENTRÉE (boutique / services) ============ */
+.split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-5); }
+.split-card {
+  position: relative; overflow: hidden; border-radius: var(--r-xl);
+  padding: var(--sp-10); color: #fff; min-height: 260px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  transition: transform var(--t), box-shadow var(--t);
+}
+.split-card:hover { transform: translateY(-4px); box-shadow: var(--sh-lg); }
+.split-card.shop { background: linear-gradient(140deg, #D9481F, #F79420); }
+.split-card.serv { background: linear-gradient(140deg, #0F4534, #17694F); }
+.split-card i.bg-icon { position: absolute; right: -12px; bottom: -18px; font-size: 9rem; opacity: .13; }
+.split-card h3 { color: #fff; font-size: var(--fs-2xl); margin-bottom: 8px; }
+.split-card p { color: rgba(255,255,255,.85); margin-bottom: var(--sp-5); max-width: 40ch; }
+.split-card .go { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #fff; }
+
+/* ============ CATÉGORIES ============ */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: var(--sp-4); }
+.cat-tile {
+  background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--r-lg);
+  padding: var(--sp-5) var(--sp-3); text-align: center; transition: all var(--t);
+}
+.cat-tile:hover { border-color: var(--brand-300); box-shadow: var(--sh-md); transform: translateY(-3px); }
+.cat-tile .ico {
+  width: 52px; height: 52px; border-radius: var(--r-lg); margin: 0 auto var(--sp-3);
+  display: grid; place-items: center; font-size: 1.35rem;
+  background: var(--brand-50); color: var(--brand-600);
+}
+.cat-tile.serv .ico { background: var(--forest-50); color: var(--forest-600); }
+.cat-tile strong { display: block; font-size: var(--fs-sm); color: var(--ink-900); font-weight: 650; }
+.cat-tile span { font-size: var(--fs-xs); color: var(--ink-400); }
+
+/* ============ COMMENT ÇA MARCHE ============ */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--sp-6); counter-reset: step; }
+.step { position: relative; padding-top: var(--sp-6); }
+.step::before {
+  counter-increment: step; content: counter(step);
+  position: absolute; top: 0; left: 0;
+  width: 40px; height: 40px; border-radius: var(--r-full);
+  display: grid; place-items: center;
+  background: var(--brand-500); color: #fff;
+  font-family: var(--font-display); font-weight: 800; font-size: var(--fs-md);
+  box-shadow: var(--sh-brand);
+}
+.step h4 { margin: var(--sp-6) 0 6px; }
+
+/* ============ DÉTAIL PRODUIT ============ */
+.detail-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: var(--sp-10); align-items: start; }
+.gallery { border-radius: var(--r-xl); overflow: hidden; background: var(--white); border: 1px solid var(--ink-200); }
+.gallery .main { aspect-ratio: 1/1; display: grid; place-items: center; background: var(--ink-100); }
+.gallery .main img { width: 100%; height: 100%; object-fit: cover; }
+.gallery .main .placeholder { font-size: 4rem; color: var(--ink-300); }
+.price-block { font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 800; color: var(--forest-600); }
+.price-block small { display: block; font-size: var(--fs-sm); font-weight: 600; color: var(--ink-500); font-family: var(--font-body); }
+.spec-list { display: grid; gap: 0; border: 1px solid var(--ink-200); border-radius: var(--r-lg); overflow: hidden; }
+.spec-list div { display: flex; justify-content: space-between; gap: var(--sp-4); padding: 11px 16px; font-size: var(--fs-sm); }
+.spec-list div:nth-child(odd) { background: var(--sand-50); }
+.spec-list dt, .spec-list .k { color: var(--ink-500); font-weight: 600; }
+.spec-list .v { color: var(--ink-900); font-weight: 650; text-align: right; }
+
+.qty { display: inline-flex; align-items: center; border: 1.5px solid var(--ink-200); border-radius: var(--r-full); overflow: hidden; background: #fff; }
+.qty button { width: 38px; height: 42px; color: var(--ink-600); font-size: var(--fs-md); }
+.qty button:hover { background: var(--ink-100); color: var(--ink-900); }
+.qty input { width: 52px; border: none; text-align: center; padding: 0; font-weight: 700; background: transparent; }
+.qty input:focus { box-shadow: none; }
+
+/* ============ PANIER / RÉCAPITULATIF ============ */
+.checkout-grid { display: grid; grid-template-columns: 1.4fr .85fr; gap: var(--sp-8); align-items: start; }
+.summary { position: sticky; top: calc(var(--nav-h) + 16px); }
+.summary-line { display: flex; justify-content: space-between; gap: var(--sp-4); padding: 9px 0; font-size: var(--fs-base); color: var(--ink-600); }
+.summary-line.total {
+  border-top: 1.5px dashed var(--ink-200); margin-top: var(--sp-3); padding-top: var(--sp-4);
+  font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 800; color: var(--ink-900);
+}
+.cart-line { display: grid; grid-template-columns: 84px 1fr auto; gap: var(--sp-4); align-items: center; padding: var(--sp-4) 0; border-bottom: 1px solid var(--ink-100); }
+.cart-line:last-child { border-bottom: none; }
+.cart-line .thumb { width: 84px; height: 84px; border-radius: var(--r-md); overflow: hidden; background: var(--ink-100); display: grid; place-items: center; }
+.cart-line .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ============ AUTHENTIFICATION ============ */
+.auth-wrap { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - var(--nav-h)); }
+.auth-side {
+  background: linear-gradient(155deg, #0A3226, #17694F);
+  color: #fff; padding: var(--sp-16) var(--sp-12);
+  display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden;
+}
+.auth-side::before {
+  content: ''; position: absolute; inset: 0; opacity: .14;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 0l6 24 24 6-24 6-6 24-6-24-24-6 24-6z' fill='%23fff' fill-opacity='.12'/%3E%3C/svg%3E");
+}
+.auth-side > * { position: relative; z-index: 1; }
+.auth-side h2 { color: #fff; font-size: var(--fs-3xl); margin-bottom: var(--sp-4); }
+.auth-side p { color: rgba(255,255,255,.82); }
+.auth-side ul { margin-top: var(--sp-8); display: grid; gap: var(--sp-4); }
+.auth-side ul li { display: flex; gap: 12px; align-items: flex-start; color: rgba(255,255,255,.88); font-size: var(--fs-base); }
+.auth-side ul li i { color: var(--gold-400); margin-top: 4px; }
+.auth-form { padding: var(--sp-12) var(--sp-8); display: flex; align-items: center; justify-content: center; }
+.auth-form .inner { width: 100%; max-width: 440px; }
+
+/* ============ ARTISAN ============ */
+.artisan-hero {
+  background: linear-gradient(150deg, var(--forest-600), var(--forest-500));
+  color: #fff; border-radius: var(--r-xl); padding: var(--sp-8);
+  display: flex; gap: var(--sp-6); align-items: center; flex-wrap: wrap;
+}
+.artisan-hero h1 { color: #fff; margin-bottom: 4px; }
+.artisan-hero .meta { color: rgba(255,255,255,.8); font-size: var(--fs-sm); }
+.portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-4); }
+.portfolio-item { border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--ink-200); background: #fff; }
+.portfolio-item .img { aspect-ratio: 4/3; background: var(--ink-100); display: grid; place-items: center; }
+.portfolio-item .img img { width: 100%; height: 100%; object-fit: cover; }
+.portfolio-item .cap { padding: var(--sp-3) var(--sp-4); }
+
+.review { padding: var(--sp-4) 0; border-bottom: 1px solid var(--ink-100); }
+.review:last-child { border-bottom: none; }
+
+/* ============ TARIFS / ABONNEMENT ============ */
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--sp-5); }
+.plan { background: #fff; border: 2px solid var(--ink-200); border-radius: var(--r-xl); padding: var(--sp-6); display: flex; flex-direction: column; }
+.plan.featured { border-color: var(--brand-500); box-shadow: var(--sh-md); position: relative; }
+.plan.featured::before {
+  content: 'Le plus choisi'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--brand-500); color: #fff; font-size: var(--fs-xs); font-weight: 700;
+  padding: 4px 14px; border-radius: var(--r-full); white-space: nowrap;
+}
+.plan .amount { font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 800; color: var(--ink-900); margin: var(--sp-3) 0 2px; }
+.plan .amount small { font-size: var(--fs-sm); font-weight: 600; color: var(--ink-500); font-family: var(--font-body); }
+.plan ul { margin: var(--sp-5) 0; display: grid; gap: 10px; flex: 1; }
+.plan ul li { display: flex; gap: 10px; font-size: var(--fs-sm); color: var(--ink-600); }
+.plan ul li i { color: var(--forest-500); margin-top: 4px; }
+.plan ul li.off { color: var(--ink-400); }
+.plan ul li.off i { color: var(--ink-300); }
+
+/* ============ PAIEMENT MOBILE MONEY ============ */
+.pay-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--sp-3); }
+.pay-method { position: relative; }
+.pay-method input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.pay-method .box {
+  border: 2px solid var(--ink-200); border-radius: var(--r-lg); padding: var(--sp-4);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: #fff; transition: all var(--t); cursor: pointer; height: 100%;
+}
+.pay-method .box .mark {
+  width: 44px; height: 44px; border-radius: var(--r-md); display: grid; place-items: center;
+  font-weight: 800; font-size: var(--fs-xs); color: #fff; font-family: var(--font-display); text-align: center; line-height: 1.05;
+}
+.pay-method .box .mark.orange { background: #FF7900; }
+.pay-method .box .mark.moov   { background: #0B57A4; }
+.pay-method .box .mark.wave   { background: #1DC8FF; color: #06283D; }
+.pay-method .box .mark.card   { background: var(--ink-700); }
+.pay-method .box strong { font-size: var(--fs-sm); color: var(--ink-900); }
+.pay-method .box span { font-size: var(--fs-xs); color: var(--ink-500); text-align: center; }
+.pay-method input:checked + .box { border-color: var(--brand-500); background: var(--brand-50); }
+
+.pay-instructions { background: var(--warning-bg); border: 1px solid var(--warning-br); border-radius: var(--r-lg); padding: var(--sp-5); }
+.pay-instructions ol { list-style: decimal; padding-left: 20px; display: grid; gap: 8px; }
+.pay-instructions li { font-size: var(--fs-base); color: var(--warning-fg); }
+.pay-code {
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  background: var(--ink-900); color: var(--gold-400);
+  padding: 10px 16px; border-radius: var(--r-md); display: inline-block;
+  font-size: var(--fs-lg); font-weight: 700; letter-spacing: .06em;
+}
+
+/* ============ TABLEAU DE BORD ============ */
+.dash-grid { display: grid; grid-template-columns: 250px 1fr; gap: var(--sp-8); align-items: start; }
+.dash-nav { background: #fff; border: 1px solid var(--ink-200); border-radius: var(--r-lg); padding: var(--sp-3); position: sticky; top: calc(var(--nav-h) + 16px); }
+.dash-nav a { display: flex; align-items: center; gap: 11px; padding: 11px 13px; border-radius: var(--r-md); color: var(--ink-600); font-size: var(--fs-sm); font-weight: 650; }
+.dash-nav a:hover { background: var(--ink-100); color: var(--ink-900); }
+.dash-nav a.active { background: var(--brand-50); color: var(--brand-700); }
+.dash-nav a i { width: 18px; text-align: center; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr; gap: var(--sp-10); }
+  .hero-art { display: none; }
+  .detail-grid, .checkout-grid, .dash-grid { grid-template-columns: 1fr; }
+  .summary, .dash-nav { position: static; }
+  .auth-wrap { grid-template-columns: 1fr; }
+  .auth-side { display: none; }
+}
+@media (max-width: 760px) {
+  .split-grid { grid-template-columns: 1fr; }
+  .hero { padding: var(--sp-12) 0; }
+  .hero-proof { gap: var(--sp-5); }
+  .cart-line { grid-template-columns: 64px 1fr; }
+  .cart-line .thumb { width: 64px; height: 64px; }
+  .panel { padding: var(--sp-5); }
+}
+
+/* ---- Tuiles illustrées du hero (sans dépendance externe) ---- */
+.tile-art { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: var(--sp-5); position: relative; overflow: hidden; }
+.tile-art i { font-size: 2.4rem; color: rgba(255,255,255,.95); }
+.tile-art .cap { color: #fff; }
+.tile-art .cap strong { display: block; font-family: var(--font-display); font-size: var(--fs-md); font-weight: 800; }
+.tile-art .cap span { font-size: var(--fs-xs); color: rgba(255,255,255,.8); }
+.tile-art::after { content: ''; position: absolute; right: -30px; top: -30px; width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,.12); }
+.art-shop { background: linear-gradient(150deg, #F79420, #D9481F); }
+.art-serv { background: linear-gradient(150deg, #17694F, #0A3226); }
+.art-pay  { background: linear-gradient(150deg, #F2B705, #EE6C2B); }
+</style>
+<style>.nav{position:static}</style></head>
+<body>
+
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="brand" aria-label="EazyMarket — accueil">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IkVhenlNYXJrZXQiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJlem1HIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGNzk0MjAiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI1NSUiIHN0b3AtY29sb3I9IiNFRTZDMkIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRDk0ODFGIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxOCIgZmlsbD0idXJsKCNlem1HKSIvPgogIDxwYXRoIGQ9Ik0zMiA5Yy02LjIgMC0xMS4yIDUtMTEuMiAxMS4yVjIzaDYuMXYtMi44YzAtMi44IDIuMy01LjEgNS4xLTUuMXM1LjEgMi4zIDUuMSA1LjFWMjNoNi4xdi0yLjhDNDMuMiAxNCAzOC4yIDkgMzIgOXoiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9Ii45NSIvPgogIDxwYXRoIGQ9Ik0xNS40IDIzaDMzLjJhMyAzIDAgMCAxIDMgMy4zbC0yLjcgMjQuNGE1IDUgMCAwIDEtNSA0LjRIMjAuMWE1IDUgMCAwIDEtNS00LjRsLTIuNy0yNC40YTMgMyAwIDAgMSAzLTMuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMzIgMjkuNWwyLjkgNi45IDYuOSAyLjktNi45IDIuOS0yLjkgNi45LTIuOS02LjktNi45LTIuOSA2LjktMi45eiIgZmlsbD0iIzBGNDUzNCIvPgo8L3N2Zz4K" alt="">
+      <span class="wordmark">Eazy<em>Market</em></span>
+    </a>
+
+    <form class="nav-search" action="/recherche/" method="get" role="search">
+      <i class="fas fa-magnifying-glass"></i>
+      <input type="search" name="q" value=""
+             placeholder="Chercher un produit, un plombier, un menuisier…" aria-label="Rechercher">
+    </form>
+
+    <button class="nav-toggle" data-nav-toggle aria-label="Menu" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="nav-links" data-nav-links>
+      <a href="/produits/"><i class="fas fa-store"></i> Boutique</a>
+      <a href="/services/"><i class="fas fa-screwdriver-wrench"></i> Services</a>
+
+      
+        <a href="/infos/comment-ca-marche/"><i class="fas fa-circle-question"></i> Comment ça marche</a>
+        <a href="/panier/" aria-label="Panier"><i class="fas fa-basket-shopping"></i></a>
+        <a href="/compte/connexion/" class="btn btn-ghost btn-sm">Connexion</a>
+        <a href="/compte/inscription/" class="btn btn-primary btn-sm">Créer un compte</a>
+      
+    </div>
+  </div>
+</nav>
+
+
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="pill"><span class="dot"></span> 8 professionnels · 10 produits en ligne</span>
+        <h1>Tout ce dont vous avez besoin,<br><span class="accent">et tous ceux</span> qui savent le faire.</h1>
+        <p class="lead">
+          D'un côté la boutique : des vendeurs d'ici, des prix affichés tout compris, une livraison
+          dans la journée à Ouagadougou. De l'autre l'annuaire des pros : plombier, menuisier,
+          couturière, électricien — vous décrivez le travail, vous recevez un devis chiffré.
+        </p>
+        <div class="hero-cta">
+          <a href="/produits/" class="btn btn-primary btn-lg"><i class="fas fa-basket-shopping"></i> Explorer la boutique</a>
+          <a href="/services/" class="btn btn-ghost btn-lg"><i class="fas fa-screwdriver-wrench"></i> Trouver un artisan</a>
+        </div>
+        <div class="hero-proof">
+          <div><strong>10</strong><span>Produits</span></div>
+          <div><strong>8</strong><span>Artisans</span></div>
+          <div><strong>0 F</strong><span>Pour s'inscrire</span></div>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="tile t1"><div class="tile-art art-shop"><i class="fas fa-basket-shopping"></i><div class="cap"><strong>Boutique</strong><span>Livré chez vous</span></div></div></div>
+        <div class="tile t3"><div class="tile-art art-pay"><i class="fas fa-mobile-screen-button"></i><div class="cap"><strong>Mobile Money</strong><span>Orange · Moov · Wave</span></div></div></div>
+        <div class="tile t2"><div class="tile-art art-serv"><i class="fas fa-screwdriver-wrench"></i><div class="cap"><strong>Artisans</strong><span>Devis en 24 h</span></div></div></div>
+        <div class="hero-badge b1"><i class="fas fa-shield-halved"></i> Paiement à la livraison possible</div>
+        <div class="hero-badge b2"><i class="fas fa-star"></i> Avis clients vérifiés</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="container trust-grid">
+    <div class="trust-item"><i class="fas fa-mobile-screen-button"></i><div><strong>Payez comme vous voulez</strong><span>Orange Money, Moov, Wave ou à la livraison</span></div></div>
+    <div class="trust-item"><i class="fas fa-tags"></i><div><strong>Prix tout compris</strong><span>Ce que vous voyez est ce que vous payez</span></div></div>
+    <div class="trust-item"><i class="fas fa-truck-fast"></i><div><strong>Livraison le jour même</strong><span>Dans Ouagadougou, dès 1 000 FCFA</span></div></div>
+    <div class="trust-item"><i class="fas fa-user-shield"></i><div><strong>Pros vérifiés</strong><span>Identité contrôlée, avis publics</span></div></div>
+  </div>
+</div>
+
+
+<main class="page ">
+  <div class="container">
+    
+
+    
+
+
+<section class="mb-6">
+  <div class="section-head">
+    <span class="eyebrow"><i class="fas fa-grip"></i> Rayons</span>
+    <h2>Par où voulez-vous commencer ?</h2>
+  </div>
+  <div class="cat-grid">
+    
+      <a href="/categorie/telephones-accessoires/" class="cat-tile">
+        <span class="ico"><i class="fas fa-mobile-screen-button"></i></span>
+        <strong>Téléphones &amp; accessoires</strong>
+        <span>1 article</span>
+      </a>
+    
+      <a href="/categorie/informatique/" class="cat-tile">
+        <span class="ico"><i class="fas fa-laptop"></i></span>
+        <strong>Informatique</strong>
+        <span>1 article</span>
+      </a>
+    
+      <a href="/categorie/electromenager/" class="cat-tile">
+        <span class="ico"><i class="fas fa-blender"></i></span>
+        <strong>Électroménager</strong>
+        <span>1 article</span>
+      </a>
+    
+      <a href="/categorie/mode-habillement/" class="cat-tile">
+        <span class="ico"><i class="fas fa-shirt"></i></span>
+        <strong>Mode &amp; habillement</strong>
+        <span>1 article</span>
+      </a>
+    
+      <a href="/categorie/beaute-soins/" class="cat-tile">
+        <span class="ico"><i class="fas fa-spray-can-sparkles"></i></span>
+        <strong>Beauté &amp; soins</strong>
+        <span>1 article</span>
+      </a>
+    
+      <a href="/categorie/maison-decoration/" class="cat-tile">
+        <span class="ico"><i class="fas fa-couch"></i></span>
+        <strong>Maison &amp; décoration</strong>
+        <span>1 article</span>
+      </a>
+    
+      <a href="/categorie/alimentation-terroir/" class="cat-tile">
+        <span class="ico"><i class="fas fa-bowl-food"></i></span>
+        <strong>Alimentation &amp; terroir</strong>
+        <span>1 article</span>
+      </a>
+    
+      <a href="/categorie/agriculture-elevage/" class="cat-tile">
+        <span class="ico"><i class="fas fa-seedling"></i></span>
+        <strong>Agriculture &amp; élevage</strong>
+        <span>0 articles</span>
+      </a>
+    
+      <a href="/categorie/motos-pieces/" class="cat-tile">
+        <span class="ico"><i class="fas fa-motorcycle"></i></span>
+        <strong>Motos &amp; pièces</strong>
+        <span>1 article</span>
+      </a>
+    
+      <a href="/categorie/construction-outillage/" class="cat-tile">
+        <span class="ico"><i class="fas fa-trowel-bricks"></i></span>
+        <strong>Construction &amp; outillage</strong>
+        <span>2 articles</span>
+      </a>
+    
+      <a href="/categorie/enfants-bebe/" class="cat-tile">
+        <span class="ico"><i class="fas fa-baby"></i></span>
+        <strong>Enfants &amp; bébé</strong>
+        <span>0 articles</span>
+      </a>
+    
+      <a href="/categorie/sport-loisirs/" class="cat-tile">
+        <span class="ico"><i class="fas fa-futbol"></i></span>
+        <strong>Sport &amp; loisirs</strong>
+        <span>0 articles</span>
+      </a>
+    
+  </div>
+</section>
+
+
+
+
+<section class="mt-8">
+  <div class="split-grid">
+    <a href="/produits/" class="split-card shop">
+      <i class="fas fa-store bg-icon"></i>
+      <h3>La boutique</h3>
+      <p>Téléphones, électroménager, mode, produits du terroir. Vendus par des commerçants d'ici, livrés chez vous.</p>
+      <span class="go">Voir les produits <i class="fas fa-arrow-right"></i></span>
+    </a>
+    <a href="/services/" class="split-card serv">
+      <i class="fas fa-helmet-safety bg-icon"></i>
+      <h3>Les professionnels</h3>
+      <p>Un robinet qui fuit, un meuble sur mesure, une tenue à coudre ? Décrivez le travail, recevez un devis chiffré.</p>
+      <span class="go">Trouver un pro <i class="fas fa-arrow-right"></i></span>
+    </a>
+  </div>
+</section>
+
+
+<section class="mt-8">
+  <div class="row-between section-head">
+    <div><span class="eyebrow"><i class="fas fa-bolt"></i> Nouveautés</span><h2>Tout juste arrivé</h2></div>
+    <a href="/produits/?tri=recent" class="btn btn-ghost btn-sm">Tout voir <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="grid grid-4">
+    
+<article class="card card-hover product-card">
+  <a href="/produit/machine-a-coudre-mecanique/" class="thumb">
+    
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkYzRjEiLz4KICA8ZyBvcGFjaXR5PSIuNDUiPgogICAgPHBhdGggZD0iTTIwMCAxMDhjLTEzIDAtMjMuNSAxMC41LTIzLjUgMjMuNVYxMzZoMTJ2LTQuNWMwLTYuNCA1LjEtMTEuNSAxMS41LTExLjVzMTEuNSA1LjEgMTEuNSAxMS41VjEzNmgxMnYtNC41YzAtMTMtMTAuNS0yMy41LTIzLjUtMjMuNXoiIGZpbGw9IiM5NEEzOUQiLz4KICAgIDxwYXRoIGQ9Ik0xNjQgMTM2aDcyYTYgNiAwIDAgMSA2IDYuNmwtNS4yIDQ1YTkgOSAwIDAgMS05IDhIMTcyLjJhOSA5IDAgMCAxLTktOGwtNS4yLTQ1YTYgNiAwIDAgMSA2LTYuNnoiIGZpbGw9IiM5NEEzOUQiLz4KICA8L2c+CiAgPHRleHQgeD0iMjAwIiB5PSIyMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJJbnRlciwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzk0QTM5RCI+UGhvdG8gw6AgdmVuaXI8L3RleHQ+Cjwvc3ZnPgo=" alt="" loading="lazy">
+    
+    <span class="ribbon">Populaire</span>
+    
+  </a>
+  <div class="body">
+    <span class="cat">Construction &amp; outillage</span>
+    <a href="/produit/machine-a-coudre-mecanique/" class="name">Machine à coudre mécanique</a>
+    
+    <div class="price">
+      83 460 <small>FCFA</small>
+      
+    </div>
+  </div>
+  <div class="foot">
+    
+      <form action="/panier/ajouter/10/" method="post" style="flex:1"><input type="hidden" name="csrfmiddlewaretoken" value="pn3pRglJc3801gEX2evtscvEitdP9OGp8rodvP1n1oZ0RPcen1romFObt3jHzIZT">
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    
+    
+  </div>
+</article>
+
+<article class="card card-hover product-card">
+  <a href="/produit/casque-moto-homologue/" class="thumb">
+    
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkYzRjEiLz4KICA8ZyBvcGFjaXR5PSIuNDUiPgogICAgPHBhdGggZD0iTTIwMCAxMDhjLTEzIDAtMjMuNSAxMC41LTIzLjUgMjMuNVYxMzZoMTJ2LTQuNWMwLTYuNCA1LjEtMTEuNSAxMS41LTExLjVzMTEuNSA1LjEgMTEuNSAxMS41VjEzNmgxMnYtNC41YzAtMTMtMTAuNS0yMy41LTIzLjUtMjMuNXoiIGZpbGw9IiM5NEEzOUQiLz4KICAgIDxwYXRoIGQ9Ik0xNjQgMTM2aDcyYTYgNiAwIDAgMSA2IDYuNmwtNS4yIDQ1YTkgOSAwIDAgMS05IDhIMTcyLjJhOSA5IDAgMCAxLTktOGwtNS4yLTQ1YTYgNiAwIDAgMSA2LTYuNnoiIGZpbGw9IiM5NEEzOUQiLz4KICA8L2c+CiAgPHRleHQgeD0iMjAwIiB5PSIyMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJJbnRlciwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzk0QTM5RCI+UGhvdG8gw6AgdmVuaXI8L3RleHQ+Cjwvc3ZnPgo=" alt="" loading="lazy">
+    
+    <span class="ribbon">Populaire</span>
+    
+  </a>
+  <div class="body">
+    <span class="cat">Motos &amp; pièces</span>
+    <a href="/produit/casque-moto-homologue/" class="name">Casque moto homologué</a>
+    
+    <div class="price">
+      16 050 <small>FCFA</small>
+      
+    </div>
+  </div>
+  <div class="foot">
+    
+      <form action="/panier/ajouter/9/" method="post" style="flex:1"><input type="hidden" name="csrfmiddlewaretoken" value="pn3pRglJc3801gEX2evtscvEitdP9OGp8rodvP1n1oZ0RPcen1romFObt3jHzIZT">
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    
+    
+  </div>
+</article>
+
+<article class="card card-hover product-card">
+  <a href="/produit/sac-de-riz-local-25-kg/" class="thumb">
+    
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkYzRjEiLz4KICA8ZyBvcGFjaXR5PSIuNDUiPgogICAgPHBhdGggZD0iTTIwMCAxMDhjLTEzIDAtMjMuNSAxMC41LTIzLjUgMjMuNVYxMzZoMTJ2LTQuNWMwLTYuNCA1LjEtMTEuNSAxMS41LTExLjVzMTEuNSA1LjEgMTEuNSAxMS41VjEzNmgxMnYtNC41YzAtMTMtMTAuNS0yMy41LTIzLjUtMjMuNXoiIGZpbGw9IiM5NEEzOUQiLz4KICAgIDxwYXRoIGQ9Ik0xNjQgMTM2aDcyYTYgNiAwIDAgMSA2IDYuNmwtNS4yIDQ1YTkgOSAwIDAgMS05IDhIMTcyLjJhOSA5IDAgMCAxLTktOGwtNS4yLTQ1YTYgNiAwIDAgMSA2LTYuNnoiIGZpbGw9IiM5NEEzOUQiLz4KICA8L2c+CiAgPHRleHQgeD0iMjAwIiB5PSIyMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJJbnRlciwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzk0QTM5RCI+UGhvdG8gw6AgdmVuaXI8L3RleHQ+Cjwvc3ZnPgo=" alt="" loading="lazy">
+    
+    
+    
+  </a>
+  <div class="body">
+    <span class="cat">Alimentation &amp; terroir</span>
+    <a href="/produit/sac-de-riz-local-25-kg/" class="name">Sac de riz local 25 kg</a>
+    
+    <div class="price">
+      18 725 <small>FCFA</small>
+      
+    </div>
+  </div>
+  <div class="foot">
+    
+      <form action="/panier/ajouter/8/" method="post" style="flex:1"><input type="hidden" name="csrfmiddlewaretoken" value="pn3pRglJc3801gEX2evtscvEitdP9OGp8rodvP1n1oZ0RPcen1romFObt3jHzIZT">
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    
+    
+  </div>
+</article>
+
+<article class="card card-hover product-card">
+  <a href="/produit/table-basse-en-bois-de-teck/" class="thumb">
+    
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkYzRjEiLz4KICA8ZyBvcGFjaXR5PSIuNDUiPgogICAgPHBhdGggZD0iTTIwMCAxMDhjLTEzIDAtMjMuNSAxMC41LTIzLjUgMjMuNVYxMzZoMTJ2LTQuNWMwLTYuNCA1LjEtMTEuNSAxMS41LTExLjVzMTEuNSA1LjEgMTEuNSAxMS41VjEzNmgxMnYtNC41YzAtMTMtMTAuNS0yMy41LTIzLjUtMjMuNXoiIGZpbGw9IiM5NEEzOUQiLz4KICAgIDxwYXRoIGQ9Ik0xNjQgMTM2aDcyYTYgNiAwIDAgMSA2IDYuNmwtNS4yIDQ1YTkgOSAwIDAgMS05IDhIMTcyLjJhOSA5IDAgMCAxLTktOGwtNS4yLTQ1YTYgNiAwIDAgMSA2LTYuNnoiIGZpbGw9IiM5NEEzOUQiLz4KICA8L2c+CiAgPHRleHQgeD0iMjAwIiB5PSIyMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJJbnRlciwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzk0QTM5RCI+UGhvdG8gw6AgdmVuaXI8L3RleHQ+Cjwvc3ZnPgo=" alt="" loading="lazy">
+    
+    <span class="ribbon">Populaire</span>
+    
+  </a>
+  <div class="body">
+    <span class="cat">Maison &amp; décoration</span>
+    <a href="/produit/table-basse-en-bois-de-teck/" class="name">Table basse en bois de teck</a>
+    
+    <div class="price">
+      48 150 <small>FCFA</small>
+      
+    </div>
+  </div>
+  <div class="foot">
+    
+      <form action="/panier/ajouter/7/" method="post" style="flex:1"><input type="hidden" name="csrfmiddlewaretoken" value="pn3pRglJc3801gEX2evtscvEitdP9OGp8rodvP1n1oZ0RPcen1romFObt3jHzIZT">
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    
+    
+  </div>
+</article>
+
+<article class="card card-hover product-card">
+  <a href="/produit/ordinateur-portable-reconditionne-i5/" class="thumb">
+    
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkYzRjEiLz4KICA8ZyBvcGFjaXR5PSIuNDUiPgogICAgPHBhdGggZD0iTTIwMCAxMDhjLTEzIDAtMjMuNSAxMC41LTIzLjUgMjMuNVYxMzZoMTJ2LTQuNWMwLTYuNCA1LjEtMTEuNSAxMS41LTExLjVzMTEuNSA1LjEgMTEuNSAxMS41VjEzNmgxMnYtNC41YzAtMTMtMTAuNS0yMy41LTIzLjUtMjMuNXoiIGZpbGw9IiM5NEEzOUQiLz4KICAgIDxwYXRoIGQ9Ik0xNjQgMTM2aDcyYTYgNiAwIDAgMSA2IDYuNmwtNS4yIDQ1YTkgOSAwIDAgMS05IDhIMTcyLjJhOSA5IDAgMCAxLTktOGwtNS4yLTQ1YTYgNiAwIDAgMSA2LTYuNnoiIGZpbGw9IiM5NEEzOUQiLz4KICA8L2c+CiAgPHRleHQgeD0iMjAwIiB5PSIyMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJJbnRlciwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzk0QTM5RCI+UGhvdG8gw6AgdmVuaXI8L3RleHQ+Cjwvc3ZnPgo=" alt="" loading="lazy">
+    
+    <span class="ribbon">Populaire</span>
+    
+  </a>
+  <div class="body">
+    <span class="cat">Informatique</span>
+    <a href="/produit/ordinateur-portable-reconditionne-i5/" class="name">Ordinateur portable reconditionné i5</a>
+    
+    <div class="price">
+      208 650 <small>FCFA</small>
+      
+    </div>
+  </div>
+  <div class="foot">
+    
+      <form action="/panier/ajouter/6/" method="post" style="flex:1"><input type="hidden" name="csrfmiddlewaretoken" value="pn3pRglJc3801gEX2evtscvEitdP9OGp8rodvP1n1oZ0RPcen1romFObt3jHzIZT">
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    
+    
+  </div>
+</article>
+
+<article class="card card-hover product-card">
+  <a href="/produit/beurre-de-karite-pur-1-kg/" class="thumb">
+    
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkYzRjEiLz4KICA8ZyBvcGFjaXR5PSIuNDUiPgogICAgPHBhdGggZD0iTTIwMCAxMDhjLTEzIDAtMjMuNSAxMC41LTIzLjUgMjMuNVYxMzZoMTJ2LTQuNWMwLTYuNCA1LjEtMTEuNSAxMS41LTExLjVzMTEuNSA1LjEgMTEuNSAxMS41VjEzNmgxMnYtNC41YzAtMTMtMTAuNS0yMy41LTIzLjUtMjMuNXoiIGZpbGw9IiM5NEEzOUQiLz4KICAgIDxwYXRoIGQ9Ik0xNjQgMTM2aDcyYTYgNiAwIDAgMSA2IDYuNmwtNS4yIDQ1YTkgOSAwIDAgMS05IDhIMTcyLjJhOSA5IDAgMCAxLTktOGwtNS4yLTQ1YTYgNiAwIDAgMSA2LTYuNnoiIGZpbGw9IiM5NEEzOUQiLz4KICA8L2c+CiAgPHRleHQgeD0iMjAwIiB5PSIyMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJJbnRlciwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzk0QTM5RCI+UGhvdG8gw6AgdmVuaXI8L3RleHQ+Cjwvc3ZnPgo=" alt="" loading="lazy">
+    
+    
+    
+  </a>
+  <div class="body">
+    <span class="cat">Beauté &amp; soins</span>
+    <a href="/produit/beurre-de-karite-pur-1-kg/" class="name">Beurre de karité pur 1 kg</a>
+    
+    <div class="price">
+      4 815 <small>FCFA</small>
+      
+    </div>
+  </div>
+  <div class="foot">
+    
+      <form action="/panier/ajouter/5/" method="post" style="flex:1"><input type="hidden" name="csrfmiddlewaretoken" value="pn3pRglJc3801gEX2evtscvEitdP9OGp8rodvP1n1oZ0RPcen1romFObt3jHzIZT">
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    
+    
+  </div>
+</article>
+
+<article class="card card-hover product-card">
+  <a href="/produit/panneau-solaire-100-w-regulateur/" class="thumb">
+    
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkYzRjEiLz4KICA8ZyBvcGFjaXR5PSIuNDUiPgogICAgPHBhdGggZD0iTTIwMCAxMDhjLTEzIDAtMjMuNSAxMC41LTIzLjUgMjMuNVYxMzZoMTJ2LTQuNWMwLTYuNCA1LjEtMTEuNSAxMS41LTExLjVzMTEuNSA1LjEgMTEuNSAxMS41VjEzNmgxMnYtNC41YzAtMTMtMTAuNS0yMy41LTIzLjUtMjMuNXoiIGZpbGw9IiM5NEEzOUQiLz4KICAgIDxwYXRoIGQ9Ik0xNjQgMTM2aDcyYTYgNiAwIDAgMSA2IDYuNmwtNS4yIDQ1YTkgOSAwIDAgMS05IDhIMTcyLjJhOSA5IDAgMCAxLTktOGwtNS4yLTQ1YTYgNiAwIDAgMSA2LTYuNnoiIGZpbGw9IiM5NEEzOUQiLz4KICA8L2c+CiAgPHRleHQgeD0iMjAwIiB5PSIyMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJJbnRlciwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzk0QTM5RCI+UGhvdG8gw6AgdmVuaXI8L3RleHQ+Cjwvc3ZnPgo=" alt="" loading="lazy">
+    
+    <span class="ribbon">Populaire</span>
+    
+  </a>
+  <div class="body">
+    <span class="cat">Construction &amp; outillage</span>
+    <a href="/produit/panneau-solaire-100-w-regulateur/" class="name">Panneau solaire 100 W + régulateur</a>
+    
+    <div class="price">
+      69 550 <small>FCFA</small>
+      
+    </div>
+  </div>
+  <div class="foot">
+    
+      <form action="/panier/ajouter/4/" method="post" style="flex:1"><input type="hidden" name="csrfmiddlewaretoken" value="pn3pRglJc3801gEX2evtscvEitdP9OGp8rodvP1n1oZ0RPcen1romFObt3jHzIZT">
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    
+    
+  </div>
+</article>
+
+<article class="card card-hover product-card">
+  <a href="/produit/sac-a-main-en-cuir-cousu-main/" class="thumb">
+    
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkYzRjEiLz4KICA8ZyBvcGFjaXR5PSIuNDUiPgogICAgPHBhdGggZD0iTTIwMCAxMDhjLTEzIDAtMjMuNSAxMC41LTIzLjUgMjMuNVYxMzZoMTJ2LTQuNWMwLTYuNCA1LjEtMTEuNSAxMS41LTExLjVzMTEuNSA1LjEgMTEuNSAxMS41VjEzNmgxMnYtNC41YzAtMTMtMTAuNS0yMy41LTIzLjUtMjMuNXoiIGZpbGw9IiM5NEEzOUQiLz4KICAgIDxwYXRoIGQ9Ik0xNjQgMTM2aDcyYTYgNiAwIDAgMSA2IDYuNmwtNS4yIDQ1YTkgOSAwIDAgMS05IDhIMTcyLjJhOSA5IDAgMCAxLTktOGwtNS4yLTQ1YTYgNiAwIDAgMSA2LTYuNnoiIGZpbGw9IiM5NEEzOUQiLz4KICA8L2c+CiAgPHRleHQgeD0iMjAwIiB5PSIyMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJJbnRlciwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzk0QTM5RCI+UGhvdG8gw6AgdmVuaXI8L3RleHQ+Cjwvc3ZnPgo=" alt="" loading="lazy">
+    
+    <span class="ribbon">Populaire</span>
+    
+  </a>
+  <div class="body">
+    <span class="cat">Mode &amp; habillement</span>
+    <a href="/produit/sac-a-main-en-cuir-cousu-main/" class="name">Sac à main en cuir cousu main</a>
+    
+    <div class="price">
+      19 260 <small>FCFA</small>
+      
+    </div>
+  </div>
+  <div class="foot">
+    
+      <form action="/panier/ajouter/3/" method="post" style="flex:1"><input type="hidden" name="csrfmiddlewaretoken" value="pn3pRglJc3801gEX2evtscvEitdP9OGp8rodvP1n1oZ0RPcen1romFObt3jHzIZT">
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    
+    
+  </div>
+</article>
+
+  </div>
+</section>
+
+
+
+<section class="mt-8">
+  <div class="row-between section-head">
+    <div><span class="eyebrow"><i class="fas fa-award"></i> Artisans</span><h2>Les mieux notés près de chez vous</h2></div>
+    <a href="/services/artisans/" class="btn btn-ghost btn-sm">Voir l'annuaire <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="grid grid-4">
+    <article class="card card-hover artisan-card">
+  <div class="top">
+    
+      <span class="avatar avatar-forest">FO</span>
+    
+    <div style="flex:1;min-width:0">
+      <a href="/services/artisan/2/" style="font-family:var(--font-display);font-weight:700;color:var(--ink-900);font-size:var(--fs-md)">
+        Fatimata Ouédraogo
+      </a>
+      <div class="small muted">Couture &amp; mode</div>
+      
+        
+<span class="stars" aria-label="Note 5,0 sur 5">
+  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+</span>
+<span class="tiny muted">(1)</span>
+
+      
+    </div>
+  </div>
+
+  <p class="small">Couture &amp; mode depuis plus de 18 ans à Ouagadougou. Travail soigné, devis gratuit, déplacement dans toute la …</p>
+
+  <div class="chip-list">
+    <span class="chip"><i class="fas fa-location-dot"></i> Pissy</span>
+    <span class="chip"><i class="fas fa-clock"></i> 18 ans</span>
+    <span class="chip" style="background:var(--success-bg);color:var(--success-fg)"><i class="fas fa-circle-check"></i> Vérifié</span>
+    <span class="chip" style="background:var(--warning-bg);color:var(--warning-fg)"><i class="fas fa-bolt"></i> Urgences</span>
+  </div>
+
+  <div class="row-between" style="margin-top:auto;padding-top:var(--sp-3)">
+    <span class="small bold">5 000 – 25 000 FCFA</span>
+    <a href="/services/artisan/2/" class="btn btn-outline btn-sm">Voir le profil</a>
+  </div>
+</article>
+<article class="card card-hover artisan-card">
+  <div class="top">
+    
+      <span class="avatar avatar-forest">IC</span>
+    
+    <div style="flex:1;min-width:0">
+      <a href="/services/artisan/3/" style="font-family:var(--font-display);font-weight:700;color:var(--ink-900);font-size:var(--fs-md)">
+        Issa Compaoré
+      </a>
+      <div class="small muted">Électricité</div>
+      
+        
+<span class="stars" aria-label="Note 4,2 sur 5">
+  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star empty"></i>
+</span>
+<span class="tiny muted">(6)</span>
+
+      
+    </div>
+  </div>
+
+  <p class="small">Électricité depuis plus de 13 ans à Ouagadougou. Travail soigné, devis gratuit, déplacement dans toute la vil…</p>
+
+  <div class="chip-list">
+    <span class="chip"><i class="fas fa-location-dot"></i> Ouaga 2000</span>
+    <span class="chip"><i class="fas fa-clock"></i> 4 ans</span>
+    <span class="chip" style="background:var(--success-bg);color:var(--success-fg)"><i class="fas fa-circle-check"></i> Vérifié</span>
+    
+  </div>
+
+  <div class="row-between" style="margin-top:auto;padding-top:var(--sp-3)">
+    <span class="small bold">3 000 – 75 000 FCFA</span>
+    <a href="/services/artisan/3/" class="btn btn-outline btn-sm">Voir le profil</a>
+  </div>
+</article>
+<article class="card card-hover artisan-card">
+  <div class="top">
+    
+      <span class="avatar avatar-forest">OS</span>
+    
+    <div style="flex:1;min-width:0">
+      <a href="/services/artisan/1/" style="font-family:var(--font-display);font-weight:700;color:var(--ink-900);font-size:var(--fs-md)">
+        Ousmane Sawadogo
+      </a>
+      <div class="small muted">Plomberie</div>
+      
+        
+<span class="stars" aria-label="Note 4,1 sur 5">
+  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star empty"></i>
+</span>
+<span class="tiny muted">(12)</span>
+
+      
+    </div>
+  </div>
+
+  <p class="small">Plomberie depuis plus de 18 ans à Ouagadougou. Travail soigné, devis gratuit, déplacement dans toute la ville.</p>
+
+  <div class="chip-list">
+    <span class="chip"><i class="fas fa-location-dot"></i> Tanghin</span>
+    <span class="chip"><i class="fas fa-clock"></i> 6 ans</span>
+    
+    <span class="chip" style="background:var(--warning-bg);color:var(--warning-fg)"><i class="fas fa-bolt"></i> Urgences</span>
+  </div>
+
+  <div class="row-between" style="margin-top:auto;padding-top:var(--sp-3)">
+    <span class="small bold">10 000 – 75 000 FCFA</span>
+    <a href="/services/artisan/1/" class="btn btn-outline btn-sm">Voir le profil</a>
+  </div>
+</article>
+<article class="card card-hover artisan-card">
+  <div class="top">
+    
+      <span class="avatar avatar-forest">RN</span>
+    
+    <div style="flex:1;min-width:0">
+      <a href="/services/artisan/7/" style="font-family:var(--font-display);font-weight:700;color:var(--ink-900);font-size:var(--fs-md)">
+        Rasmané Nikièma
+      </a>
+      <div class="small muted">Mécanique auto &amp; moto</div>
+      
+        
+<span class="stars" aria-label="Note 4,7 sur 5">
+  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star empty"></i>
+</span>
+<span class="tiny muted">(16)</span>
+
+      
+    </div>
+  </div>
+
+  <p class="small">Mécanique auto &amp; moto depuis plus de 8 ans à Ouagadougou. Travail soigné, devis gratuit, déplacement dans tou…</p>
+
+  <div class="chip-list">
+    <span class="chip"><i class="fas fa-location-dot"></i> Pissy</span>
+    <span class="chip"><i class="fas fa-clock"></i> 17 ans</span>
+    
+    
+  </div>
+
+  <div class="row-between" style="margin-top:auto;padding-top:var(--sp-3)">
+    <span class="small bold">10 000 – 40 000 FCFA</span>
+    <a href="/services/artisan/7/" class="btn btn-outline btn-sm">Voir le profil</a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+
+<section class="mt-8 panel">
+  <div class="section-head center">
+    <span class="eyebrow" style="justify-content:center"><i class="fas fa-route"></i> En trois temps</span>
+    <h2>Comment ça marche</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><h4>Vous cherchez</h4><p>Un produit dans la boutique, ou un professionnel dans l'annuaire. Filtrez par quartier, prix et note.</p></div>
+    <div class="step"><h4>Vous commandez ou décrivez</h4><p>Ajoutez au panier, ou expliquez le travail à faire. L'artisan vous renvoie un devis détaillé.</p></div>
+    <div class="step"><h4>Vous payez comme vous voulez</h4><p>Orange Money, Moov Money, Wave — ou en espèces à la livraison. Chaque étape est tracée.</p></div>
+    <div class="step"><h4>Vous notez</h4><p>Votre avis compte : il aide les prochains clients et récompense les pros sérieux.</p></div>
+  </div>
+</section>
+
+<section class="mt-8 panel" style="background:linear-gradient(140deg,var(--forest-600),var(--forest-500));border:none">
+  <div class="row-between">
+    <div style="max-width:56ch">
+      <h2 style="color:#fff">Vous vendez, ou vous avez un métier entre les mains ?</h2>
+      <p style="color:rgba(255,255,255,.85)">
+        L'inscription est gratuite. Vous ne payez qu'une commission quand vous vendez —
+        et vos premiers devis d'artisan sont offerts. Votre argent arrive sur votre mobile money.
+      </p>
+    </div>
+    <div class="row row-wrap">
+      <a href="/infos/vendre/" class="btn btn-primary btn-lg">Ouvrir ma boutique</a>
+      <a href="/services/devenir-artisan/" class="btn btn-ghost btn-lg" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff">Devenir artisan</a>
+    </div>
+  </div>
+</section>
+
+
+  </div>
+</main>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgNjQiIHdpZHRoPSIzMDAiIGhlaWdodD0iNjQiPgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTMyIDljLTYuMiAwLTExLjIgNS0xMS4yIDExLjJWMjNoNi4xdi0yLjhjMC0yLjggMi4zLTUuMSA1LjEtNS4xczUuMSAyLjMgNS4xIDUuMVYyM2g2LjF2LTIuOEM0My4yIDE0IDM4LjIgOSAzMiA5eiIgZmlsbD0iI0VFNkMyQiIvPgogIDxwYXRoIGQ9Ik0xNS40IDIzaDMzLjJhMyAzIDAgMCAxIDMgMy4zbC0yLjcgMjQuNGE1IDUgMCAwIDEtNSA0LjRIMjAuMWE1IDUgMCAwIDEtNS00LjRsLTIuNy0yNC40YTMgMyAwIDAgMSAzLTMuM3oiIGZpbGw9IiNFRTZDMkIiLz4KICA8cGF0aCBkPSJNMzIgMjkuNWwyLjkgNi45IDYuOSAyLjktNi45IDIuOS0yLjkgNi45LTIuOS02LjktNi45LTIuOSA2LjktMi45eiIgZmlsbD0iI0ZGRkZGRiIvPgogIDx0ZXh0IHg9Ijc4IiB5PSIzNCIgZm9udC1mYW1pbHk9Ik91dGZpdCwgSW50ZXIsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjciIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNGRkZGRkYiIGxldHRlci1zcGFjaW5nPSItMC42Ij5FYXp5TWFya2V0PC90ZXh0PgogIDx0ZXh0IHg9Ijc5IiB5PSI1MCIgZm9udC1mYW1pbHk9IkludGVyLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwLjUiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsLjcpIiBsZXR0ZXItc3BhY2luZz0iMi4yIj5CT1VUSVFVRSAmIzE4MzsgU0VSVklDRVM8L3RleHQ+Cjwvc3ZnPgo=" alt="EazyMarket" style="height:52px;margin-bottom:16px">
+        <p>Le marché en ligne du Burkina Faso : des produits livrés chez vous et des professionnels de confiance près de chez vous. Paiement mobile money, prix affichés tout compris.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          <a href="https://wa.me/22600000000" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Acheter</h4>
+        <a href="/produits/">Tous les produits</a>
+        <a href="/services/">Trouver un artisan</a>
+        <a href="/commandes/mes-commandes/">Suivre ma commande</a>
+        <a href="/infos/comment-ca-marche/">Comment ça marche</a>
+      </div>
+
+      <div>
+        <h4>Vendre</h4>
+        <a href="/infos/vendre/">Ouvrir ma boutique</a>
+        <a href="/services/devenir-artisan/">Devenir artisan référencé</a>
+        <a href="/compte/inscription/">Devenir livreur</a>
+        <a href="/infos/vendre/">Nos tarifs</a>
+      </div>
+
+      <div>
+        <h4>Aide</h4>
+        <a href="/infos/faq/">Questions fréquentes</a>
+        <a href="/infos/contact/">Nous contacter</a>
+        <a href="/infos/a-propos/">À propos</a>
+        <a href="/infos/conditions/">Conditions d'utilisation</a>
+        <p class="mt-4"><i class="fas fa-phone"></i> +226 00 00 00 00</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 EazyMarket — Ouagadougou, Burkina Faso</span>
+      <span>Paiement sécurisé : Orange Money · Moov Money · Wave</span>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body>
+</html>

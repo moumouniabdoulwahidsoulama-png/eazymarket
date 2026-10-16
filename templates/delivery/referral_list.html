@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Dossiers livreurs — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="row-between mb-6"><h1>Dossiers livreurs</h1><a href="{% url 'admin_dashboard' %}" class="btn btn-ghost btn-sm">Retour au pilotage</a></div>
+
+<section class="panel mb-6">
+  <div class="panel-head"><h3>À traiter</h3><span class="badge badge-warning">{{ submitted|length }}</span></div>
+  {% for r in submitted %}
+    <div class="card card-pad mb-4">
+      <div class="row-between mb-4">
+        <div>
+          <div class="bold">{{ r.deliverer.username }} <span class="tiny muted">· {{ r.referral_code }}</span></div>
+          <div class="small muted">{{ r.deliverer.profile.get_vehicle_type_display }} · {{ r.deliverer.profile.delivery_zone }} · {{ r.deliverer.profile.phone }}</div>
+        </div>
+        {% if r.id_document %}<a href="{{ r.id_document.url }}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><i class="fas fa-id-card"></i> Pièce d'identité</a>{% endif %}
+      </div>
+      <div class="table-wrap mb-4">
+        <table class="table">
+          <thead><tr><th>Personne parrainée</th><th>Téléphone</th><th>Lien</th></tr></thead>
+          <tbody>{% for s in r.sponsors.all %}<tr><td class="small">{{ s.full_name }}</td><td class="small">{{ s.phone }}</td><td class="small">{{ s.relation|default:"—" }}</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
+      <form method="post" action="{% url 'verify_referral' r.id %}">{% csrf_token %}
+        <div class="field"><input type="text" name="note" placeholder="Note interne (ex : 3 contacts joints, tous positifs)"></div>
+        <div class="row">
+          <button name="action" value="approve" class="btn btn-primary btn-sm" data-confirm="Valider {{ r.deliverer.username }} comme livreur ?">Valider</button>
+          <button name="action" value="reject" class="btn btn-quiet btn-sm">Refuser</button>
+        </div>
+      </form>
+    </div>
+  {% empty %}<p class="muted">Aucun dossier en attente.</p>{% endfor %}
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h3>Livreurs validés</h3></div>
+  {% for r in verified %}
+    <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--ink-100)">
+      <span class="small">{{ r.deliverer.username }}</span>
+      <span class="tiny muted">validé le {{ r.verified_at|date:"d/m/Y" }}</span>
+    </div>
+  {% empty %}<p class="muted small">Aucun livreur validé.</p>{% endfor %}
+</section>
+{% endblock %}

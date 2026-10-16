@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Services - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto;">
+
+    <!-- Bannière -->
+    <div style="text-align: center; padding: 40px 20px 30px;">
+        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 42px; background: linear-gradient(135deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <i class="fas fa-tools"></i> Services EazyMarket
+        </h1>
+        <p style="color: rgba(255,255,255,0.5); font-size: 18px; max-width: 600px; margin: 10px auto;">
+            Trouvez les meilleurs artisans et prestataires près de chez vous
+        </p>
+        
+        <!-- Barre de recherche -->
+        <form action="{% url 'artisan_list' %}" method="get" style="max-width: 500px; margin: 20px auto; display: flex; gap: 10px;">
+            <input type="text" name="q" placeholder="Rechercher un artisan..." 
+                   style="flex: 1; padding: 14px 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #ffffff; font-size: 15px; outline: none;">
+            <button type="submit" class="nav-btn btn-primary" style="border: none; padding: 14px 30px;">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Catégories de services -->
+    <h2 style="color: rgba(255,255,255,0.7); font-size: 18px; margin-bottom: 20px;">
+        <i class="fas fa-th-large"></i> Catégories
+    </h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-bottom: 40px;">
+        {% for category in categories %}
+            <a href="{% url 'artisan_list_category' category.slug %}" 
+               style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; text-align: center; text-decoration: none; color: inherit; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease;"
+               onmouseenter="this.style.transform='translateY(-5px)'; this.style.borderColor='rgba(0,255,255,0.3)'"
+               onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255,255,255,0.08)'">
+                <i class="fas {{ category.icon }}" style="font-size: 32px; color: #00ffff; display: block; margin-bottom: 10px;"></i>
+                <span style="font-size: 14px; font-weight: 600;">{{ category.name }}</span>
+            </a>
+        {% empty %}
+            <p style="color: rgba(255,255,255,0.3); grid-column: 1 / -1; text-align: center;">Aucune catégorie disponible</p>
+        {% endfor %}
+    </div>
+
+    <!-- Artisans en vedette -->
+    {% if featured_artisans %}
+    <h2 style="color: rgba(255,255,255,0.7); font-size: 18px; margin-bottom: 20px;">
+        <i class="fas fa-star"></i> Artisans en vedette
+    </h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+        {% for artisan in featured_artisans %}
+            <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease;"
+                 onmouseenter="this.style.transform='translateY(-5px)'; this.style.borderColor='rgba(255,215,0,0.3)'"
+                 onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255,255,255,0.08)'">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid #ffd700;">
+                        <i class="fas fa-user" style="font-size: 24px; color: rgba(255,255,255,0.3);"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 16px; color: #ffffff;">{{ artisan.full_name }}</h3>
+                        <span style="font-size: 13px; color: rgba(255,255,255,0.3);">{{ artisan.service_category.name }}</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px;">
+                    <span style="color: rgba(255,255,255,0.5);">📍 {{ artisan.quartier }}</span>
+                    <span style="color: #ffd700;">⭐ {{ artisan.rating }}/5</span>
+                </div>
+                
+                <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    {{ artisan.description|truncatechars:80 }}
+                </p>
+                
+                <div style="display: flex; gap: 10px;">
+                    <a href="{% url 'artisan_detail' artisan.id %}" class="nav-btn btn-primary" style="flex: 1; text-align: center; padding: 8px; font-size: 13px; border: none;">
+                        <i class="fas fa-eye"></i> Voir profil
+                    </a>
+                    {% if artisan.is_available %}
+                        <span class="badge badge-success" style="font-size: 11px; padding: 5px 12px; align-self: center;">
+                            <i class="fas fa-check-circle"></i> Disponible
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Comment ça marche -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+        <div style="text-align: center;">
+            <div style="font-size: 40px; color: #00ffff; margin-bottom: 10px;">
+                <i class="fas fa-search"></i>
+            </div>
+            <h4 style="color: #ffffff; font-size: 16px;">1. Recherchez</h4>
+            <p style="color: rgba(255,255,255,0.3); font-size: 13px;">Trouvez l'artisan idéal pour votre projet</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 40px; color: #ff00ff; margin-bottom: 10px;">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <h4 style="color: #ffffff; font-size: 16px;">2. Contactez</h4>
+            <p style="color: rgba(255,255,255,0.3); font-size: 13px;">Envoyez une demande de service</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 40px; color: #ffd700; margin-bottom: 10px;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h4 style="color: #ffffff; font-size: 16px;">3. Validez</h4>
+            <p style="color: rgba(255,255,255,0.3); font-size: 13px;">L'artisan accepte et réalise le travail</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 40px; color: #00ff64; margin-bottom: 10px;">
+                <i class="fas fa-star"></i>
+            </div>
+            <h4 style="color: #ffffff; font-size: 16px;">4. Évaluez</h4>
+            <p style="color: rgba(255,255,255,0.3); font-size: 13px;">Laissez un avis pour aider la communauté</p>
+        </div>
+    </div>
+
+    <!-- Devenir artisan -->
+    <div style="text-align: center; padding: 40px 20px; margin-top: 30px; background: linear-gradient(135deg, rgba(0,255,255,0.05), rgba(255,0,255,0.05)); border-radius: 16px; border: 1px solid rgba(0,255,255,0.1);">
+        <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 10px;">Vous êtes artisan ?</h2>
+        <p style="color: rgba(255,255,255,0.4); margin-bottom: 20px;">Rejoignez EazyMarket et trouvez de nouveaux clients</p>
+        <a href="#" class="nav-btn btn-primary" style="border: none; padding: 14px 40px;">
+            <i class="fas fa-user-plus"></i> S'inscrire comme artisan
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}À propos — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container-narrow">
+  <div class="section-head"><span class="eyebrow"><i class="fas fa-seedling"></i> Notre histoire</span><h1>Rapprocher ceux qui vendent, ceux qui savent faire, et ceux qui ont besoin</h1></div>
+
+  <div class="panel stack">
+    <p>À {{ CITY }}, trouver un bon produit ou un bon artisan tient encore beaucoup à la chance : un statut WhatsApp aperçu au bon moment, un cousin qui connaît quelqu'un, un numéro griffonné sur un mur. Ça marche parfois. Souvent, ça coûte du temps, de l'argent, et de la confiance.</p>
+
+    <p>{{ SITE.SITE_NAME }} est né de ce constat simple. Nous avons construit un endroit où les commerçants exposent leurs produits comme dans une vraie vitrine, où les artisans montrent leurs réalisations au lieu de les décrire, et où le client compare, choisit, paie et note — le tout depuis son téléphone, avec le mobile money qu'il utilise déjà tous les jours.</p>
+
+    <h3>Ce en quoi nous croyons</h3>
+    <ul class="stack">
+      <li><strong>Le prix affiché est le prix payé.</strong> Pas de frais qui apparaissent à la dernière étape.</li>
+      <li><strong>La réputation se gagne, elle ne s'achète pas.</strong> Un avis ne peut être laissé qu'après un achat ou un travail réellement terminé.</li>
+      <li><strong>Un professionnel doit être payé vite.</strong> Nos délais de versement sont courts et annoncés à l'avance.</li>
+      <li><strong>Tout doit tenir sur un téléphone modeste.</strong> Nous concevons pour une connexion lente et un petit écran, pas pour une démo sur grand écran.</li>
+    </ul>
+
+    <h3>Où nous allons</h3>
+    <p>Nous démarrons à {{ CITY }}, quartier par quartier. L'objectif n'est pas d'avoir le plus grand catalogue, mais que chaque personne inscrite — vendeur, artisan ou livreur — gagne réellement quelque chose à être là. Le reste suivra.</p>
+  </div>
+
+  <div class="panel mt-6 center">
+    <h3>Une question, une idée, un partenariat ?</h3>
+    <p class="mb-4">Nous lisons tout.</p>
+    <a href="{% url 'contact' %}" class="btn btn-primary">Nous écrire</a>
+  </div>
+</div>
+{% endblock %}

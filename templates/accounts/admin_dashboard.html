@@ -1,0 +1,123 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Pilotage — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="row-between mb-6">
+  <div><h1>Pilotage</h1><p class="small">Vue d'ensemble de la place de marché</p></div>
+  <div class="row row-wrap">
+    <a href="{% url 'admin_transactions' %}" class="btn {% if to_review %}btn-primary{% else %}btn-ghost{% endif %}">
+      <i class="fas fa-money-check-dollar"></i> Paiements à valider {% if to_review %}({{ to_review }}){% endif %}
+    </a>
+    <a href="{% url 'admin_payouts' %}" class="btn btn-ghost"><i class="fas fa-hand-holding-dollar"></i> Retraits {% if payouts_pending %}({{ payouts_pending }}){% endif %}</a>
+    <a href="{% url 'referral_list' %}" class="btn btn-ghost"><i class="fas fa-id-badge"></i> Dossiers livreurs</a>
+    <a href="/django-admin/" class="btn btn-ghost"><i class="fas fa-database"></i> Admin Django</a>
+  </div>
+</div>
+
+<div class="stat-grid mb-8">
+  <div class="stat"><div class="label">Volume d'affaires</div><div class="value">{{ stats.gmv|floatformat:0|intcomma }}<small> F</small></div><div class="delta">{{ stats.month_gmv|floatformat:0|intcomma }} F sur 30 j</div></div>
+  <div class="stat forest"><div class="label">Revenu commissions</div><div class="value">{{ stats.revenue|floatformat:0|intcomma }}<small> F</small></div></div>
+  <div class="stat gold"><div class="label">Revenu abonnements</div><div class="value">{{ stats.subs_revenue|floatformat:0|intcomma }}<small> F</small></div></div>
+  <div class="stat"><div class="label">Commandes</div><div class="value">{{ stats.orders }}</div></div>
+  <div class="stat"><div class="label">Utilisateurs</div><div class="value">{{ stats.users }}</div><div class="delta">{{ stats.sellers }} vendeurs · {{ stats.artisans }} artisans</div></div>
+  <div class="stat"><div class="label">Produits</div><div class="value">{{ stats.products }}</div></div>
+</div>
+
+{% if confirmations_attente %}
+<section class="panel mb-8" style="border-color:var(--warning-br)">
+  <div class="panel-head">
+    <h3>Commandes payées en attente de confirmation</h3>
+    <span class="badge badge-warning">{{ confirmations_attente|length }}</span>
+  </div>
+  <p class="small muted mb-3">
+    L'argent de ces clients est chez nous. Si le vendeur ne répond pas avant l'heure limite,
+    la commande sera annulée automatiquement et le client remboursé.
+    Un coup de fil ou un message WhatsApp sauve souvent la vente.
+  </p>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Commande</th><th>Vendeur</th><th class="num">Sa part</th><th>Reste</th><th></th></tr></thead>
+      <tbody>
+      {% for c in confirmations_attente %}
+        <tr>
+          <td><span class="bold small">{{ c.order.order_number }}</span><div class="tiny muted">{{ c.created_at|date:"d/m H:i" }}</div></td>
+          <td class="small">
+            {{ c.seller.profile.store_name|default:c.seller.username }}
+            <div class="tiny muted">{{ c.seller.profile.reliability_label }} · {{ c.seller.profile.confirmation_rate }} %</div>
+          </td>
+          <td class="num bold">{{ c.seller_amount|intcomma }}</td>
+          <td><span class="badge badge-{% if c.hours_left <= 4 %}danger{% else %}warning{% endif %}">{{ c.hours_left }} h</span></td>
+          <td>
+            {% if c.relance_whatsapp %}
+              <a href="{{ c.relance_whatsapp }}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
+                <i class="fab fa-whatsapp"></i> Relancer
+              </a>
+            {% else %}<span class="tiny muted">Pas de numéro</span>{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if boutiques_suspendues %}
+<section class="panel mb-8" style="border-color:var(--danger-br)">
+  <div class="panel-head"><h3>Boutiques suspendues</h3><span class="badge badge-danger">{{ boutiques_suspendues|length }}</span></div>
+  <p class="small muted mb-3">
+    Suspendues automatiquement après trop d'annulations. Leurs articles ne sont plus visibles.
+    Pour réactiver une boutique : Django admin → Profils → décocher « Boutique suspendue ».
+  </p>
+  {% for p in boutiques_suspendues %}
+    <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--ink-100)">
+      <div>
+        <span class="bold small">{{ p.store_name|default:p.user.username }}</span>
+        <div class="tiny muted">{{ p.suspended_reason }}</div>
+      </div>
+      <span class="badge badge-neutral">{{ p.orders_cancelled }} annulation{{ p.orders_cancelled|pluralize }}</span>
+    </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+<div class="detail-grid">
+  <section class="panel">
+    <div class="panel-head"><h3>Dernières commandes</h3></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Commande</th><th>Client</th><th class="num">Montant</th><th>Statut</th></tr></thead>
+        <tbody>
+        {% for order in recent_orders %}
+          <tr>
+            <td><span class="bold small">{{ order.order_number }}</span><div class="tiny muted">{{ order.created_at|date:"d/m H:i" }}</div></td>
+            <td class="small">{{ order.user.username }}</td>
+            <td class="num bold">{{ order.total|intcomma }}</td>
+            <td><span class="badge badge-{{ order.status_badge }}">{{ order.get_status_display }}</span></td>
+          </tr>
+        {% empty %}<tr><td colspan="4" class="muted">Aucune commande.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <aside class="stack">
+    <div class="panel">
+      <div class="panel-head"><h3>Meilleures ventes</h3></div>
+      {% for p in top_products %}
+        <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--ink-100)">
+          <span class="small">{{ p.name|truncatechars:28 }}</span><span class="bold small">{{ p.sold_count }}</span>
+        </div>
+      {% empty %}<p class="muted small">Pas encore de vente.</p>{% endfor %}
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>Meilleurs vendeurs</h3></div>
+      {% for s in top_sellers %}
+        <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--ink-100)">
+          <span class="small">{{ s.username }}</span><span class="bold small">{{ s.sales|floatformat:0|intcomma }} F</span>
+        </div>
+      {% empty %}<p class="muted small">Pas encore de vente.</p>{% endfor %}
+    </div>
+  </aside>
+</div>
+{% endblock %}

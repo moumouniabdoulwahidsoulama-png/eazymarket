@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Trouver un artisan à {{ CITY }} — {{ SITE.SITE_NAME }}{% endblock %}
+
+{% block hero %}
+<section class="hero" style="padding-block:var(--sp-12)">
+  <div class="container">
+    <div style="max-width:66ch">
+      <span class="pill"><span class="dot"></span> {{ total_artisans }} professionnels référencés</span>
+      <h1>Le bon pro, <span class="accent">au bon prix</span>, près de chez vous.</h1>
+      <p class="lead">Décrivez le travail à faire. L'artisan vous répond par un devis chiffré — main-d'œuvre, fournitures, déplacement. Vous acceptez, ou pas. Rien n'est engagé avant votre accord.</p>
+      <form action="{% url 'artisan_list' %}" method="get" class="row row-wrap" style="max-width:640px">
+        <input type="search" name="q" placeholder="Plombier, menuisier, couturière…" style="flex:1;min-width:220px">
+        <input type="text" name="quartier" placeholder="Quartier" style="width:160px">
+        <button class="btn btn-primary"><i class="fas fa-magnifying-glass"></i> Chercher</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+
+{% if categories %}
+<section>
+  <div class="section-head"><span class="eyebrow"><i class="fas fa-toolbox"></i> Métiers</span><h2>Quel professionnel vous faut-il ?</h2></div>
+  <div class="cat-grid">
+    {% for c in categories %}
+      <a href="{{ c.get_absolute_url }}" class="cat-tile serv">
+        <span class="ico"><i class="fas {{ c.icon }}"></i></span>
+        <strong>{{ c.name }}</strong>
+        <span>{{ c.n }} pro{{ c.n|pluralize }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if featured_artisans %}
+<section class="mt-8">
+  <div class="section-head"><span class="eyebrow"><i class="fas fa-crown"></i> Mis en avant</span><h2>Professionnels recommandés</h2></div>
+  <div class="grid grid-4">{% for artisan in featured_artisans %}{% include 'partials/artisan_card.html' %}{% endfor %}</div>
+</section>
+{% endif %}
+
+{% if top_artisans %}
+<section class="mt-8">
+  <div class="row-between section-head">
+    <div><span class="eyebrow"><i class="fas fa-star"></i> Réputation</span><h2>Les mieux notés</h2></div>
+    <a href="{% url 'artisan_list' %}" class="btn btn-ghost btn-sm">Tout l'annuaire <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="grid grid-4">{% for artisan in top_artisans %}{% include 'partials/artisan_card.html' %}{% endfor %}</div>
+</section>
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-user-gear' title="L'annuaire démarre" text="Soyez parmi les premiers professionnels référencés — l'inscription est gratuite." cta_url='/services/devenir-artisan/' cta_label="Créer mon profil pro" %}
+{% endif %}
+
+<section class="panel mt-8">
+  <div class="section-head center"><span class="eyebrow" style="justify-content:center"><i class="fas fa-file-invoice"></i> Le parcours</span><h2>De la demande au chantier terminé</h2></div>
+  <div class="steps">
+    <div class="step"><h4>Vous décrivez</h4><p>Le travail, le quartier, une photo si vous en avez une, et votre budget approximatif.</p></div>
+    <div class="step"><h4>L'artisan chiffre</h4><p>Il vous envoie un devis détaillé : main-d'œuvre, fournitures, déplacement, durée estimée.</p></div>
+    <div class="step"><h4>Vous décidez</h4><p>Acceptez, refusez, ou discutez directement dans la messagerie de la demande.</p></div>
+    <div class="step"><h4>Vous notez</h4><p>Travail terminé, vous laissez un avis. C'est ce qui fait vivre la confiance sur la plateforme.</p></div>
+  </div>
+</section>
+
+<section class="panel mt-6" style="background:linear-gradient(140deg,var(--brand-600),var(--brand-400));border:none">
+  <div class="row-between">
+    <div style="max-width:54ch">
+      <h2 style="color:#fff">Vous avez un métier entre les mains ?</h2>
+      <p style="color:rgba(255,255,255,.9)">Créez votre profil, montrez vos réalisations, et recevez des demandes de clients de votre quartier. {{ PRICING.ARTISAN_SUB_PRICE|floatformat:0 }} FCFA tous les {{ PRICING.ARTISAN_SUB_DAYS }} jours, et aucune commission sur vos chantiers.</p>
+    </div>
+    <a href="{% url 'register' %}?role=artisan" class="btn btn-dark btn-lg">Créer mon profil pro</a>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Paiements à valider — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="row-between mb-6">
+  <div><h1>Paiements</h1><p class="small">{{ counts.awaiting_review }} à vérifier · {{ counts.pending }} en attente</p></div>
+  <a href="{% url 'admin_dashboard' %}" class="btn btn-ghost btn-sm">Retour au pilotage</a>
+</div>
+
+<div class="tabs">
+  <a href="?etat=awaiting_review" class="{% if state == 'awaiting_review' %}active{% endif %}">À vérifier ({{ counts.awaiting_review }})</a>
+  <a href="?etat=pending" class="{% if state == 'pending' %}active{% endif %}">En attente</a>
+  <a href="?etat=success" class="{% if state == 'success' %}active{% endif %}">Confirmés</a>
+  <a href="?etat=failed" class="{% if state == 'failed' %}active{% endif %}">Échoués</a>
+  <a href="?etat=all" class="{% if state == 'all' %}active{% endif %}">Tous</a>
+</div>
+
+<form method="get" class="row mb-6">
+  <input type="hidden" name="etat" value="{{ state }}">
+  <input type="search" name="q" value="{{ query }}" placeholder="Référence, ID opérateur, numéro, utilisateur…" style="max-width:420px">
+  <button class="btn btn-ghost btn-sm">Chercher</button>
+</form>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Référence</th><th>Client</th><th>Objet</th><th class="num">Montant</th><th>Canal</th><th>ID opérateur</th><th>Statut</th><th></th></tr></thead>
+    <tbody>
+    {% for tx in transactions %}
+      <tr>
+        <td><span class="bold small">{{ tx.reference }}</span><div class="tiny muted">{{ tx.created_at|date:"d/m H:i" }}</div></td>
+        <td class="small">{{ tx.user.username }}<div class="tiny muted">{{ tx.payer_number }}</div></td>
+        <td class="small">{{ tx.get_purpose_display }}</td>
+        <td class="num bold">{{ tx.amount|intcomma }}</td>
+        <td class="small">{{ tx.get_channel_display }}</td>
+        <td class="small" style="font-family:monospace">{{ tx.provider_reference|default:"—" }}
+          {% if tx.proof %}<a href="{{ tx.proof.url }}" target="_blank" rel="noopener"><i class="fas fa-image"></i></a>{% endif %}
+        </td>
+        <td><span class="badge badge-{% if tx.status == 'success' %}success{% elif tx.status == 'failed' %}danger{% elif tx.status == 'awaiting_review' %}warning{% else %}neutral{% endif %}">{{ tx.get_status_display }}</span></td>
+        <td>
+          {% if tx.status != 'success' %}
+          <div class="row">
+            <form method="post" action="{% url 'admin_review' tx.reference 'valider' %}">{% csrf_token %}
+              <button class="btn btn-primary btn-sm" data-confirm="Confirmer {{ tx.reference }} ({{ tx.amount }} FCFA) ? L'argent doit être réellement reçu."><i class="fas fa-check"></i></button>
+            </form>
+            <form method="post" action="{% url 'admin_review' tx.reference 'refuser' %}">{% csrf_token %}
+              <button class="btn btn-quiet btn-sm" data-confirm="Refuser ce paiement ?"><i class="fas fa-xmark"></i></button>
+            </form>
+          </div>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="8" class="muted">Aucun paiement dans cet état.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

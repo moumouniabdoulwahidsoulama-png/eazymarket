@@ -1,0 +1,92 @@
+{% comment %}
+  Bloc de gestion des vidéos, utilisé par le vendeur et par l'artisan.
+  Attend : cible ("produit" ou "artisan"), produit_id (si produit),
+           mes_videos (liste), etat (compteur d'emplacements), VIDEO (réglages).
+{% endcomment %}
+{% load humanize %}
+<div class="video-admin">
+  <div class="row-between mb-3">
+    <div>
+      <strong>Vidéos</strong>
+      <div class="tiny muted">
+        {% if etat.illimite %}
+          Aucune limite sur votre compte.
+        {% else %}
+          {{ etat.utilises }} / {{ etat.total }} emplacement{{ etat.total|pluralize }} utilisé{{ etat.utilises|pluralize }}
+          — {{ etat.gratuits }} offert{{ etat.gratuits|pluralize }}.
+          Les liens TikTok / YouTube ne comptent pas.
+        {% endif %}
+      </div>
+    </div>
+    {% if not etat.illimite and not etat.restants %}
+      <a href="{% url 'buy_video_slots' %}" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> {{ etat.pack_taille }} emplacements — {{ etat.pack_prix|intcomma }} F
+      </a>
+    {% endif %}
+  </div>
+
+  {% if mes_videos %}
+  <div class="video-liste mb-3">
+    {% for v in mes_videos %}
+      <div class="video-ligne">
+        <span class="video-vignette">
+          {% if v.poster_url %}<img src="{{ v.poster_url }}" alt="">{% else %}<i class="fas fa-video"></i>{% endif %}
+        </span>
+        <span class="video-infos">
+          <span class="small bold">{{ v.title|default:"Sans titre" }}</span>
+          <span class="tiny muted">
+            {% if v.is_hosted %}Fichier{% if v.duree_affichee %} · {{ v.duree_affichee }}{% endif %}{% if v.poids_affiche %} · {{ v.poids_affiche }}{% endif %}
+            {% else %}<i class="fab {{ v.plateforme_icone }}"></i> {{ v.plateforme_nom }} · gratuit{% endif %}
+            {% if not v.is_approved %}· <span style="color:var(--danger-fg)">retirée du site</span>{% endif %}
+          </span>
+        </span>
+        <form method="post" action="{% url 'delete_video' v.id %}">{% csrf_token %}
+          <button class="btn btn-quiet btn-sm" data-confirm="Supprimer cette vidéo ?">
+            <i class="fas fa-trash"></i>
+          </button>
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" action="{% url 'add_video' %}" enctype="multipart/form-data" class="video-form" data-video-form data-max-seconds="{{ VIDEO.MAX_SECONDS }}" data-max-mo="{{ VIDEO.MAX_MB }}">
+    {% csrf_token %}
+    <input type="hidden" name="cible" value="{{ cible }}">
+    {% if produit_id %}<input type="hidden" name="produit_id" value="{{ produit_id }}">{% endif %}
+
+    <div class="video-onglets">
+      <label class="video-onglet">
+        <input type="radio" name="mode" value="fichier" checked data-video-mode="fichier">
+        <span><i class="fas fa-upload"></i> Envoyer un fichier</span>
+      </label>
+      <label class="video-onglet">
+        <input type="radio" name="mode" value="lien" data-video-mode="lien">
+        <span><i class="fab fa-tiktok"></i> Coller un lien <em>(gratuit)</em></span>
+      </label>
+    </div>
+
+    <div data-video-pan="fichier">
+      <label class="fichier"><input type="file" name="file" accept="video/mp4,video/quicktime,video/webm" data-video-input data-fichier><span class="fichier-bouton"><i class="fas fa-upload"></i> Choisir une vidéo</span><span class="fichier-nom" data-fichier-nom></span></label>
+      <p class="hint">
+        {{ VIDEO.MAX_SECONDS }} secondes maximum, {{ VIDEO.MAX_MB }} Mo maximum.
+        Filmez le tour de l'article en lumière du jour, sans commentaire :
+        c'est ce que le client veut voir.
+      </p>
+      <p class="video-erreur" data-video-erreur hidden></p>
+    </div>
+
+    <div data-video-pan="lien" hidden>
+      <input type="url" name="external_url" placeholder="https://www.tiktok.com/@vous/video/...">
+      <p class="hint">
+        Vous filmez déjà pour TikTok, YouTube, Facebook ou Instagram ? Collez
+        le lien : c'est gratuit, sans limite, et votre vidéo reste chez vous.
+      </p>
+    </div>
+
+    <div class="row mt-3">
+      <input type="text" name="title" maxlength="120" placeholder="Titre court (facultatif)">
+      <button class="btn btn-primary btn-sm" data-video-submit>Ajouter la vidéo</button>
+    </div>
+  </form>
+</div>

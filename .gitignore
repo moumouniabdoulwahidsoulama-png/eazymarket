@@ -1,0 +1,27 @@
+# Environnement Python
+venv/
+env/
+.venv/
+
+# Caches Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Secrets
+.env
+
+# Base de données locale
+db.sqlite3
+db.sqlite3-journal
+
+# Fichiers collectés / uploads
+/staticfiles/
+/media/
+
+# Logs
+*.log
+
+# IDE / outils
+.vscode/
+.idea/

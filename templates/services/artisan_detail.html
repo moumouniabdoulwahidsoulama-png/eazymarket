@@ -1,0 +1,168 @@
+{% extends 'base.html' %}{% load protection %}
+{% block title %}{{ artisan.full_name }}, {{ artisan.service_category.name }} à {{ artisan.quartier }} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<nav class="crumbs">
+  <a href="{% url 'services_home' %}">Services</a><span class="sep">/</span>
+  <a href="{{ artisan.service_category.get_absolute_url }}">{{ artisan.service_category.name }}</a><span class="sep">/</span>
+  <span>{{ artisan.full_name }}</span>
+</nav>
+
+<div class="artisan-hero">
+  {% if artisan.photo %}<img class="avatar avatar-lg" src="{{ artisan.photo.url }}" alt="{{ artisan.full_name }}">
+  {% else %}<span class="avatar avatar-lg">{{ artisan.initials }}</span>{% endif %}
+  <div style="flex:1;min-width:240px">
+    <h1>{{ artisan.full_name }}
+      {% if artisan.is_verified %}<i class="fas fa-circle-check" style="color:var(--gold-400);font-size:1.2rem" title="Identité vérifiée"></i>{% endif %}
+    </h1>
+    <div class="meta">
+      {{ artisan.service_category.name }} · <i class="fas fa-location-dot"></i> {{ artisan.quartier }}, {{ artisan.city }}
+      {% if artisan.years_experience %} · {{ artisan.years_experience }} ans d'expérience{% endif %}
+    </div>
+    <div class="row mt-2">
+      {% if artisan.total_reviews %}{% include 'partials/stars.html' with rating=artisan.rating count=artisan.total_reviews %}{% endif %}
+      {% if artisan.completed_jobs %}<span class="small" style="color:rgba(255,255,255,.85)">· {{ artisan.completed_jobs }} chantier{{ artisan.completed_jobs|pluralize }} terminé{{ artisan.completed_jobs|pluralize }}</span>{% endif %}
+    </div>
+  </div>
+  <div class="row row-wrap">
+    {% if artisan.is_available %}
+      <a href="{% url 'request_service' artisan.id %}" class="btn btn-primary btn-lg"><i class="fas fa-file-invoice"></i> Demander un devis <span class="tiny">— gratuit</span></a>
+    {% else %}
+      <span class="btn btn-ghost btn-lg is-disabled">Indisponible actuellement</span>
+    {% endif %}
+  </div>
+</div>
+
+<div class="detail-grid mt-8">
+  <div class="stack-lg">
+    <section class="panel">
+      <div class="panel-head"><h3>Présentation</h3></div>
+      <p style="white-space:pre-line">{{ artisan.description|masquer_numeros:unlocked }}</p>
+      <div class="chip-list mt-4">
+        <span class="chip"><i class="fas fa-tag"></i> {{ artisan.price_range|masquer_numeros:unlocked }}</span>
+        {% if artisan.hourly_rate %}<span class="chip"><i class="fas fa-clock"></i> {{ artisan.hourly_rate }} FCFA/h</span>{% endif %}
+        {% if artisan.accepts_urgent %}<span class="chip" style="background:var(--warning-bg);color:var(--warning-fg)"><i class="fas fa-bolt"></i> Intervient en urgence</span>{% endif %}
+        {% if artisan.intervention_radius %}<span class="chip"><i class="fas fa-map"></i> {{ artisan.intervention_radius|masquer_numeros:unlocked }}</span>{% endif %}
+      </div>
+    </section>
+
+    {% include 'partials/video_player.html' with videos=videos titre="Son travail en vidéo" %}
+
+    {% if portfolios %}
+    <section class="panel">
+      <div class="panel-head"><h3>Réalisations</h3></div>
+      <div class="portfolio-grid">
+        {% for item in portfolios %}
+          <div class="portfolio-item">
+            <div class="img">
+              {% if item.display_image %}<img src="{{ item.display_image }}" alt="{{ item.title }}" loading="lazy">
+              {% else %}<i class="fas fa-image" style="font-size:2rem;color:var(--ink-300)"></i>{% endif %}
+            </div>
+            <div class="cap"><strong class="small">{{ item.title|masquer_numeros:unlocked }}</strong>{% if item.description %}<p class="tiny">{{ item.description|masquer_numeros:unlocked|truncatechars:80 }}</p>{% endif %}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Avis clients {% if artisan.total_reviews %}({{ artisan.total_reviews }}){% endif %}</h3>
+        {% if can_review %}<a href="{% url 'leave_review' artisan.id %}" class="btn btn-outline btn-sm">Laisser un avis</a>{% endif %}
+      </div>
+      {% for review in reviews %}
+        <div class="review">
+          <div class="row-between">
+            <div class="row">
+              <span class="avatar avatar-sm">{{ review.client.username|slice:":2"|upper }}</span>
+              <div><div class="bold small">{{ review.client.username }}</div>{% include 'partials/stars.html' with rating=review.rating %}</div>
+            </div>
+            <span class="tiny muted">{{ review.created_at|date:"d/m/Y" }}</span>
+          </div>
+          <p class="mt-2">{{ review.comment }}</p>
+          {% if review.artisan_reply %}
+            <div class="card card-pad mt-2" style="background:var(--sand-50)">
+              <div class="tiny bold">Réponse de {{ artisan.full_name }}</div>
+              <p class="small">{{ review.artisan_reply }}</p>
+            </div>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="muted">Pas encore d'avis. Les premiers clients feront la réputation de ce professionnel.</p>
+      {% endfor %}
+    </section>
+  </div>
+
+  <aside class="stack">
+    <div class="panel">
+      <h4 class="mb-4">Contacter {{ artisan.full_name|truncatewords:1 }}</h4>
+
+      {% if unlocked %}
+        <div class="alert success mb-4"><i class="fas fa-lock-open"></i><span class="small">Contact débloqué</span></div>
+        <div class="spec-list mb-4">
+          <div><span class="k">Téléphone</span><span class="v">{{ artisan.phone }}</span></div>
+          {% if artisan.whatsapp %}<div><span class="k">WhatsApp</span><span class="v">{{ artisan.whatsapp }}</span></div>{% endif %}
+        </div>
+        <div class="row row-wrap">
+          <a href="tel:{{ artisan.phone }}" class="btn btn-primary" style="flex:1"><i class="fas fa-phone"></i> Appeler</a>
+          {% if artisan.whatsapp %}<a href="https://wa.me/{{ artisan.whatsapp|cut:' '|cut:'+' }}" class="btn btn-dark"><i class="fab fa-whatsapp"></i></a>{% endif %}
+        </div>
+        <p class="tiny muted mt-4">Vous pouvez aussi passer par un devis écrit : c'est ce qui vous protège en cas de désaccord sur le prix.</p>
+
+      {% else %}
+        <div class="card card-pad mb-4" style="background:var(--sand-50);border-style:dashed">
+          <div class="row" style="align-items:flex-start">
+            <i class="fas fa-lock" style="color:var(--ink-400);font-size:1.2rem;margin-top:2px"></i>
+            <div>
+              <div class="bold small">Numéro masqué</div>
+              <div class="tiny muted">{{ artisan.phone_masque }}</div>
+            </div>
+          </div>
+        </div>
+
+        <form method="post" action="{% url 'unlock_contact' artisan.id %}">{% csrf_token %}
+          <button class="btn btn-primary btn-block">
+            <i class="fas fa-phone"></i>
+            {% if free_unlocks_left %}Voir le numéro — offert{% else %}Voir le numéro — {{ unlock_price }} FCFA{% endif %}
+          </button>
+        </form>
+        {% if free_unlocks_left %}
+          <p class="tiny center mt-2" style="color:var(--success-fg)"><i class="fas fa-gift"></i> Votre premier contact est offert.</p>
+        {% else %}
+          <p class="tiny muted center mt-2">Paiement unique, valable {{ PRICING.CONTACT_UNLOCK_DAYS }} jours pour cet artisan.</p>
+        {% endif %}
+
+        <div class="row" style="justify-content:center;margin:16px 0"><span class="tiny muted">— ou —</span></div>
+
+        {% if artisan.is_available %}
+          <a href="{% url 'request_service' artisan.id %}" class="btn btn-ghost btn-block">
+            <i class="fas fa-file-invoice"></i> Demander un devis gratuit
+          </a>
+          <p class="tiny muted center mt-2">Sans payer : décrivez le travail, l'artisan vous répond par un devis chiffré.</p>
+        {% endif %}
+      {% endif %}
+      <div class="spec-list mt-4">
+        <div><span class="k">Métier</span><span class="v">{{ artisan.service_category.name }}</span></div>
+        <div><span class="k">Zone</span><span class="v">{{ artisan.quartier }}</span></div>
+        <div><span class="k">Expérience</span><span class="v">{{ artisan.years_experience }} an{{ artisan.years_experience|pluralize }}</span></div>
+        <div><span class="k">Tarifs</span><span class="v">{{ artisan.price_range|masquer_numeros:unlocked }}</span></div>
+        <div><span class="k">Taux de réponse</span><span class="v">{{ artisan.response_rate }} %</span></div>
+      </div>
+      <p class="tiny muted mt-4"><i class="fas fa-shield-halved"></i> Ne versez jamais d'acompte avant d'avoir accepté un devis écrit.</p>
+    </div>
+
+    {% if similar %}
+    <div class="panel">
+      <h4 class="mb-4">Autres {{ artisan.service_category.name|lower }}s</h4>
+      {% for a in similar %}
+        <a href="{{ a.get_absolute_url }}" class="row" style="padding:10px 0;border-bottom:1px solid var(--ink-100)">
+          <span class="avatar avatar-sm avatar-forest">{{ a.initials }}</span>
+          <div><div class="small bold">{{ a.full_name }}</div><div class="tiny muted">{{ a.quartier }}</div></div>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </aside>
+</div>
+
+{% endblock %}

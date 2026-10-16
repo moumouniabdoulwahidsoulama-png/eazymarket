@@ -1,0 +1,34 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}{{ store.store_name }} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="artisan-hero" style="background:linear-gradient(150deg,var(--brand-600),var(--brand-400))">
+  {% if store.store_logo %}<img class="avatar avatar-lg" src="{{ store.store_logo.url }}" alt="">
+  {% else %}<span class="avatar avatar-lg">{{ store.initials }}</span>{% endif %}
+  <div style="flex:1">
+    <h1>{{ store.store_name }}</h1>
+    <div class="meta">
+      {% if store.quartier %}<i class="fas fa-location-dot"></i> {{ store.quartier }}, {{ store.city }} · {% endif %}
+      Membre depuis {{ store.created_at|date:"F Y" }}
+    </div>
+    {% if store.store_description %}<p style="color:rgba(255,255,255,.9);margin-top:8px;max-width:60ch">{{ store.store_description }}</p>{% endif %}
+  </div>
+  <div class="row row-wrap">
+    {% if store.is_official %}<span class="badge badge-success"><i class="fas fa-medal"></i> Boutique officielle</span>{% endif %}
+    {% if store.is_verified %}<span class="badge badge-success"><i class="fas fa-circle-check"></i> Vendeur vérifié</span>{% endif %}
+    <span class="badge badge-{{ store.reliability_badge }}">{{ store.reliability_label }}</span>
+    {% if store.orders_handled %}
+      <span class="badge badge-neutral">{{ store.confirmation_rate }} % de commandes confirmées{% if store.avg_confirmation_delay %} · répond en {{ store.avg_confirmation_delay }}{% endif %}</span>
+    {% endif %}
+  </div>
+</div>
+
+<div class="mt-8">
+  {% if page_obj.object_list %}
+    <div class="grid grid-4">{% for product in page_obj %}{% include 'partials/product_card.html' %}{% endfor %}</div>
+    {% include 'partials/pagination.html' %}
+  {% else %}
+    {% include 'partials/empty.html' with icon='fa-store' title='Boutique vide' text="Ce vendeur n'a pas encore publié d'article." %}
+  {% endif %}
+</div>
+{% endblock %}

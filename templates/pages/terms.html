@@ -1,0 +1,40 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Conditions d'utilisation — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container-narrow">
+  <h1 class="mb-2">Conditions d'utilisation</h1>
+  <p class="small muted mb-6">Dernière mise à jour : {% now "d F Y" %}</p>
+
+  <div class="alert warning mb-6"><i class="fas fa-triangle-exclamation"></i><span>Ce texte est une base de travail rédigée en langage clair. Faites-le relire par un juriste avant l'ouverture commerciale.</span></div>
+
+  <div class="panel stack">
+    <div><h3>1. Ce qu'est {{ SITE.SITE_NAME }}</h3><p>{{ SITE.SITE_NAME }} est une place de marché : nous mettons en relation des vendeurs, des artisans, des livreurs et des clients. Nous ne sommes ni le vendeur des produits, ni l'employeur des artisans. Le contrat de vente ou de prestation se noue entre eux et vous.</p></div>
+
+    <div><h3>2. Votre compte</h3><p>Vous vous engagez à donner des informations exactes et à garder votre mot de passe secret. Un compte par personne. Nous pouvons suspendre un compte en cas de fraude, de faux avis, de contenu illégal ou de comportement abusif envers un autre utilisateur.</p></div>
+
+    <div><h3>3. Prix, commissions et paiements</h3><p>Le prix affiché inclut notre commission ({{ PRICING.COMMISSION_RATE|floatformat:0 }} % du prix vendeur, minimum {{ PRICING.COMMISSION_MIN|intcomma }} FCFA, le total étant arrondi au palier supérieur). Les frais de livraison sont indiqués avant le paiement. Les paiements passent par les opérateurs de mobile money ; nous n'enregistrons jamais vos codes secrets.</p></div>
+
+    <div><h3>3 bis. Emplacements d'annonces</h3><p>La boutique s'ouvre à l'achat d'un premier pack de {{ PRICING.SHOP_PACK_SIZE }} emplacements, au prix de {{ PRICING.SHOP_PACK_PRICE|intcomma }} FCFA. Les emplacements supplémentaires s'achètent par packs du même format. Ils sont acquis définitivement et ne sont pas remboursables ; supprimer une annonce libère son emplacement.</p></div>
+
+    <div><h3>3 ter. Déblocage de contact</h3><p>Le client peut consulter gratuitement les profils et demander des devis. L'affichage du numéro direct d'un professionnel est facturé {{ PRICING.CONTACT_UNLOCK_PRICE }} FCFA, une fois par professionnel, valable {{ PRICING.CONTACT_UNLOCK_DAYS }} jours. Ce montant rémunère la mise en relation et n'est pas remboursable une fois le numéro affiché.</p></div>
+
+    <div><h3>4. Versements aux professionnels</h3><p>Les gains d'un vendeur sont crédités à la commande payée et deviennent retirables {{ SITE.PAYOUT_DELAY_DAYS }} jours après la livraison, sauf litige en cours. Le retrait minimum est de {{ PRICING.PAYOUT_MIN|intcomma }} FCFA.</p></div>
+
+    <div><h3>5. Abonnements des artisans</h3><p>L'abonnement ({{ PRICING.ARTISAN_SUB_PRICE|intcomma }} FCFA par période de {{ PRICING.ARTISAN_SUB_DAYS }} jours) conditionne la visibilité du profil dans l'annuaire. Il est payé d'avance, sans reconduction automatique, et n'est pas remboursable une fois la période entamée sauf défaillance de notre part. Aucune commission n'est prélevée sur les prestations.</p></div>
+
+    <div><h3>5 bis. Livreurs</h3><p>L'activation d'un compte livreur est gratuite. Elle suppose d'avoir parrainé {{ PRICING.DELIVERY_REQUIRED_SHARES }} personnes joignables et d'avoir fourni une pièce d'identité, puis d'être validé par un administrateur. Un livreur reste responsable des marchandises qui lui sont confiées.</p></div>
+
+    <div><h3>6. Devis et prestations</h3><p>Un devis émis sur la plateforme engage l'artisan sur le prix et le contenu décrits, jusqu'à sa date de validité. L'acceptation par le client vaut accord. {{ SITE.SITE_NAME }} ne prélève aucune commission sur les prestations de service.</p></div>
+
+    <div><h3>7. Avis</h3><p>Un avis ne peut être laissé qu'après un achat payé ou une prestation marquée comme terminée. Les avis achetés, échangés ou rédigés par des proches sont supprimés et peuvent entraîner la suspension du compte.</p></div>
+
+    <div><h3>8. Produits et services interdits</h3><p>Sont notamment interdits : armes, médicaments, contrefaçons, produits volés, espèces protégées, contenus à caractère sexuel, et toute activité contraire à la loi burkinabè.</p></div>
+
+    <div><h3>9. Litiges</h3><p>Signalez tout problème depuis la page de la commande ou de la demande concernée, dans les 48 heures. Nous examinons les échanges et les devis enregistrés, et pouvons suspendre un versement le temps de l'instruction.</p></div>
+
+    <div><h3>10. Données personnelles</h3><p>Nous collectons ce qui est nécessaire au fonctionnement du service : identité, coordonnées, historique de commandes. Nous ne les vendons pas. Vous pouvez demander leur suppression en écrivant à {{ SITE.SUPPORT_EMAIL }}.</p></div>
+
+    <div><h3>11. Modifications</h3><p>Ces conditions peuvent évoluer. Toute modification importante est annoncée sur le site et par notification au moins 15 jours avant son entrée en vigueur.</p></div>
+  </div>
+</div>
+{% endblock %}

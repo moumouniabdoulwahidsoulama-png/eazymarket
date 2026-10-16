@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Mon Profil - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="glass-card" style="max-width: 100%;">
+        <h1><i class="fas fa-user-circle"></i> Mon Profil</h1>
+        <p class="subtitle">Gérez vos informations personnelles</p>
+        
+        <div style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <span style="color: rgba(255,255,255,0.5);">Nom d'utilisateur</span>
+                <span style="color: #ffffff;">{{ user.username }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <span style="color: rgba(255,255,255,0.5);">Email</span>
+                <span style="color: #ffffff;">{{ user.email }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <span style="color: rgba(255,255,255,0.5);">Rôle</span>
+                <span style="color: #00ffff;">{{ user.profile.get_user_type_display }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <span style="color: rgba(255,255,255,0.5);">Téléphone</span>
+                <span style="color: #ffffff;">{{ user.profile.phone|default:"Non renseigné" }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <span style="color: rgba(255,255,255,0.5);">Adresse</span>
+                <span style="color: #ffffff;">{{ user.profile.address|default:"Non renseignée" }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 15px 0;">
+                <span style="color: rgba(255,255,255,0.5);">Vérifié</span>
+                <span>
+                    {% if user.profile.is_verified %}
+                        <span class="badge badge-success"><i class="fas fa-check"></i> Oui</span>
+                    {% else %}
+                        <span class="badge badge-danger"><i class="fas fa-times"></i> Non</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; display: flex; gap: 10px;">
+            <a href="#" class="nav-btn btn-primary" style="flex: 1; text-align: center;">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <a href="{% url 'logout' %}" class="nav-btn btn-danger-outline" style="flex: 1; text-align: center;">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

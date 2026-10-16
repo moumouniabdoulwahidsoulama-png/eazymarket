@@ -1,0 +1,144 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Demande {{ sr.reference }} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="row-between mb-6">
+  <div>
+    <span class="chip">{{ sr.reference }}</span>
+    <h1 class="mt-2">{{ sr.title }}</h1>
+    <p class="small">Créée le {{ sr.created_at|date:"d/m/Y à H:i" }} · {{ sr.get_urgency_display }}</p>
+  </div>
+  <span class="badge badge-{% if sr.status == 'completed' %}success{% elif sr.status == 'rejected' or sr.status == 'cancelled' %}danger{% elif sr.status == 'pending' %}warning{% else %}info{% endif %}">{{ sr.get_status_display }}</span>
+</div>
+
+<div class="detail-grid">
+  <div class="stack-lg">
+    <section class="panel">
+      <div class="panel-head"><h3>Le travail demandé</h3></div>
+      <p style="white-space:pre-line">{{ sr.description }}</p>
+      {% if sr.photo %}<img src="{{ sr.photo.url }}" alt="" class="mt-4" style="border-radius:var(--r-lg);max-height:340px;object-fit:cover">{% endif %}
+      <div class="spec-list mt-4">
+        {% if sr.budget %}<div><span class="k">Budget indiqué</span><span class="v">{{ sr.budget }}</span></div>{% endif %}
+        {% if sr.preferred_date %}<div><span class="k">Date souhaitée</span><span class="v">{{ sr.preferred_date|date:"d/m/Y" }}{% if sr.preferred_time %} à {{ sr.preferred_time|time:"H:i" }}{% endif %}</span></div>{% endif %}
+        {% if is_artisan or is_client %}
+          <div><span class="k">Téléphone</span><span class="v">{{ sr.client_phone }}</span></div>
+          <div><span class="k">Adresse</span><span class="v">{{ sr.client_address }}</span></div>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- ===== DEVIS ===== -->
+    <section class="panel">
+      <div class="panel-head"><h3>Devis</h3></div>
+
+      {% for quote in quotes %}
+        <div class="card card-pad mb-4 {% if quote.status == 'accepted' %}" style="border-color:var(--success-br);background:var(--success-bg){% endif %}">
+          <div class="row-between">
+            <div><span class="bold">{{ quote.reference }}</span> <span class="tiny muted">· {{ quote.created_at|date:"d/m/Y" }}</span></div>
+            <span class="badge badge-{% if quote.status == 'accepted' %}success{% elif quote.status == 'refused' %}danger{% else %}info{% endif %}">{{ quote.get_status_display }}</span>
+          </div>
+          <div class="spec-list mt-4">
+            <div><span class="k">Main-d'œuvre</span><span class="v">{{ quote.labour_cost|intcomma }} {{ CURRENCY }}</span></div>
+            <div><span class="k">Fournitures</span><span class="v">{{ quote.materials_cost|intcomma }} {{ CURRENCY }}</span></div>
+            <div><span class="k">Déplacement</span><span class="v">{{ quote.travel_cost|intcomma }} {{ CURRENCY }}</span></div>
+            <div style="background:var(--ink-100)"><span class="k bold">Total</span><span class="v" style="font-size:var(--fs-lg)">{{ quote.total|intcomma }} {{ CURRENCY }}</span></div>
+          </div>
+          {% if quote.details %}<p class="small mt-4" style="white-space:pre-line">{{ quote.details }}</p>{% endif %}
+          <div class="row row-wrap mt-2">
+            {% if quote.duration %}<span class="chip"><i class="fas fa-hourglass-half"></i> {{ quote.duration }}</span>{% endif %}
+            {% if quote.valid_until %}<span class="chip"><i class="fas fa-calendar"></i> Valable jusqu'au {{ quote.valid_until|date:"d/m/Y" }}</span>{% endif %}
+          </div>
+
+          {% if is_client and quote.status == 'sent' %}
+            <div class="row mt-4">
+              <form method="post" action="{% url 'respond_quote' quote.id 'accepter' %}">{% csrf_token %}
+                <button class="btn btn-primary" data-confirm="Accepter ce devis de {{ quote.total }} FCFA ?"><i class="fas fa-check"></i> Accepter le devis</button>
+              </form>
+              <form method="post" action="{% url 'respond_quote' quote.id 'refuser' %}">{% csrf_token %}
+                <button class="btn btn-ghost">Refuser</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="muted">{% if is_artisan %}Aucun devis envoyé. Chiffrez la prestation ci-dessous.{% else %}L'artisan n'a pas encore envoyé de devis. Vous serez notifié dès son arrivée.{% endif %}</p>
+      {% endfor %}
+
+      {% if is_artisan and sr.is_open %}
+        <details {% if not quotes %}open{% endif %} class="mt-4">
+          <summary class="btn btn-outline"><i class="fas fa-file-invoice-dollar"></i> Établir un devis</summary>
+          <form method="post" action="{% url 'create_quote' sr.id %}" class="mt-4">{% csrf_token %}
+            <div class="form-grid">
+              <div class="field"><label>Main-d'œuvre (FCFA)</label><input type="number" name="labour_cost" min="0" value="0" required></div>
+              <div class="field"><label>Fournitures (FCFA)</label><input type="number" name="materials_cost" min="0" value="0"></div>
+              <div class="field"><label>Déplacement (FCFA)</label><input type="number" name="travel_cost" min="0" value="0"></div>
+              <div class="field"><label>Durée estimée</label><input type="text" name="duration" placeholder="Ex : 2 jours"></div>
+              <div class="field"><label>Valable jusqu'au</label><input type="date" name="valid_until"></div>
+            </div>
+            <div class="field"><label>Détail de la prestation</label><textarea name="details" placeholder="Ce qui est inclus, ce qui ne l'est pas, matériaux prévus…" required></textarea></div>
+            <button class="btn btn-primary"><i class="fas fa-paper-plane"></i> Envoyer le devis</button>
+          </form>
+        </details>
+      {% endif %}
+    </section>
+
+    <!-- ===== MESSAGERIE ===== -->
+    <section class="panel">
+      <div class="panel-head"><h3>Discussion</h3></div>
+      {% for m in thread %}
+        <div class="mb-4" style="display:flex;gap:12px;{% if m.sender == user %}flex-direction:row-reverse;text-align:right{% endif %}">
+          <span class="avatar avatar-sm {% if m.sender != user %}avatar-forest{% endif %}">{{ m.sender.username|slice:":2"|upper }}</span>
+          <div class="card card-pad" style="flex:1;max-width:80%;{% if m.sender == user %}background:var(--brand-50);border-color:var(--brand-200){% endif %}">
+            <div class="tiny muted">{{ m.sender.username }} · {{ m.created_at|date:"d/m H:i" }}</div>
+            <p class="small mt-2" style="white-space:pre-line">{{ m.body }}</p>
+            {% if m.attachment %}<img src="{{ m.attachment.url }}" alt="" class="mt-2" style="border-radius:var(--r-md);max-height:200px">{% endif %}
+          </div>
+        </div>
+      {% empty %}
+        <p class="muted">Aucun message. Utilisez cet espace pour préciser un détail ou convenir d'un rendez-vous.</p>
+      {% endfor %}
+
+      {% if is_client or is_artisan %}
+        <form method="post" action="{% url 'post_service_message' sr.id %}" enctype="multipart/form-data" class="mt-4">{% csrf_token %}
+          <div class="field"><textarea name="body" rows="3" placeholder="Écrire un message…" required></textarea></div>
+          <div class="row"><input type="file" name="attachment" accept="image/*" style="flex:1"><button class="btn btn-primary"><i class="fas fa-paper-plane"></i> Envoyer</button></div>
+        </form>
+      {% endif %}
+    </section>
+  </div>
+
+  <aside class="summary stack">
+    <div class="panel">
+      <h4 class="mb-4">{% if is_client %}L'artisan{% else %}Le client{% endif %}</h4>
+      {% if is_client %}
+        <a href="{{ sr.artisan.get_absolute_url }}" class="row">
+          <span class="avatar avatar-forest">{{ sr.artisan.initials }}</span>
+          <div><div class="bold">{{ sr.artisan.full_name }}</div><div class="tiny muted">{{ sr.artisan.service_category.name }}</div></div>
+        </a>
+        {% if sr.status == 'completed' %}
+          <a href="{% url 'leave_review' sr.artisan.id %}" class="btn btn-primary btn-block mt-4"><i class="fas fa-star"></i> Noter cet artisan</a>
+        {% endif %}
+      {% else %}
+        <div class="row"><span class="avatar avatar-sm">{{ sr.client.username|slice:":2"|upper }}</span><div class="bold">{{ sr.client.username }}</div></div>
+        <div class="spec-list mt-4">
+          <div><span class="k">Téléphone</span><span class="v">{{ sr.client_phone }}</span></div>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if is_artisan and sr.is_open %}
+    <div class="panel">
+      <h4 class="mb-4">Faire avancer</h4>
+      <form method="post" action="{% url 'manage_service_request' sr.id %}" class="stack">{% csrf_token %}
+        <textarea name="admin_message" rows="2" placeholder="Message au client (facultatif)"></textarea>
+        <div class="row row-wrap">
+          <button name="action" value="start" class="btn btn-ghost btn-sm">Démarrer</button>
+          <button name="action" value="complete" class="btn btn-primary btn-sm">Marquer terminé</button>
+          <button name="action" value="reject" class="btn btn-quiet btn-sm">Refuser</button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

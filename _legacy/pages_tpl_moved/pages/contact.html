@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 36px; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <i class="fas fa-envelope"></i> Contactez-nous
+        </h1>
+        <p style="color: rgba(255, 215, 0, 0.4); font-size: 18px;">Nous sommes là pour vous aider</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        <!-- Formulaire -->
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255, 215, 0, 0.08);">
+            <h2 style="color: #FFD700; font-size: 18px; margin-bottom: 20px;">
+                <i class="fas fa-paper-plane"></i> Envoyez un message
+            </h2>
+            <form method="post" action="{% url 'contact' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Votre nom</label>
+                    <input type="text" name="name" required placeholder="Jean Dupont" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,215,0,0.08); border-radius: 8px; color: #ffffff;">
+                </div>
+                <div class="form-group">
+                    <label>Votre email</label>
+                    <input type="email" name="email" required placeholder="jean@exemple.com" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,215,0,0.08); border-radius: 8px; color: #ffffff;">
+                </div>
+                <div class="form-group">
+                    <label>Sujet</label>
+                    <input type="text" name="subject" required placeholder="Sujet de votre message" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,215,0,0.08); border-radius: 8px; color: #ffffff;">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea name="message" required placeholder="Décrivez votre demande..." style="width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,215,0,0.08); border-radius: 8px; color: #ffffff; min-height: 120px;"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Envoyer le message
+                </button>
+            </form>
+        </div>
+
+        <!-- Informations -->
+        <div>
+            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255, 215, 0, 0.08); margin-bottom: 20px;">
+                <h2 style="color: #FFD700; font-size: 18px; margin-bottom: 20px;">
+                    <i class="fas fa-info-circle"></i> Informations
+                </h2>
+                <div style="color: rgba(255, 255, 255, 0.5); line-height: 2.2;">
+                    <p><i class="fas fa-map-marker-alt" style="color: #FFD700; width: 25px;"></i> Ouagadougou, Burkina Faso</p>
+                    <p><i class="fas fa-phone" style="color: #FFD700; width: 25px;"></i> +226 XX XX XX XX</p>
+                    <p><i class="fas fa-envelope" style="color: #FFD700; width: 25px;"></i> contact@eazymarket.com</p>
+                    <p><i class="fas fa-clock" style="color: #FFD700; width: 25px;"></i> Lun - Sam: 8h - 20h</p>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255, 215, 0, 0.08);">
+                <h2 style="color: #FFD700; font-size: 18px; margin-bottom: 20px;">
+                    <i class="fas fa-share-alt"></i> Suivez-nous
+                </h2>
+                <div style="display: flex; gap: 15px;">
+                    <a href="#" style="color: rgba(255, 215, 0, 0.5); font-size: 28px; transition: all 0.3s ease;" 
+                       onmouseenter="this.style.color='#FFD700'; this.style.transform='scale(1.1)'" 
+                       onmouseleave="this.style.color='rgba(255,215,0,0.5)'; this.style.transform='scale(1)'">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" style="color: rgba(255, 215, 0, 0.5); font-size: 28px; transition: all 0.3s ease;" 
+                       onmouseenter="this.style.color='#FFD700'; this.style.transform='scale(1.1)'" 
+                       onmouseleave="this.style.color='rgba(255,215,0,0.5)'; this.style.transform='scale(1)'">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" style="color: rgba(255, 215, 0, 0.5); font-size: 28px; transition: all 0.3s ease;" 
+                       onmouseenter="this.style.color='#FFD700'; this.style.transform='scale(1.1)'" 
+                       onmouseleave="this.style.color='rgba(255,215,0,0.5)'; this.style.transform='scale(1)'">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" style="color: rgba(255, 215, 0, 0.5); font-size: 28px; transition: all 0.3s ease;" 
+                       onmouseenter="this.style.color='#FFD700'; this.style.transform='scale(1.1)'" 
+                       onmouseleave="this.style.color='rgba(255,215,0,0.5)'; this.style.transform='scale(1)'">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" style="color: rgba(255, 215, 0, 0.5); font-size: 28px; transition: all 0.3s ease;" 
+                       onmouseenter="this.style.color='#FFD700'; this.style.transform='scale(1.1)'" 
+                       onmouseleave="this.style.color='rgba(255,215,0,0.5)'; this.style.transform='scale(1)'">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% load static humanize %}
+<article class="card card-hover product-card">
+  <a href="{{ product.get_absolute_url }}" class="thumb">
+    {% if product.main_image %}
+      <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy">
+    {% else %}
+      <img src="{% static 'img/placeholder-product.svg' %}" alt="" loading="lazy">
+    {% endif %}
+    {% if product.discount_percentage %}<span class="ribbon ribbon-brand">-{{ product.discount_percentage }} %</span>
+    {% elif product.is_featured %}<span class="ribbon ribbon-gold">Coup de cœur</span>
+    {% elif product.sold_count > 4 %}<span class="ribbon">Populaire</span>{% endif %}
+    {% if not product.in_stock %}<span class="ribbon ribbon-right" style="background:var(--ink-700)">Épuisé</span>{% endif %}
+  </a>
+  <div class="body">
+    <span class="cat">{{ product.category.name }}</span>
+    <a href="{{ product.get_absolute_url }}" class="name">{{ product.name|truncatechars:52 }}</a>
+    {% if product.num_reviews %}
+      {% include 'partials/stars.html' with rating=product.rating count=product.num_reviews %}
+    {% endif %}
+    <div class="price">
+      {{ product.price|floatformat:0|intcomma }} <small>{{ CURRENCY }}</small>
+      {% if product.compare_price %}<small style="text-decoration:line-through;margin-left:6px">{{ product.compare_price|floatformat:0|intcomma }}</small>{% endif %}
+    </div>
+  </div>
+  <div class="foot">
+    {% if product.in_stock %}
+      <form action="{% url 'add_to_cart' product.id %}" method="post" style="flex:1">{% csrf_token %}
+        <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fas fa-basket-shopping"></i> Ajouter</button>
+      </form>
+    {% else %}
+      <span class="btn btn-ghost btn-sm btn-block is-disabled">Indisponible</span>
+    {% endif %}
+    {% if user.is_authenticated %}
+      <a href="{% url 'toggle_favorite' product.id %}" class="btn btn-ghost btn-sm btn-icon" aria-label="Ajouter aux favoris"><i class="fas fa-heart"></i></a>
+    {% endif %}
+  </div>
+</article>

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Mon dossier livreur — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="row-between mb-6">
+  <div><h1>Mon dossier livreur</h1><p class="small">Code de parrainage : <strong>{{ referral.referral_code }}</strong></p></div>
+  <span class="badge badge-{% if referral.status == 'verified' %}success{% elif referral.status == 'rejected' %}danger{% elif referral.status == 'submitted' %}info{% else %}warning{% endif %}">{{ referral.get_status_display }}</span>
+</div>
+
+{% if referral.status == 'verified' %}
+  <div class="alert success mb-6"><i class="fas fa-circle-check"></i><span>Votre compte est activé. Vous pouvez prendre des courses depuis <a href="{% url 'delivery_dashboard' %}">votre tableau de bord</a>.</span></div>
+{% elif referral.status == 'submitted' %}
+  <div class="alert info mb-6"><i class="fas fa-hourglass-half"></i><span>Dossier reçu. Nous appelons vos {{ referral.required }} contacts et activons votre compte sous 48 heures.</span></div>
+{% elif referral.status == 'rejected' %}
+  <div class="alert error mb-6"><i class="fas fa-circle-exclamation"></i><span>Votre dossier n'a pas pu être validé.{% if referral.note %} {{ referral.note }}{% endif %} Contactez-nous au {{ SUPPORT_PHONE }}.</span></div>
+{% else %}
+  <div class="alert warning mb-6">
+    <i class="fas fa-share-nodes"></i>
+    <span>Pour activer votre compte livreur, <strong>partagez le lien de l'application à {{ referral.required }} personnes</strong> et inscrivez-les ci-dessous. Nous les appelons pour confirmer, puis nous activons votre compte. C'est gratuit — et cela fait connaître l'application autour de vous.</span>
+  </div>
+{% endif %}
+
+<div class="detail-grid">
+  <div class="stack-lg">
+
+    <!-- ÉTAPE 1 : partager -->
+    <section class="panel">
+      <div class="panel-head"><h3><span class="avatar avatar-sm">1</span> Partagez le lien</h3></div>
+      <p class="small mb-4">Envoyez ce message à des personnes qui vous connaissent : famille, ancien employeur, commerçants du quartier, amis.</p>
+
+      <div class="card card-pad mb-4" style="background:var(--sand-50)">
+        <p class="small" style="white-space:pre-line">{{ referral.share_text }}</p>
+      </div>
+
+      <div class="row row-wrap">
+        {% if SITE.WHATSAPP %}
+        <a href="https://wa.me/?text={{ referral.share_text|urlencode }}" class="btn btn-dark" target="_blank" rel="noopener">
+          <i class="fab fa-whatsapp"></i> Partager sur WhatsApp
+        </a>
+        {% endif %}
+        <button class="btn btn-ghost" type="button" data-copy="{{ referral.share_text }}"><i class="fas fa-copy"></i> Copier le message</button>
+        <button class="btn btn-quiet" type="button" data-copy="{{ referral.share_url }}"><i class="fas fa-link"></i> Copier le lien seul</button>
+      </div>
+    </section>
+
+    <!-- ÉTAPE 2 : déclarer -->
+    <section class="panel">
+      <div class="panel-head">
+        <h3><span class="avatar avatar-sm">2</span> Inscrivez vos {{ referral.required }} contacts</h3>
+        <span class="badge badge-{% if referral.is_complete %}success{% else %}neutral{% endif %}">{{ referral.sponsor_count }} / {{ referral.required }}</span>
+      </div>
+
+      {% for s in sponsors %}
+        <div class="row-between" style="padding:12px 0;border-bottom:1px solid var(--ink-100)">
+          <div class="row">
+            <span class="avatar avatar-sm avatar-forest">{{ forloop.counter }}</span>
+            <div>
+              <div class="bold small">{{ s.full_name }}</div>
+              <div class="tiny muted">{{ s.phone }}{% if s.relation %} · {{ s.relation }}{% endif %}</div>
+            </div>
+          </div>
+          {% if referral.status != 'verified' %}
+          <form method="post" action="{% url 'remove_sponsor' s.id %}">{% csrf_token %}
+            <button class="btn btn-quiet btn-sm" style="color:var(--danger-fg)"><i class="fas fa-xmark"></i></button>
+          </form>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="muted">Aucun contact enregistré pour l'instant.</p>
+      {% endfor %}
+
+      {% if referral.status != 'verified' and not referral.is_complete %}
+        <form method="post" action="{% url 'add_sponsor' %}" class="mt-6">{% csrf_token %}
+          <div class="form-grid">
+            <div class="field"><label>Nom et prénom <span class="req">*</span></label><input type="text" name="full_name" required placeholder="Ex : Madi Ouédraogo"></div>
+            <div class="field"><label>Téléphone <span class="req">*</span></label><input type="tel" name="phone" required placeholder="+226 ..."></div>
+            <div class="field"><label>Qui est-ce pour vous ?</label><input type="text" name="relation" placeholder="Ex : ancien employeur, voisin"></div>
+          </div>
+          <button class="btn btn-primary"><i class="fas fa-plus"></i> Ajouter ce contact</button>
+        </form>
+      {% endif %}
+    </section>
+  </div>
+
+  <aside class="summary stack">
+    <div class="panel">
+      <h4 class="mb-4"><span class="avatar avatar-sm">3</span> Envoyer pour validation</h4>
+      {% if referral.status == 'draft' %}
+        <p class="small mb-4">
+          {% if referral.is_complete %}Vos {{ referral.required }} contacts sont enregistrés. Ajoutez votre pièce d'identité et envoyez.
+          {% else %}Il vous manque {{ referral.missing }} contact{{ referral.missing|pluralize }}.{% endif %}
+        </p>
+        <form method="post" action="{% url 'submit_referral' %}" enctype="multipart/form-data">{% csrf_token %}
+          <div class="field"><label>Pièce d'identité</label><input type="file" name="id_document" accept="image/*"><p class="hint">Usage interne uniquement. Jamais affichée sur votre profil.</p></div>
+          <button class="btn btn-primary btn-block" {% if not referral.is_complete %}disabled{% endif %}>Envoyer mon dossier</button>
+        </form>
+      {% else %}
+        <p class="small">Dossier {{ referral.get_status_display|lower }}{% if referral.submitted_at %} le {{ referral.submitted_at|date:"d/m/Y" }}{% endif %}.</p>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <h4 class="mb-4">Pourquoi cette étape ?</h4>
+      <ul class="stack small">
+        <li><i class="fas fa-shield-halved" style="color:var(--brand-500)"></i> Un livreur transporte la marchandise et l'argent des autres : les clients doivent pouvoir vous faire confiance.</li>
+        <li><i class="fas fa-hand-holding-dollar" style="color:var(--brand-500)"></i> Un livreur validé reçoit plus de courses et est payé plus vite.</li>
+        <li><i class="fas fa-lock" style="color:var(--brand-500)"></i> Vos contacts ne sont jamais affichés publiquement et ne reçoivent aucune publicité.</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+{% endblock %}

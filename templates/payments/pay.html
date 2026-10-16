@@ -1,0 +1,49 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Paiement — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="container-narrow">
+
+  <div class="center mb-6">
+    <span class="chip">{{ tx.reference }}</span>
+    <h1 class="mt-2">Régler {{ tx.amount|floatformat:0|intcomma }} {{ CURRENCY }}</h1>
+    <p>{{ tx.get_purpose_display }}</p>
+  </div>
+
+  <form method="post" class="panel">{% csrf_token %}
+    <div class="panel-head"><h3>Choisissez votre moyen de paiement</h3></div>
+
+    <div class="pay-methods mb-6">
+      {% for ch in channels %}
+        <label class="pay-method">
+          <input type="radio" name="channel" value="{{ ch }}" {% if forloop.first %}checked{% endif %}>
+          <span class="box">
+            {% if ch == 'orange_money' %}<span class="mark orange">OM</span><strong>Orange Money</strong><span>Code marchand *144*10*</span>
+            {% elif ch == 'moov_money' %}<span class="mark moov">MOOV</span><strong>Moov Money</strong><span>*555#</span>
+            {% elif ch == 'wave' %}<span class="mark wave">WAVE</span><strong>Wave</strong><span>Application Wave</span>
+            {% elif ch == 'card' %}<span class="mark card"><i class="fas fa-credit-card"></i></span><strong>Carte bancaire</strong><span>Visa · Mastercard</span>
+            {% else %}<span class="mark" style="background:var(--forest-600)"><i class="fas fa-money-bill"></i></span><strong>{{ ch }}</strong><span></span>{% endif %}
+          </span>
+        </label>
+      {% endfor %}
+      {% if tx.purpose == 'order' %}
+        <label class="pay-method">
+          <input type="radio" name="channel" value="cash">
+          <span class="box"><span class="mark" style="background:var(--forest-600)"><i class="fas fa-money-bill"></i></span><strong>À la livraison</strong><span>En espèces</span></span>
+        </label>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <label>Numéro qui va payer</label>
+      <input type="tel" name="payer_number" value="{{ tx.payer_number }}" placeholder="+226 ...">
+      <p class="hint">Il nous sert à retrouver votre paiement en cas de problème.</p>
+    </div>
+
+    <button class="btn btn-primary btn-lg btn-block">Continuer <i class="fas fa-arrow-right"></i></button>
+    <p class="tiny muted center mt-4">
+      {% if provider.automatic %}<i class="fas fa-lock"></i> Vous serez redirigé vers la page sécurisée de l'opérateur.
+      {% else %}<i class="fas fa-lock"></i> Le code à composer s'affichera à l'étape suivante.{% endif %}
+    </p>
+  </form>
+</div>
+{% endblock %}

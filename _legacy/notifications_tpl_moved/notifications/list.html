@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 28px; background: linear-gradient(135deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <i class="fas fa-bell"></i> Notifications
+        </h1>
+        {% if notifications %}
+            <a href="{% url 'notification_clear_all' %}" class="nav-btn btn-danger-outline" onclick="return confirm('Supprimer toutes les notifications ?')">
+                <i class="fas fa-trash-alt"></i> Tout supprimer
+            </a>
+        {% endif %}
+    </div>
+    
+    {% if notifications %}
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            {% for notification in notifications %}
+                <div style="border-radius: 12px; padding: 15px 20px; transition: all 0.3s ease; {% if notification.is_read %}background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);{% else %}background: rgba(255,255,255,0.08); border: 1px solid rgba(0,255,255,0.2);{% endif %}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 15px;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <h4 style="color: {% if notification.is_read %}rgba(255,255,255,0.6){% else %}#ffffff{% endif %}; font-size: 15px; margin: 0;">
+                                    {{ notification.title }}
+                                </h4>
+                                {% if not notification.is_read %}
+                                    <span class="badge badge-success" style="font-size: 10px;">Nouveau</span>
+                                {% endif %}
+                            </div>
+                            <p style="color: rgba(255,255,255,0.4); font-size: 14px; margin: 5px 0 0;">{{ notification.message }}</p>
+                            <small style="color: rgba(255,255,255,0.2); font-size: 12px;">
+                                {{ notification.created_at|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                            {% if not notification.is_read %}
+                                <a href="{% url 'notification_mark_read' notification.id %}" class="nav-btn btn-outline" style="padding: 5px 12px; font-size: 12px; border: none;">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'notification_delete' notification.id %}" class="nav-btn btn-danger-outline" style="padding: 5px 12px; font-size: 12px; border: none;" onclick="return confirm('Supprimer cette notification ?')">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% if notification.link %}
+                                <a href="{{ notification.link }}" class="nav-btn btn-primary" style="padding: 5px 12px; font-size: 12px; border: none;">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
+            <i class="fas fa-bell-slash" style="font-size: 48px; color: rgba(255,255,255,0.1); display: block; margin-bottom: 15px;"></i>
+            <h2 style="color: rgba(255,255,255,0.3);">Aucune notification</h2>
+            <p style="color: rgba(255,255,255,0.2);">Vous serez notifié des nouvelles demandes et mises à jour.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

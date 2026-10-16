@@ -1,0 +1,11 @@
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="row center mt-8" style="justify-content:center" aria-label="Pagination">
+  {% if page_obj.has_previous %}
+    <a class="btn btn-ghost btn-sm" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.tri %}tri={{ request.GET.tri }}&{% endif %}page={{ page_obj.previous_page_number }}"><i class="fas fa-chevron-left"></i> Précédent</a>
+  {% endif %}
+  <span class="small muted">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+    <a class="btn btn-ghost btn-sm" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.tri %}tri={{ request.GET.tri }}&{% endif %}page={{ page_obj.next_page_number }}">Suivant <i class="fas fa-chevron-right"></i></a>
+  {% endif %}
+</nav>
+{% endif %}

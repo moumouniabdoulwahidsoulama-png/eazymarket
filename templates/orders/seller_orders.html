@@ -1,0 +1,160 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mes ventes — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="row-between mb-6">
+  <h1>Mes ventes</h1>
+  <a href="{% url 'seller_dashboard' %}" class="btn btn-ghost btn-sm">Tableau de bord</a>
+</div>
+
+{% if profile.is_store_suspended %}
+<div class="alert danger mb-6">
+  <i class="fas fa-circle-exclamation"></i>
+  <span>
+    <strong>Votre boutique est suspendue.</strong>
+    {{ profile.suspended_reason }} Vos articles ne sont plus visibles.
+    Contactez-nous sur WhatsApp au {{ SITE.WHATSAPP }} pour la réactiver.
+  </span>
+</div>
+{% endif %}
+
+{% if a_confirmer %}
+<section class="confirm-zone mb-8">
+  <div class="row-between mb-4">
+    <h2 class="confirm-title"><i class="fas fa-bell"></i> À confirmer maintenant</h2>
+    <span class="chip chip-active">{{ a_confirmer|length }} commande{{ a_confirmer|length|pluralize }}</span>
+  </div>
+  <p class="small muted mb-4">
+    Le client a déjà payé. Nous gardons son argent jusqu'à votre réponse.
+    Dites-nous simplement si vous avez l'article et si vous pouvez le livrer.
+    Sans réponse de votre part avant l'heure limite, la commande est annulée, le client remboursé,
+    et cela pèse sur votre taux de confirmation.
+  </p>
+
+  {% for c in a_confirmer %}
+  <article class="confirm-card">
+    <div class="row-between confirm-head">
+      <div>
+        <span class="chip">{{ c.order.order_number }}</span>
+        <div class="small muted mt-2">
+          Commandé le {{ c.order.created_at|date:"d/m/Y à H:i" }}
+          · {% if c.order.fulfilment == 'pickup' %}Retrait en boutique{% else %}Livraison — {{ c.order.shipping_quartier }}, {{ c.order.shipping_city }}{% endif %}
+        </div>
+      </div>
+      <div class="countdown {% if c.hours_left <= 4 %}urgent{% endif %}">
+        <span class="countdown-h">{{ c.hours_left }} h</span>
+        <span class="tiny">restantes</span>
+      </div>
+    </div>
+
+    <div class="confirm-items">
+      {% for item in c.items %}
+        <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--ink-100)">
+          <span class="small">{{ item.quantity }} × {{ item.product_name }}</span>
+          <span class="small bold">{{ item.subtotal|intcomma }} F</span>
+        </div>
+      {% endfor %}
+      <div class="summary-line mt-3">
+        <span>Vous recevrez</span>
+        <span class="bold">{{ c.seller_amount|intcomma }} F</span>
+      </div>
+      <p class="tiny muted">Après commission de {{ c.commission|intcomma }} F. Versé sur votre solde dès votre confirmation.</p>
+    </div>
+
+    <div class="confirm-actions">
+      <form method="post" action="{% url 'respond_confirmation' c.id %}">{% csrf_token %}
+        <input type="hidden" name="reponse" value="oui">
+        <button class="btn btn-primary btn-block">
+          <i class="fas fa-circle-check"></i> J'ai le produit, je livre
+        </button>
+      </form>
+      <form method="post" action="{% url 'respond_confirmation' c.id %}">{% csrf_token %}
+        <input type="hidden" name="reponse" value="non">
+        <input type="text" name="note" placeholder="Raison (facultatif) : rupture de stock…" maxlength="250">
+        <button class="btn btn-quiet btn-block"
+                data-confirm="Confirmer que vous n'avez pas cet article ? Le client sera remboursé et cette annulation sera comptée.">
+          <i class="fas fa-circle-xmark"></i> Je ne l'ai pas
+        </button>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+<div class="row-wrap mb-6">
+  <span class="badge badge-{{ profile.reliability_badge }}">{{ profile.reliability_label }}</span>
+  <span class="tiny muted">
+    {{ profile.confirmation_rate }} % de commandes confirmées
+    {% if profile.avg_confirmation_delay %}· réponse en {{ profile.avg_confirmation_delay }} en moyenne{% endif %}
+    {% if profile.orders_cancelled %}· {{ profile.orders_cancelled }} annulation{{ profile.orders_cancelled|pluralize }}{% endif %}
+  </span>
+</div>
+
+{% if orders %}
+<div class="stack">
+  {% for group in orders %}
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <span class="chip">{{ group.order.order_number }}</span>
+          <div class="small muted mt-2">{{ group.order.created_at|date:"d/m/Y" }} · {{ group.order.user.username }} · {{ group.order.shipping_quartier }}</div>
+        </div>
+        <div class="center">
+          <div class="bold">{{ group.total|intcomma }} {{ CURRENCY }}</div>
+          <div class="tiny muted">votre part</div>
+        </div>
+      </div>
+      {% for item in group.items %}
+        <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--ink-100)">
+          <span class="small">{{ item.quantity }} × {{ item.product_name }}</span>
+          <span class="small">{{ item.subtotal|intcomma }} F <span class="tiny muted">(− {{ item.commission|intcomma }} F)</span></span>
+        </div>
+      {% endfor %}
+      <div class="row-between mt-4">
+        <span class="badge badge-{{ group.order.status_badge }}">{{ group.order.get_status_display }}</span>
+        {% if group.order.is_paid and not group.order.delivered_at and group.order.status != 'cancelled' %}
+        <form method="post" action="{% url 'update_order_status' group.order.id %}" class="row">{% csrf_token %}
+          <select name="status" aria-label="Nouveau statut">
+            <option value="preparing">En préparation</option>
+            <option value="ready">Prête</option>
+            <option value="shipped">Partie en livraison</option>
+          </select>
+          <button class="btn btn-ghost btn-sm">Mettre à jour</button>
+        </form>
+        {% endif %}
+      </div>
+
+      {% if group.order.is_paid and not group.order.delivered_at and group.order.status != 'cancelled' %}
+      <div class="remise">
+        <div>
+          <strong>Le client a reçu sa commande ?</strong>
+          <p class="small">
+            C'est cette confirmation qui déclenche votre paiement. Tant qu'elle
+            n'est pas faite, votre argent reste bloqué — même si vous avez livré.
+          </p>
+        </div>
+        <form method="post" action="{% url 'update_order_status' group.order.id %}">{% csrf_token %}
+          <input type="hidden" name="status" value="delivered">
+          <button class="btn btn-primary"
+                  data-confirm="Confirmer que le client a bien reçu {{ group.order.order_number }} ? Votre paiement sera débloqué, et le client aura {{ JOURS_LITIGE }} jours pour signaler un problème.">
+            <i class="fas fa-circle-check"></i> Oui, remis au client
+          </button>
+        </form>
+      </div>
+      {% endif %}
+
+      <details class="thread-toggle mt-4">
+        <summary>Écrire au client</summary>
+        <form method="post" action="{% url 'post_order_message' group.order.id %}" enctype="multipart/form-data" class="thread-form mt-3">{% csrf_token %}
+          <textarea name="body" rows="2" required placeholder="Ex : c'est disponible, je livre demain matin."></textarea>
+          <button class="btn btn-outline btn-sm">Envoyer</button>
+        </form>
+        <p class="tiny muted mt-2">Passez par ce message plutôt que par téléphone : en cas de litige, c'est votre preuve.</p>
+      </details>
+    </section>
+  {% endfor %}
+</div>
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-receipt' title='Aucune vente' text="Vos ventes apparaîtront ici dès la première commande payée." %}
+{% endif %}
+{% endblock %}

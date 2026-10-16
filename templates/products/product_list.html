@@ -1,0 +1,46 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}{{ title }} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<nav class="crumbs">
+  <a href="{% url 'home' %}">Accueil</a><span class="sep">/</span>
+  <a href="{% url 'product_list' %}">Boutique</a>
+  {% if category %}<span class="sep">/</span><span>{{ category.name }}</span>{% endif %}
+</nav>
+
+<div class="row-between mb-6">
+  <div>
+    <h1>{{ title }}</h1>
+    <p class="small">{{ page_obj.paginator.count }} produit{{ page_obj.paginator.count|pluralize }} disponible{{ page_obj.paginator.count|pluralize }}</p>
+  </div>
+  <form method="get" class="row">
+    {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+    <select name="tri" onchange="this.form.submit()" aria-label="Trier">
+      <option value="recent" {% if sort == 'recent' %}selected{% endif %}>Plus récents</option>
+      <option value="prix_asc" {% if sort == 'prix_asc' %}selected{% endif %}>Prix croissant</option>
+      <option value="prix_desc" {% if sort == 'prix_desc' %}selected{% endif %}>Prix décroissant</option>
+      <option value="populaire" {% if sort == 'populaire' %}selected{% endif %}>Les plus vendus</option>
+      <option value="note" {% if sort == 'note' %}selected{% endif %}>Les mieux notés</option>
+    </select>
+  </form>
+</div>
+
+{% if categories %}
+<div class="chip-list mb-6">
+  <a href="{% url 'product_list' %}" class="chip {% if not category %}chip-active{% endif %}">Tout</a>
+  {% for c in categories %}
+    <a href="{{ c.get_absolute_url }}" class="chip {% if category.id == c.id %}chip-active{% endif %}"><i class="fas {{ c.icon }}"></i> {{ c.name }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if page_obj.object_list %}
+  <div class="grid grid-4">
+    {% for product in page_obj %}{% include 'partials/product_card.html' %}{% endfor %}
+  </div>
+  {% include 'partials/pagination.html' %}
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-box-open' title='Aucun produit ici pour le moment' text="Cette catégorie se remplit petit à petit. Regardez les autres rayons ou revenez bientôt." cta_url='/produits/' cta_label='Voir tous les produits' %}
+{% endif %}
+
+{% endblock %}

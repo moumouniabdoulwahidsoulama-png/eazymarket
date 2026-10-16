@@ -1,0 +1,197 @@
+{% extends 'base.html' %}{% load static humanize %}
+{% block title %}Ma boutique — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="row-between mb-6">
+  <div>
+    <h1>{{ user.profile.store_name|default:"Ma boutique" }}</h1>
+    <p class="small">Tableau de bord vendeur</p>
+  </div>
+  <div class="row row-wrap">
+    <a href="{% url 'seller_orders' %}" class="btn btn-ghost"><i class="fas fa-receipt"></i> Mes ventes</a>
+    <a href="{% url 'wallet' %}" class="btn btn-primary"><i class="fas fa-wallet"></i> {{ wallet.available|floatformat:0|intcomma }} {{ CURRENCY }}</a>
+  </div>
+</div>
+
+{% if a_confirmer %}
+<a href="{% url 'seller_orders' %}" class="confirm-banner mb-6">
+  <span class="confirm-banner-icon"><i class="fas fa-bell"></i></span>
+  <span>
+    <strong>{{ a_confirmer|length }} commande{{ a_confirmer|length|pluralize }} payée{{ a_confirmer|length|pluralize }} attend{{ a_confirmer|length|pluralize:"e,ent" }} votre réponse.</strong>
+    <span class="small">Le client a déjà payé. Confirmez que vous avez l'article pour recevoir votre argent —
+    sans réponse sous {{ a_confirmer.0.hours_left }} h, la commande est annulée.</span>
+  </span>
+  <span class="btn btn-primary btn-sm">Répondre</span>
+</a>
+{% endif %}
+
+{% if profile.is_store_suspended %}
+<div class="alert danger mb-6">
+  <i class="fas fa-circle-exclamation"></i>
+  <span><strong>Boutique suspendue.</strong> {{ profile.suspended_reason }}
+  Vos articles ne sont plus visibles. Écrivez-nous au {{ SITE.WHATSAPP }}.</span>
+</div>
+{% endif %}
+
+<div class="card card-pad mb-6" style="{% if not shop.left %}border-color:var(--warning-br);background:var(--warning-bg){% endif %}">
+  <div class="row-between">
+    <div>
+      <div class="bold">Emplacements d'annonces : {{ shop.used }} / {{ shop.total }}</div>
+      <div class="small muted">
+        {% if shop.left %}Il vous reste {{ shop.left }} emplacement{{ shop.left|pluralize }} libre{{ shop.left|pluralize }}.
+        {% else %}Boutique pleine — achetez un pack pour publier davantage.{% endif %}
+        {% if shop.free %}{{ shop.free }} annonce{{ shop.free|pluralize }} offerte{{ shop.free|pluralize }} au départ, puis{% endif %}
+        {{ shop.pack_price|floatformat:0|intcomma }} FCFA les {{ shop.pack_size }} emplacements, définitifs.
+      </div>
+    </div>
+    <a href="{% url 'buy_slots' %}" class="btn {% if shop.left %}btn-ghost{% else %}btn-primary{% endif %}"><i class="fas fa-plus"></i> Agrandir ma boutique</a>
+  </div>
+</div>
+
+<div class="stat-grid mb-8">
+  <div class="stat"><div class="label">Chiffre d'affaires</div><div class="value">{{ stats.revenue|floatformat:0|intcomma }}<small> F</small></div><div class="delta">{{ stats.month_revenue|floatformat:0|intcomma }} F sur 30 j</div></div>
+  <div class="stat forest"><div class="label">Ce que vous touchez</div><div class="value">{{ stats.net|floatformat:0|intcomma }}<small> F</small></div><div class="delta">après commission</div></div>
+  <div class="stat gold"><div class="label">Commission {{ SITE.SITE_NAME }}</div><div class="value">{{ stats.commission|floatformat:0|intcomma }}<small> F</small></div></div>
+  <div class="stat"><div class="label">Commandes</div><div class="value">{{ stats.orders }}</div></div>
+  <div class="stat"><div class="label">Annonces en ligne</div><div class="value">{{ stats.products }}</div><div class="delta">{{ stats.out_of_stock }} en rupture</div></div>
+  <div class="stat"><div class="label">Vues produits</div><div class="value">{{ stats.views|intcomma }}</div></div>
+  <div class="stat"><div class="label">Taux de confirmation</div><div class="value">{{ profile.confirmation_rate }}<small> %</small></div><div class="delta">{{ profile.reliability_label }}{% if profile.avg_confirmation_delay %} · {{ profile.avg_confirmation_delay }}{% endif %}</div></div>
+</div>
+
+<section class="panel mb-8">
+  <div class="panel-head"><h3>Publier un produit</h3>
+    {% if shop.unlimited %}<span class="badge badge-success">Illimité</span>
+    {% elif shop.left %}<span class="badge badge-neutral">{{ shop.left }} emplacement{{ shop.left|pluralize }} libre{{ shop.left|pluralize }}</span>{% endif %}
+  </div>
+  {% if not shop.unlimited and not shop.left %}
+    <div class="alert warning"><i class="fas fa-triangle-exclamation"></i><span>Tous vos emplacements sont occupés. <a href="{% url 'buy_slots' %}">Achetez un pack</a> ou supprimez une annonce pour continuer.</span></div>
+  {% endif %}
+  <form method="post" action="{% url 'add_product' %}" enctype="multipart/form-data">{% csrf_token %}
+    <div class="form-grid">
+      <div class="field"><label>Nom du produit <span class="req">*</span></label><input type="text" name="name" required placeholder="Ex : Réfrigérateur 200 L"></div>
+      <div class="field"><label>Catégorie <span class="req">*</span></label>
+        <select name="category" required><option value="">Choisir…</option>{% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select>
+      </div>
+      <div class="field">
+        <label>Votre prix en FCFA <span class="req">*</span></label>
+        <input type="number" name="base_price" required min="100" step="50" placeholder="75000" data-price-input>
+        <p class="hint">
+          {% if shop.official %}Boutique officielle : aucune commission, le prix saisi est le prix affiché.
+          {% else %}C'est <strong>ce que vous touchez</strong>, exactement. Nous ajoutons {{ PRICING.COMMISSION_RATE|floatformat:0 }} % par-dessus
+          et arrondissons pour afficher un prix propre.{% endif %}
+          <span data-price-preview class="bold" style="color:var(--brand-600)"></span>
+        </p>
+      </div>
+      <div class="field"><label>Quantité en stock</label><input type="number" name="stock" min="0" value="1"></div>
+      <div class="field">
+        <label class="check-line">
+          <input type="checkbox" name="made_to_order" value="1" data-toggle-target="#lead-time">
+          <span>Article <strong>sur commande</strong> (je ne l'ai pas en stock mais je peux l'obtenir)</span>
+        </label>
+        <div id="lead-time" class="mt-2">
+          <label class="tiny muted">Délai pour l'obtenir (jours)</label>
+          <input type="number" name="lead_time_days" min="1" max="30" value="2">
+        </div>
+        <p class="hint">Cochez uniquement si vous êtes sûr de pouvoir le fournir dans ce délai :
+        une commande que vous n'honorez pas fait baisser votre taux de confirmation.</p>
+      </div>
+      <div class="field"><label>État</label><select name="condition"><option value="new">Neuf</option><option value="used">Occasion</option><option value="refurb">Reconditionné</option></select></div>
+      <div class="field"><label>Garantie (mois)</label><input type="number" name="warranty_months" min="0" value="0"></div>
+      <div class="field"><label>Photo principale</label><input type="file" name="main_image" accept="image/*"><p class="hint">Une vraie photo, bien éclairée, sur fond neutre : c'est le premier facteur d'achat.</p></div>
+    </div>
+    <div class="field"><label>Description <span class="req">*</span></label><textarea name="description" required placeholder="Marque, modèle, dimensions, ce qui est inclus, état exact…"></textarea></div>
+    <button class="btn btn-primary"><i class="fas fa-plus"></i> Mettre en ligne</button>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h3>Mes annonces</h3>
+    <span class="small muted">{{ products|length }}</span>
+  </div>
+
+  <div class="alert info mb-4">
+    <i class="fas fa-circle-play"></i>
+    <span>
+      <strong>Ajoutez une vidéo à vos articles.</strong>
+      Quelques secondes qui font le tour de l'objet, filmées au téléphone :
+      c'est ce qui convainc un client d'acheter à quelqu'un qu'il ne connaît pas.
+      Ouvrez le crayon d'une annonce pour en ajouter une.
+      {% if video.illimite %}Votre compte n'a aucune limite.
+      {% else %}Il vous reste {{ video.restants }} emplacement{{ video.restants|pluralize }} sur {{ video.total }}
+      — et les liens TikTok ou YouTube sont gratuits, sans limite.{% endif %}
+    </span>
+  </div>
+  {% if products %}
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Produit</th><th>Votre prix</th><th>Prix affiché</th><th>Stock</th><th>Vues</th><th>Vidéo</th><th>Statut</th><th></th></tr></thead>
+      <tbody>
+      {% for p in products %}
+        <tr>
+          <td>
+            <div class="row">
+              {% if p.main_image %}<img src="{{ p.main_image.url }}" alt="" style="width:42px;height:42px;object-fit:cover;border-radius:8px">
+              {% else %}<img src="{% static 'img/placeholder-product.svg' %}" alt="" style="width:42px;height:42px;object-fit:cover;border-radius:8px">{% endif %}
+              <div><a href="{{ p.get_absolute_url }}" class="bold small">{{ p.name|truncatechars:34 }}</a><div class="tiny muted">{{ p.category.name }}</div></div>
+            </div>
+          </td>
+          <td class="num">{{ p.base_price|intcomma }}</td>
+          <td class="num bold">{{ p.price|floatformat:0|intcomma }}</td>
+          <td class="num">{{ p.stock }}</td>
+          <td class="num">{{ p.views_count }}</td>
+          <td>
+            {% if p.mes_videos %}<span class="badge badge-success">{{ p.mes_videos|length }}</span>
+            {% else %}<span class="tiny muted">—</span>{% endif %}
+          </td>
+          <td>{% if p.is_available and p.stock %}<span class="badge badge-success">En ligne</span>{% elif not p.stock %}<span class="badge badge-warning">Rupture</span>{% else %}<span class="badge badge-neutral">Retiré</span>{% endif %}</td>
+          <td>
+            <details>
+              <summary class="btn btn-quiet btn-sm"><i class="fas fa-pen"></i></summary>
+              <form method="post" action="{% url 'update_product' p.id %}" class="row mt-2" style="min-width:230px">{% csrf_token %}
+                <input type="number" name="base_price" value="{{ p.base_price|floatformat:0 }}" style="width:100px" aria-label="Prix">
+                <input type="number" name="stock" value="{{ p.stock }}" style="width:70px" aria-label="Stock">
+                <button class="btn btn-primary btn-sm">OK</button>
+              </form>
+              <form method="post" action="{% url 'toggle_product' p.id %}" class="mt-2">{% csrf_token %}
+                <button class="btn btn-quiet btn-sm">{% if p.is_available %}Retirer de la vente{% else %}Remettre en vente{% endif %}</button>
+              </form>
+              <form method="post" action="{% url 'delete_product' p.id %}" class="mt-2">{% csrf_token %}
+                <button class="btn btn-quiet btn-sm" style="color:var(--danger-fg)" data-confirm="Supprimer « {{ p.name }} » ? L'emplacement sera libéré.">Supprimer et libérer l'emplacement</button>
+              </form>
+              {% include 'partials/video_manager.html' with cible='produit' produit_id=p.id mes_videos=p.mes_videos etat=video %}
+            </details>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    {% include 'partials/empty.html' with icon='fa-store' title='Aucune annonce' text="Publiez votre premier produit avec le formulaire ci-dessus. Les annonces avec photo se vendent trois fois mieux." %}
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var input = document.querySelector('[data-price-input]');
+  var out = document.querySelector('[data-price-preview]');
+  if (!input || !out) return;
+  var RATE = {% if shop.official %}0{% else %}{{ PRICING.COMMISSION_RATE }}{% endif %}, FLOOR = {{ PRICING.COMMISSION_MIN }};
+  function step(v) { return v <= 50000 ? 100 : (v <= 200000 ? 500 : 1000); }
+  function fmt(n) { return n.toLocaleString('fr-FR').replace(/\u202f|,/g, ' '); }
+  function render() {
+    var base = parseInt(input.value, 10);
+    if (!base || base < 1) { out.textContent = ''; return; }
+    if (RATE <= 0) { out.textContent = ' → le client voit ' + fmt(base) + ' {{ CURRENCY }}.'; return; }
+    var target = base + Math.max(base * RATE / 100, FLOOR);
+    var s = step(target);
+    var price = Math.ceil(target / s) * s;
+    out.textContent = ' → le client voit ' + fmt(price) + ' {{ CURRENCY }}, vous touchez ' + fmt(base) + ' {{ CURRENCY }}.';
+  }
+  input.addEventListener('input', render); render();
+})();
+</script>
+{% endblock %}

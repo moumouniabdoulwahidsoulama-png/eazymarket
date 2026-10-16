@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Demander un devis à {{ artisan.full_name }} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<nav class="crumbs"><a href="{{ artisan.get_absolute_url }}">{{ artisan.full_name }}</a><span class="sep">/</span><span>Demande de devis</span></nav>
+
+<div class="checkout-grid">
+  <form method="post" enctype="multipart/form-data" class="panel">{% csrf_token %}
+    <div class="panel-head"><h3>Décrivez le travail</h3></div>
+
+    <div class="field">
+      <label>Objet de la demande <span class="req">*</span></label>
+      <input type="text" name="title" required placeholder="Ex : Réparation d'une fuite sous l'évier" maxlength="200">
+    </div>
+
+    <div class="field">
+      <label>Description détaillée <span class="req">*</span></label>
+      <textarea name="description" required placeholder="Que faut-il faire exactement ? Depuis quand ? Avez-vous déjà le matériel ? Plus vous êtes précis, plus le devis sera juste."></textarea>
+      <p class="hint">Un artisan chiffre mieux avec des détails : dimensions, matériaux souhaités, état actuel.</p>
+    </div>
+
+    <div class="field">
+      <label>Photo (fortement conseillé)</label>
+      <input type="file" name="photo" accept="image/*">
+      <p class="hint">Une photo évite les allers-retours et les mauvaises surprises sur le prix.</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="field"><label>Urgence</label>
+        <select name="urgency">
+          <option value="flexible">Quand c'est possible</option>
+          <option value="week">Dans la semaine</option>
+          <option value="urgent">Urgent — sous 24 h</option>
+        </select>
+      </div>
+      <div class="field"><label>Budget estimé</label><input type="text" name="budget" placeholder="Ex : 15 000 – 25 000 FCFA"></div>
+      <div class="field"><label>Date souhaitée</label><input type="date" name="preferred_date"></div>
+      <div class="field"><label>Heure souhaitée</label><input type="time" name="preferred_time"></div>
+    </div>
+
+    <div class="panel-head mt-6"><h3>Où et comment vous joindre</h3></div>
+    <div class="form-grid">
+      <div class="field"><label>Téléphone <span class="req">*</span></label><input type="tel" name="client_phone" required value="{{ profile.phone }}" placeholder="+226 ..."></div>
+    </div>
+    <div class="field">
+      <label>Adresse d'intervention <span class="req">*</span></label>
+      <textarea name="client_address" required placeholder="Quartier, rue, repère visible (ex : Tanghin, derrière la pharmacie du marché)">{{ profile.address }}</textarea>
+    </div>
+
+    <button class="btn btn-primary btn-lg btn-block"><i class="fas fa-paper-plane"></i> Envoyer ma demande</button>
+    <p class="tiny muted center mt-4">Gratuit et sans engagement. Vous recevrez le devis dans votre espace.</p>
+  </form>
+
+  <aside class="summary">
+    <div class="panel">
+      <div class="row mb-4">
+        {% if artisan.photo %}<img class="avatar" src="{{ artisan.photo.url }}" alt="">
+        {% else %}<span class="avatar avatar-forest">{{ artisan.initials }}</span>{% endif %}
+        <div>
+          <div class="bold">{{ artisan.full_name }}</div>
+          <div class="tiny muted">{{ artisan.service_category.name }} · {{ artisan.quartier }}</div>
+        </div>
+      </div>
+      {% if artisan.total_reviews %}{% include 'partials/stars.html' with rating=artisan.rating count=artisan.total_reviews %}{% endif %}
+      <div class="spec-list mt-4">
+        <div><span class="k">Fourchette</span><span class="v">{{ artisan.price_range }}</span></div>
+        <div><span class="k">Expérience</span><span class="v">{{ artisan.years_experience }} an{{ artisan.years_experience|pluralize }}</span></div>
+      </div>
+      <div class="alert info mt-4"><i class="fas fa-circle-info"></i><span class="small">Ce que vous envoyez ici reste privé entre vous deux. L'artisan voit vos coordonnées uniquement après avoir ouvert la demande.</span></div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% load static %}
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img src="{% static 'img/logo-white.svg' %}" alt="{{ SITE.SITE_NAME }}" style="height:52px;margin-bottom:16px">
+        <p>Le marché en ligne du {{ COUNTRY.name|default:SITE.COUNTRY }} : des produits livrés chez vous et des professionnels de confiance près de chez vous. Paiement mobile money, prix affichés tout compris.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+          {% if SITE.WHATSAPP %}<a href="https://wa.me/{{ SITE.WHATSAPP }}" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>{% endif %}
+        </div>
+
+        {% if COUNTRIES|length > 1 %}
+        <div class="mt-6">
+          <div class="tiny" style="color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Pays</div>
+          <div class="chip-list">
+            {% for c in COUNTRIES %}
+              <a href="{% url 'choose_country' c.code %}" class="chip {% if COUNTRY.code == c.code %}chip-active{% endif %}">{{ c.flag }} {{ c.name }}</a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div>
+        <h4>Acheter</h4>
+        <a href="{% url 'product_list' %}">Tous les produits</a>
+        <a href="{% url 'services_home' %}">Trouver un artisan</a>
+        <a href="{% url 'driver_list' %}">Trouver un livreur</a>
+        <a href="{% url 'my_orders' %}">Suivre ma commande</a>
+        <a href="{% url 'how_it_works' %}">Comment ça marche</a>
+      </div>
+
+      <div>
+        <h4>Vendre</h4>
+        <a href="{% url 'sell' %}">Ouvrir ma boutique</a>
+        <a href="{% url 'register' %}?role=artisan">Devenir artisan référencé</a>
+        <a href="{% url 'register' %}?role=delivery">Devenir livreur</a>
+        <a href="{% url 'sell' %}">Nos tarifs</a>
+      </div>
+
+      <div>
+        <h4>Aide</h4>
+        <a href="{% url 'faq' %}">Questions fréquentes</a>
+        <a href="{% url 'contact' %}">Nous contacter</a>
+        <a href="{% url 'about' %}">À propos</a>
+        <a href="{% url 'terms' %}">Conditions d'utilisation</a>
+        <div class="mt-4">
+          <div class="tiny" style="color:rgba(255,255,255,.5)">Nous joindre — les deux lignes répondent</div>
+          <a href="https://wa.me/{{ SITE.WHATSAPP }}"><i class="fab fa-whatsapp"></i> {{ SUPPORT_PHONE }}</a>
+          {% if SITE.SUPPORT_PHONE_2 %}
+            <a href="https://wa.me/{{ SITE.WHATSAPP_2 }}"><i class="fab fa-whatsapp"></i> {{ SITE.SUPPORT_PHONE_2 }}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; {% now "Y" %} {{ SITE.SITE_NAME }}{% if COUNTRY %} — {{ COUNTRY.main_city }}, {{ COUNTRY.name }}{% endif %}</span>
+      <span>Paiement sécurisé : Orange Money · Moov Money · Wave</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,263 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Commande {{ order.order_number }} — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+
+<div class="row-between mb-6">
+  <div>
+    <span class="chip">{{ order.order_number }}</span>
+    <h1 class="mt-2">Commande du {{ order.created_at|date:"d F Y" }}</h1>
+  </div>
+  <span class="badge badge-{{ order.status_badge }}" style="font-size:var(--fs-sm);padding:8px 16px">{{ order.get_status_display }}</span>
+</div>
+
+{% if not order.is_paid and pending_tx %}
+<div class="alert warning mb-6">
+  <i class="fas fa-hourglass-half"></i>
+  <span>
+    {% if pending_tx.status == 'awaiting_review' %}
+      Votre paiement est déclaré ({{ pending_tx.provider_reference }}). Nous le vérifions — vous recevrez une notification dès confirmation.
+    {% else %}
+      Cette commande n'est pas encore payée.
+      <a href="{% url 'payment_pay' pending_tx.reference %}" class="bold">Payer maintenant</a>
+    {% endif %}
+  </span>
+</div>
+{% endif %}
+
+{% if order.status == 'awaiting' %}
+<section class="protect mb-6">
+  <div class="protect-icon"><i class="fas fa-shield-halved"></i></div>
+  <div>
+    <strong>Votre paiement est protégé.</strong>
+    <p>Nous conservons votre argent le temps que le vendeur confirme qu'il a bien l'article et
+    qu'il peut le livrer. Il ne le reçoit qu'à ce moment-là. Sans confirmation de sa part sous
+    {{ delai_confirmation }} heures, votre commande est annulée et vous êtes remboursé automatiquement.</p>
+  </div>
+</section>
+{% endif %}
+
+{% if order.credit_applied %}
+<div class="alert info mb-6">
+  <i class="fas fa-wallet"></i>
+  <span>{{ order.credit_applied|intcomma }} F ont été réglés avec votre avoir.</span>
+</div>
+{% endif %}
+
+{% if order.refunded_amount %}
+<section class="panel mb-6" style="border-color:var(--success-br)">
+  <div class="panel-head"><h3><i class="fas fa-rotate-left"></i> {{ order.refunded_amount|intcomma }} F vous ont été rendus</h3></div>
+  <p class="small">
+    La somme est <strong>sur votre compte EazyMarket</strong>, utilisable tout de suite
+    sur n'importe quelle commande — elle se déduit automatiquement au paiement.
+    {% if order.cancel_note %}<br><span class="tiny muted">Motif de l'annulation : {{ order.cancel_note }}</span>{% endif %}
+  </p>
+
+  {% if remboursement_en_cours %}
+    <div class="alert info mt-4">
+      <i class="fas fa-hourglass-half"></i>
+      <span>
+        Vous avez demandé à recevoir {{ remboursement_en_cours.amount|intcomma }} F sur
+        {{ remboursement_en_cours.number }}. Versement sous 48 h ouvrées.
+      </span>
+    </div>
+  {% elif avoir >= refund_min %}
+    <details class="thread-toggle mt-4">
+      <summary>Je préfère recevoir l'argent sur mon mobile money</summary>
+      <form method="post" action="{% url 'demander_mon_remboursement' order.id %}" class="mt-3">{% csrf_token %}
+        <div class="form-grid">
+          <div class="field">
+            <label>Votre numéro mobile money</label>
+            <input type="tel" name="numero" required placeholder="{{ COUNTRY.dial_code }} ..."
+                   value="{{ order.shipping_phone }}">
+          </div>
+          <div class="field">
+            <label>Opérateur</label>
+            <select name="canal">
+              {% for valeur, libelle in canaux %}<option value="{{ valeur }}">{{ libelle }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm">Demander le virement de {{ avoir|floatformat:0|intcomma }} F</button>
+        <p class="tiny muted mt-2">
+          Nous envoyons l'argent à la main sous 48 h ouvrées. Votre avoir est
+          bloqué le temps du virement, pour éviter de le dépenser deux fois.
+        </p>
+      </form>
+    </details>
+  {% else %}
+    <p class="tiny muted mt-3">
+      Le virement sur mobile money démarre à {{ refund_min|intcomma }} FCFA — en dessous,
+      les frais d'envoi coûteraient plus cher que la somme rendue.
+    </p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if order.is_paid and not order.delivered_at and order.status != 'cancelled' and order.status != 'awaiting' %}
+<section class="panel mb-6" style="border-color:var(--forest-600)">
+  <div class="panel-head"><h3>Vous avez reçu votre commande ?</h3></div>
+  <p class="small">
+    Dites-le dès que vous avez l'article en main : le vendeur est payé, et
+    vous n'aurez rien d'autre à faire. Tant que personne ne le confirme,
+    son argent reste bloqué chez nous.
+  </p>
+  <form method="post" action="{% url 'confirmer_reception' order.id %}" class="mt-3">{% csrf_token %}
+    <button class="btn btn-primary"
+            data-confirm="Confirmer que vous avez bien reçu votre commande ? Le vendeur sera payé.">
+      <i class="fas fa-circle-check"></i> Oui, j'ai reçu ma commande
+    </button>
+  </form>
+  <p class="tiny muted mt-3">
+    Ne confirmez que si vous avez vraiment l'article. En cas de problème,
+    écrivez au vendeur dans la messagerie plus bas.
+  </p>
+</section>
+{% endif %}
+
+{% if order.non_recu_signale %}
+<div class="alert warning mb-6">
+  <i class="fas fa-triangle-exclamation"></i>
+  <span>
+    <strong>Vous avez signalé ne pas avoir reçu cette commande.</strong>
+    Le paiement du vendeur est suspendu et nous examinons votre dossier.
+    Décrivez ce qui s'est passé dans la messagerie ci-dessous.
+  </span>
+</div>
+{% elif order.fenetre_contestation_ouverte %}
+<section class="panel mb-6" style="border-color:var(--warning-br)">
+  <div class="panel-head"><h3>Avez-vous bien reçu votre commande ?</h3></div>
+  <p class="small">
+    Le vendeur a marqué cette commande comme livrée. <strong>Son argent reste
+    bloqué {{ jours_litige }} jours</strong> : si vous n'avez rien reçu, dites-le
+    maintenant, nous suspendons son paiement et nous vérifions.
+  </p>
+  <details class="thread-toggle mt-3">
+    <summary>Je n'ai pas reçu ma commande</summary>
+    <form method="post" action="{% url 'signaler_non_recu' order.id %}" class="mt-3">{% csrf_token %}
+      <textarea name="note" rows="2" placeholder="Que s'est-il passé ? (facultatif)"></textarea>
+      <button class="btn btn-quiet btn-sm mt-2"
+              data-confirm="Confirmer que vous n'avez pas reçu cette commande ? Le paiement du vendeur sera suspendu.">
+        <i class="fas fa-circle-xmark"></i> Signaler la non-réception
+      </button>
+    </form>
+  </details>
+</section>
+{% endif %}
+
+<div class="detail-grid">
+  <div class="stack-lg">
+
+    {% if confirmations %}
+    <section class="panel">
+      <div class="panel-head"><h3>Confirmation des vendeurs</h3></div>
+      {% for c in confirmations %}
+        <div class="conf-row">
+          <div>
+            <div class="bold small">{{ c.seller.profile.store_name|default:c.seller.username }}</div>
+            <div class="tiny muted">
+              {% for item in c.items %}{{ item.quantity }} × {{ item.product_name }}{% if not forloop.last %} · {% endif %}{% endfor %}
+            </div>
+            {% if c.note %}<div class="tiny muted mt-1">« {{ c.note }} »</div>{% endif %}
+          </div>
+          <div class="center">
+            {% if c.status == 'pending' %}
+              <span class="badge badge-warning">En attente</span>
+              <div class="tiny muted mt-1">Réponse attendue sous {{ c.hours_left }} h</div>
+            {% elif c.status == 'accepted' %}
+              <span class="badge badge-success">Confirmée</span>
+              <div class="tiny muted mt-1">{{ c.responded_at|date:"d/m à H:i" }}</div>
+            {% elif c.status == 'refused' %}
+              <span class="badge badge-danger">Indisponible</span>
+              <div class="tiny muted mt-1">Remboursé</div>
+            {% else %}
+              <span class="badge badge-neutral">Sans réponse</span>
+              <div class="tiny muted mt-1">Remboursé</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    <section class="panel">
+      <div class="panel-head"><h3>Articles</h3></div>
+      {% for item in order.items.all %}
+        <div class="row-between" style="padding:12px 0;border-bottom:1px solid var(--ink-100)">
+          <div><div class="bold small">{{ item.product_name }}</div><div class="tiny muted">{{ item.quantity }} × {{ item.product_price|intcomma }} {{ CURRENCY }}</div></div>
+          <span class="bold">{{ item.subtotal|intcomma }} F</span>
+        </div>
+      {% endfor %}
+      <div class="summary-line mt-4"><span>Sous-total</span><span class="bold">{{ order.subtotal|intcomma }} F</span></div>
+      <div class="summary-line"><span>Livraison</span><span class="bold">{% if order.delivery_fee %}{{ order.delivery_fee|intcomma }} F{% else %}Offerte{% endif %}</span></div>
+      <div class="summary-line total"><span>Total</span><span>{{ order.total|intcomma }} F</span></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>Messages</h3></div>
+      <p class="tiny muted mb-3">
+        Écrivez ici pour joindre le vendeur. Tout reste sur {{ SITE.SITE_NAME }} : en cas de problème,
+        nous avons la trace de vos échanges et pouvons vous rembourser.
+      </p>
+      <div class="thread">
+        {% for m in thread %}
+          <div class="msg {% if m.sender_id == order.user_id %}mine{% endif %}">
+            <div class="msg-meta tiny muted">
+              {% if m.sender_id == order.user_id %}Vous{% else %}Le vendeur{% endif %} · {{ m.created_at|date:"d/m à H:i" }}
+            </div>
+            <div class="msg-body">{{ m.body|linebreaksbr }}</div>
+            {% if m.attachment %}<a href="{{ m.attachment.url }}" target="_blank"><img src="{{ m.attachment.url }}" alt="Pièce jointe" class="msg-img"></a>{% endif %}
+          </div>
+        {% empty %}
+          <p class="muted small">Aucun message pour l'instant.</p>
+        {% endfor %}
+      </div>
+      <form method="post" action="{% url 'post_order_message' order.id %}" enctype="multipart/form-data" class="thread-form mt-4">{% csrf_token %}
+        <textarea name="body" rows="2" required placeholder="Votre message au vendeur…"></textarea>
+        <div class="row-between mt-2">
+          <label class="fichier"><input type="file" name="attachment" accept="image/*" data-fichier><span class="fichier-bouton"><i class="fas fa-image"></i> Joindre une photo</span><span class="fichier-nom" data-fichier-nom></span></label>
+          <button class="btn btn-primary btn-sm">Envoyer</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>Suivi</h3></div>
+      {% for event in order.events.all %}
+        <div class="row" style="padding:10px 0;border-bottom:1px solid var(--ink-100)">
+          <span class="badge badge-neutral">{{ event.get_status_display }}</span>
+          <div><div class="tiny muted">{{ event.created_at|date:"d/m/Y à H:i" }}</div>{% if event.note %}<div class="small">{{ event.note }}</div>{% endif %}</div>
+        </div>
+      {% empty %}<p class="muted small">Aucune étape enregistrée.</p>{% endfor %}
+    </section>
+  </div>
+
+  <aside class="summary stack">
+    <div class="panel">
+      <h4 class="mb-4">{% if order.fulfilment == 'pickup' %}Retrait{% else %}Livraison{% endif %}</h4>
+      <div class="spec-list">
+        <div><span class="k">Destinataire</span><span class="v">{{ order.shipping_name }}</span></div>
+        <div><span class="k">Téléphone</span><span class="v">{{ order.shipping_phone }}</span></div>
+        {% if order.fulfilment == 'delivery' %}
+        <div><span class="k">Adresse</span><span class="v">{{ order.shipping_address }}</span></div>
+        <div><span class="k">Quartier</span><span class="v">{{ order.shipping_quartier }}, {{ order.shipping_city }}</span></div>
+        {% endif %}
+        <div><span class="k">Paiement</span><span class="v">{{ order.payment_method|default:"En attente" }}</span></div>
+      </div>
+      {% if order.delivery_driver %}
+        <div class="card card-pad mt-4"><div class="tiny muted">Livreur</div><div class="bold">{{ order.delivery_driver.username }}</div></div>
+      {% endif %}
+      {% if order.can_be_cancelled %}
+        <form method="post" action="{% url 'cancel_order' order.id %}" class="mt-4">{% csrf_token %}
+          <button class="btn btn-quiet btn-block" data-confirm="Annuler la commande {{ order.order_number }} ?">Annuler la commande</button>
+        </form>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <h4 class="mb-3">Un souci ?</h4>
+      <p class="small muted">Écrivez-nous sur WhatsApp au {{ SITE.WHATSAPP }}. Tant que le vendeur n'a pas
+      confirmé, votre argent est chez nous et vous ne risquez rien.</p>
+    </div>
+  </aside>
+</div>
+{% endblock %}

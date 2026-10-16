@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 36px; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <i class="fas fa-question-circle"></i> Foire Aux Questions
+        </h1>
+        <p style="color: rgba(255, 215, 0, 0.4); font-size: 18px;">Tout ce que vous devez savoir</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <!-- Catégorie: Général -->
+        <h2 style="color: #FFD700; font-size: 20px; margin: 20px 0 10px;">
+            <i class="fas fa-info-circle"></i> Général
+        </h2>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Qu'est-ce que EazyMarket ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                EazyMarket est une marketplace tout-en-un qui permet aux vendeurs de vendre des produits, aux artisans d'offrir leurs services, aux livreurs de livrer et aux acheteurs de trouver ce qu'ils cherchent, le tout en un seul endroit.
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Comment ça fonctionne ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                Inscrivez-vous gratuitement, choisissez votre rôle (acheteur, vendeur, artisan ou livreur) et commencez à utiliser la plateforme. Les vendeurs et artisans peuvent publier leurs produits/services, les acheteurs peuvent commander et les livreurs peuvent livrer.
+            </div>
+        </div>
+
+        <!-- Catégorie: Vendeurs -->
+        <h2 style="color: #FFD700; font-size: 20px; margin: 30px 0 10px;">
+            <i class="fas fa-store"></i> Vendeurs
+        </h2>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Combien coûte l'ouverture d'une boutique ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                La création d'une boutique sur EazyMarket coûte <strong style="color: #FFD700;">2500 FCFA</strong> (paiement unique). Cela vous permet de publier vos produits et de commencer à vendre.
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Quelle est la commission sur les ventes ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                EazyMarket prélève une commission de <strong style="color: #FFD700;">5%</strong> sur chaque vente. Cette commission est automatiquement ajoutée au prix de vente et reversée à la plateforme.
+            </div>
+        </div>
+
+        <!-- Catégorie: Artisans -->
+        <h2 style="color: #FFD700; font-size: 20px; margin: 30px 0 10px;">
+            <i class="fas fa-tools"></i> Artisans
+        </h2>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Comment devenir artisan sur EazyMarket ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                Créez un compte, cliquez sur "Devenir Artisan", remplissez votre profil (compétences, expérience, portfolio) et activez votre abonnement pour apparaître dans les recherches.
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Combien coûte l'abonnement artisan ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                L'abonnement artisan coûte <strong style="color: #FFD700;">500 FCFA</strong> tous les 2 mois. Cela vous permet d'apparaître dans les recherches et de recevoir des demandes de clients.
+            </div>
+        </div>
+
+        <!-- Catégorie: Livreurs -->
+        <h2 style="color: #FFD700; font-size: 20px; margin: 30px 0 10px;">
+            <i class="fas fa-truck"></i> Livreurs
+        </h2>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Comment devenir livreur sur EazyMarket ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                Créez un compte et choisissez le rôle "Livreur". Vous devez parrainer <strong style="color: #FFD700;">5 personnes</strong> (en envoyant une capture d'écran) pour être validé par l'administrateur.
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Y a-t-il des frais pour les livreurs ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                <strong style="color: #FFD700;">Non, c'est totalement gratuit !</strong> Vous gagnez de l'argent en livrant les commandes. La seule condition est de parrainer 5 personnes pour être validé.
+            </div>
+        </div>
+
+        <!-- Catégorie: Acheteurs -->
+        <h2 style="color: #FFD700; font-size: 20px; margin: 30px 0 10px;">
+            <i class="fas fa-shopping-bag"></i> Acheteurs
+        </h2>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Comment passer une commande ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                Parcourez les produits, ajoutez-les au panier, validez votre commande en remplissant vos coordonnées, puis payez via notre système de paiement sécurisé.
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px 25px; border: 1px solid rgba(255, 215, 0, 0.08); cursor: pointer;" onclick="toggleFaq(this)">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #ffffff; font-size: 16px;">Comment contacter un artisan ?</h3>
+                <span style="color: #FFD700; font-size: 20px; transition: transform 0.3s;">▼</span>
+            </div>
+            <div style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; margin-top: 10px; display: none; font-size: 14px;">
+                Consultez le profil de l'artisan, cliquez sur "Demander ce service" et remplissez le formulaire. L'artisan vous répondra directement.
+            </div>
+        </div>
+
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+        <p style="color: rgba(255, 255, 255, 0.3);">Vous n'avez pas trouvé votre réponse ?</p>
+        <a href="{% url 'contact' %}" class="nav-btn btn-primary" style="margin-top: 10px; display: inline-block; border: none;">
+            <i class="fas fa-envelope"></i> Contactez-nous
+        </a>
+    </div>
+</div>
+
+<script>
+    function toggleFaq(element) {
+        const content = element.querySelector('div:last-child');
+        const arrow = element.querySelector('span');
+        if (content.style.display === 'block') {
+            content.style.display = 'none';
+            arrow.style.transform = 'rotate(0deg)';
+        } else {
+            content.style.display = 'block';
+            arrow.style.transform = 'rotate(180deg)';
+        }
+    }
+</script>
+{% endblock %}

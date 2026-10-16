@@ -1,0 +1,25 @@
+<article class="card card-hover">
+  <a href="{% url 'driver_detail' d.id %}" class="card-pad" style="display:block;text-decoration:none;color:inherit">
+    <div class="row">
+      {% if d.profile_picture %}
+        <img src="{{ d.profile_picture.url }}" alt="" class="avatar avatar-lg">
+      {% else %}<span class="avatar avatar-lg">{{ d.initials }}</span>{% endif %}
+      <div>
+        <div class="bold">{{ d.display_name }}</div>
+        <div class="tiny muted">
+          {% if d.is_available %}<span style="color:var(--forest-600)"><i class="fas fa-circle" style="font-size:.5em;vertical-align:middle"></i> En ligne</span>
+          {% else %}<span class="muted">Hors ligne</span>{% endif %}
+          {% if d.is_verified %} · <i class="fas fa-circle-check" style="color:var(--forest-600)"></i> vérifié{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="chip-list mt-3">
+      {% if d.vehicle_type %}<span class="chip"><i class="fas fa-motorcycle"></i> {{ d.get_vehicle_type_display }}</span>{% endif %}
+      {% if d.delivery_zone %}<span class="chip"><i class="fas fa-map"></i> {{ d.delivery_zone|truncatechars:28 }}</span>{% endif %}
+    </div>
+    <div class="row-between mt-3 small">
+      <span>{% if d.delivery_rating %}<i class="fas fa-star" style="color:var(--gold-500)"></i> {{ d.delivery_rating|floatformat:1 }}{% else %}<span class="muted">Nouveau</span>{% endif %}</span>
+      <span class="muted">{{ d.total_deliveries }} livraison{{ d.total_deliveries|pluralize }}</span>
+    </div>
+  </a>
+</article>

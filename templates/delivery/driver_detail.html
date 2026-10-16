@@ -1,0 +1,70 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}{{ livreur.display_name }}, livreur — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <div class="stack-lg">
+    <section class="panel">
+      <div class="row">
+        {% if livreur.profile_picture %}
+          <img src="{{ livreur.profile_picture.url }}" alt="" class="avatar avatar-lg">
+        {% else %}<span class="avatar avatar-lg">{{ livreur.initials }}</span>{% endif %}
+        <div>
+          <h1 style="margin:0">{{ livreur.display_name }}</h1>
+          <div class="small muted mt-1">
+            {% if livreur.is_available %}<span style="color:var(--forest-600)"><i class="fas fa-circle" style="font-size:.5em;vertical-align:middle"></i> En ligne maintenant</span>
+            {% else %}Hors ligne{% endif %}
+            {% if livreur.is_verified %} · <i class="fas fa-circle-check" style="color:var(--forest-600)"></i> Livreur vérifié{% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="chip-list mt-4">
+        {% if livreur.vehicle_type %}<span class="chip"><i class="fas fa-motorcycle"></i> {{ livreur.get_vehicle_type_display }}</span>{% endif %}
+        {% if livreur.delivery_zone %}<span class="chip"><i class="fas fa-map"></i> {{ livreur.delivery_zone }}</span>{% endif %}
+        {% if livreur.city %}<span class="chip"><i class="fas fa-location-dot"></i> {{ livreur.city }}</span>{% endif %}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h3>En confiance</h3></div>
+      <div class="spec-list">
+        <div><span class="k">Livraisons effectuées</span><span class="v">{{ livreur.total_deliveries }}</span></div>
+        <div><span class="k">Note</span><span class="v">{% if livreur.delivery_rating %}{{ livreur.delivery_rating|floatformat:1 }} / 5{% else %}Pas encore noté{% endif %}</span></div>
+        <div><span class="k">Dossier</span><span class="v">Vérifié par {{ SITE.SITE_NAME }}</span></div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="stack">
+    <div class="panel">
+      <h3 class="mb-3">Contacter {{ livreur.display_name|truncatewords:1 }}</h3>
+      {% if peut_voir_contact %}
+        <div class="spec-list mb-4">
+          {% if livreur.phone %}<div><span class="k">Téléphone</span><span class="v">{{ livreur.phone }}</span></div>{% endif %}
+          {% if livreur.whatsapp %}<div><span class="k">WhatsApp</span><span class="v">{{ livreur.whatsapp }}</span></div>{% endif %}
+        </div>
+        <div class="row row-wrap">
+          {% if livreur.phone %}<a href="tel:{{ livreur.phone }}" class="btn btn-primary" style="flex:1"><i class="fas fa-phone"></i> Appeler</a>{% endif %}
+          {% if livreur.whatsapp %}<a href="https://wa.me/{{ livreur.whatsapp|cut:' '|cut:'+' }}" class="btn btn-dark"><i class="fab fa-whatsapp"></i></a>{% endif %}
+        </div>
+        <p class="tiny muted mt-4">Mettez-vous d'accord sur le prix de la course avant qu'il parte. {{ SITE.SITE_NAME }} ne prend rien sur les livraisons que vous organisez directement.</p>
+      {% else %}
+        <div class="card card-pad mb-4" style="background:var(--sand-50);border-style:dashed">
+          <i class="fas fa-lock" style="color:var(--ink-400)"></i>
+          <p class="small mt-2">Connectez-vous pour voir le numéro du livreur et le contacter.</p>
+        </div>
+        <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary btn-block">Se connecter</a>
+        <p class="tiny center mt-2">Pas de compte ? <a href="{% url 'register' %}">Créer un compte gratuit</a></p>
+      {% endif %}
+    </div>
+  </aside>
+</div>
+
+{% if autres %}
+<section class="mt-8">
+  <h3 class="mb-4">Autres livreurs près de chez vous</h3>
+  <div class="grid grid-3">
+    {% for d in autres %}{% include 'partials/driver_card.html' with d=d %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if category %}{{ category.name }} - {% endif %}Artisans - EazyMarket
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto;">
+    <!-- En-tête -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <h1 style="font-family: 'Orbitron', sans-serif; font-size: 28px; color: #ffffff;">
+                <i class="fas fa-users"></i> 
+                {% if category %}
+                    {{ category.name }}
+                {% else %}
+                    Tous les artisans
+                {% endif %}
+            </h1>
+            <p style="color: rgba(255,255,255,0.4);">{{ artisans|length }} artisan(s) trouvé(s)</p>
+        </div>
+        <a href="{% url 'services_home' %}" class="nav-btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+
+    <!-- Filtres -->
+    <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px 20px; margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+        <span style="color: rgba(255,255,255,0.5); font-size: 13px;">Filtrer :</span>
+        <a href="{% url 'artisan_list' %}" class="badge {% if not category %}badge-success{% else %}badge-warning{% endif %}" style="text-decoration: none; font-size: 12px; padding: 5px 15px;">Tous</a>
+        {% for cat in categories %}
+            <a href="{% url 'artisan_list_category' cat.slug %}" class="badge {% if category and category.id == cat.id %}badge-success{% else %}badge-warning{% endif %}" style="text-decoration: none; font-size: 12px; padding: 5px 15px;">
+                {{ cat.name }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Liste des artisans -->
+    {% if artisans %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+        {% for artisan in artisans %}
+            <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease;"
+                 onmouseenter="this.style.transform='translateY(-5px)'; this.style.borderColor='rgba(0,255,255,0.3)'"
+                 onmouseleave="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255,255,255,0.08)'">
+                
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid rgba(0,255,255,0.3);">
+                        <i class="fas fa-user" style="font-size: 24px; color: rgba(255,255,255,0.3);"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 16px; color: #ffffff;">{{ artisan.full_name }}</h3>
+                        <span style="font-size: 13px; color: rgba(255,255,255,0.3);">{{ artisan.service_category.name }}</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px;">
+                    <span style="color: rgba(255,255,255,0.5);">📍 {{ artisan.quartier }}</span>
+                    <span style="color: #ffd700;">⭐ {{ artisan.rating }}/5 ({{ artisan.total_reviews }})</span>
+                </div>
+                
+                <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    {{ artisan.description|truncatechars:80 }}
+                </p>
+                
+                <div style="display: flex; gap: 10px;">
+                    <a href="{% url 'artisan_detail' artisan.id %}" class="nav-btn btn-primary" style="flex: 1; text-align: center; padding: 8px; font-size: 13px; border: none;">
+                        <i class="fas fa-eye"></i> Voir profil
+                    </a>
+                    {% if artisan.is_available %}
+                        <span class="badge badge-success" style="font-size: 11px; padding: 5px 12px; align-self: center;">
+                            <i class="fas fa-check-circle"></i> Disponible
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.05); border-radius: 16px;">
+        <i class="fas fa-search" style="font-size: 48px; color: rgba(255,255,255,0.1); display: block; margin-bottom: 15px;"></i>
+        <h2 style="color: rgba(255,255,255,0.3);">Aucun artisan trouvé</h2>
+        <p style="color: rgba(255,255,255,0.2);">Essayez une autre catégorie ou modifiez votre recherche</p>
+        {% if query %}
+            <a href="{% url 'artisan_list' %}" class="nav-btn btn-primary" style="display: inline-block; margin-top: 15px; border: none;">
+                <i class="fas fa-undo"></i> Voir tous les artisans
+            </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

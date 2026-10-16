@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Mon Panier - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto;">
+    <h1 style="font-family: 'Orbitron', sans-serif; font-size: 28px; background: linear-gradient(135deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">
+        <i class="fas fa-shopping-cart"></i> Mon Panier
+    </h1>
+    <p style="color: rgba(255,255,255,0.5); margin-bottom: 30px;">
+        {{ cart.total_items }} article(s) dans votre panier
+    </p>
+    
+    {% if cart.items.all %}
+        <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; border: 1px solid rgba(255,255,255,0.08);">
+            <!-- Liste des articles -->
+            {% for item in cart.items.all %}
+                <div style="display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); gap: 20px; flex-wrap: wrap;">
+                    <!-- Image -->
+                    <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-box" style="font-size: 30px; color: rgba(255,255,255,0.2);"></i>
+                    </div>
+                    
+                    <!-- Infos -->
+                    <div style="flex: 1; min-width: 150px;">
+                        <h3 style="font-size: 16px; color: #ffffff; margin-bottom: 5px;">{{ item.product.name }}</h3>
+                        <p style="color: rgba(255,255,255,0.4); font-size: 13px;">{{ item.product.category.name }}</p>
+                    </div>
+                    
+                    <!-- Prix unitaire -->
+                    <div style="color: rgba(255,255,255,0.5); font-size: 14px;">
+                        {{ item.product.price }}€
+                    </div>
+                    
+                    <!-- Quantité -->
+                    <form method="post" action="{% url 'update_cart_quantity' item.id %}" style="display: flex; align-items: center; gap: 10px;">
+                        {% csrf_token %}
+                        <button type="submit" name="quantity" value="{{ item.quantity|add:-1 }}" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ffffff; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 16px;">
+                            -
+                        </button>
+                        <span style="color: #ffffff; font-weight: 600; min-width: 30px; text-align: center;">{{ item.quantity }}</span>
+                        <button type="submit" name="quantity" value="{{ item.quantity|add:1 }}" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ffffff; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 16px;">
+                            +
+                        </button>
+                    </form>
+                    
+                    <!-- Sous-total -->
+                    <div style="font-size: 18px; font-weight: 700; color: #00ffff; min-width: 80px; text-align: right;">
+                        {{ item.subtotal }}€
+                    </div>
+                    
+                    <!-- Supprimer -->
+                    <a href="{% url 'remove_from_cart' item.id %}" style="color: #ff4444; text-decoration: none; font-size: 20px;" onclick="return confirm('Retirer cet article ?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            {% endfor %}
+            
+            <!-- Total -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 20px; margin-top: 20px; border-top: 2px solid rgba(0,255,255,0.1);">
+                <div>
+                    <span style="color: rgba(255,255,255,0.5);">Total</span>
+                    <span style="font-family: 'Orbitron', sans-serif; font-size: 28px; color: #00ffff; margin-left: 15px;">
+                        {{ cart.total }}€
+                    </span>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="{% url 'clear_cart' %}" class="nav-btn btn-danger-outline" onclick="return confirm('Vider le panier ?')">
+                        <i class="fas fa-trash-alt"></i> Vider
+                    </a>
+                    <a href="{% url 'checkout' %}" class="nav-btn btn-primary">
+    <i class="fas fa-credit-card"></i> Passer commande
+</a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- Panier vide -->
+        <div style="text-align: center; padding: 80px 20px; background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
+            <i class="fas fa-shopping-cart" style="font-size: 64px; color: rgba(255,255,255,0.1); display: block; margin-bottom: 20px;"></i>
+            <h2 style="color: rgba(255,255,255,0.5); font-size: 24px;">Votre panier est vide</h2>
+            <p style="color: rgba(255,255,255,0.3); margin: 10px 0 30px;">Commencez à faire vos achats !</p>
+            <a href="/" class="nav-btn btn-primary">
+                <i class="fas fa-store"></i> Découvrir les produits
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

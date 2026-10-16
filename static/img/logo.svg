@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" width="300" height="64" role="img" aria-label="EazyMarket - Boutique et Services">
+  <defs>
+    <linearGradient id="ezmG2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F79420"/>
+      <stop offset="55%" stop-color="#EE6C2B"/>
+      <stop offset="100%" stop-color="#D9481F"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="64" height="64" rx="18" fill="url(#ezmG2)"/>
+  <path d="M32 9c-6.2 0-11.2 5-11.2 11.2V23h6.1v-2.8c0-2.8 2.3-5.1 5.1-5.1s5.1 2.3 5.1 5.1V23h6.1v-2.8C43.2 14 38.2 9 32 9z" fill="#FFFFFF" opacity=".95"/>
+  <path d="M15.4 23h33.2a3 3 0 0 1 3 3.3l-2.7 24.4a5 5 0 0 1-5 4.4H20.1a5 5 0 0 1-5-4.4l-2.7-24.4a3 3 0 0 1 3-3.3z" fill="#FFFFFF"/>
+  <path d="M32 29.5l2.9 6.9 6.9 2.9-6.9 2.9-2.9 6.9-2.9-6.9-6.9-2.9 6.9-2.9z" fill="#0F4534"/>
+  <text x="78" y="34" font-family="Outfit, Inter, Segoe UI, sans-serif" font-size="27" font-weight="800" fill="#12211C" letter-spacing="-0.6">Eazy<tspan fill="#EE6C2B">Market</tspan></text>
+  <text x="79" y="50" font-family="Inter, Segoe UI, sans-serif" font-size="10.5" font-weight="600" fill="#6B7C76" letter-spacing="2.2">BOUTIQUE &#183; SERVICES</text>
+</svg>

@@ -1,0 +1,37 @@
+# =====================================================================
+# À placer dans DEUX fichiers, sur le serveur :
+#   ~/boutique.VOTRE-DOMAINE.com/static/.htaccess
+#   ~/boutique.VOTRE-DOMAINE.com/media/.htaccess
+#
+# Sans cela, Passenger essaie de faire passer les images et les CSS par
+# Django : c'est lent et parfois cassé. Là, Apache les sert directement.
+# =====================================================================
+
+# Ce dossier ne passe pas par l'application Python
+PassengerEnabled off
+
+# Pas d'exécution de code dans ces dossiers (les fichiers viennent des
+# utilisateurs : c'est la protection la plus importante du site)
+Options -ExecCGI -Indexes
+AddHandler cgi-script .php .php3 .php4 .php5 .phtml .pl .py .cgi .sh
+RemoveHandler .php .phtml .py .pl .cgi .sh
+php_flag engine off
+
+# Mise en cache : les fichiers statiques portent une empreinte dans leur nom
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+</IfModule>
+
+# Compression : le texte (CSS, JS, JSON) part 3 à 4 fois plus léger.
+# Inutile sur les images, déjà compressées.
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>

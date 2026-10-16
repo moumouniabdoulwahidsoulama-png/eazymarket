@@ -1,0 +1,25 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mes commandes — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<h1 class="mb-6">Mes commandes</h1>
+{% if orders %}
+<div class="stack">
+  {% for order in orders %}
+    <a href="{% url 'order_detail' order.id %}" class="card card-pad card-hover" style="display:block">
+      <div class="row-between">
+        <div>
+          <span class="chip">{{ order.order_number }}</span>
+          <div class="small muted mt-2">{{ order.created_at|date:"d/m/Y" }} · {{ order.items.count }} article{{ order.items.count|pluralize }}</div>
+        </div>
+        <div class="center">
+          <div class="bold">{{ order.total|intcomma }} {{ CURRENCY }}</div>
+          <span class="badge badge-{{ order.status_badge }}">{{ order.get_status_display }}</span>
+        </div>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+{% else %}
+  {% include 'partials/empty.html' with icon='fa-box' title='Aucune commande' text="Vos futures commandes s'afficheront ici avec leur suivi." cta_url='/produits/' cta_label='Découvrir la boutique' %}
+{% endif %}
+{% endblock %}

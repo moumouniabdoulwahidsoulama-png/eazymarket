@@ -1,0 +1,79 @@
+{% extends 'base.html' %}{% load humanize %}
+{% block title %}Mon profil — {{ SITE.SITE_NAME }}{% endblock %}
+{% block content %}
+<div class="row-between mb-4"><span></span><a href="{% url 'security_settings' %}" class="btn btn-ghost btn-sm"><i class="fas fa-shield-halved"></i> Sécurité &amp; connexion</a></div>
+
+<div class="row-between mb-6">
+  <div class="row">
+    {% if profile.profile_picture %}<img class="avatar avatar-lg" src="{{ profile.profile_picture.url }}" alt="">
+    {% else %}<span class="avatar avatar-lg">{{ profile.initials }}</span>{% endif %}
+    <div>
+      <h1>{{ profile.display_name }}</h1>
+      <p class="small">{{ profile.get_user_type_display }} · membre depuis {{ profile.created_at|date:"F Y" }}
+        {% if profile.is_verified %}· <span class="badge badge-success"><i class="fas fa-circle-check"></i> Vérifié</span>{% endif %}
+      </p>
+    </div>
+  </div>
+  <div class="row row-wrap">
+    {% if profile.can_sell %}<a href="{% url 'seller_dashboard' %}" class="btn btn-primary"><i class="fas fa-store"></i> Ma boutique</a>{% endif %}
+    {% if is_artisan %}<a href="{% url 'artisan_dashboard' %}" class="btn btn-primary"><i class="fas fa-toolbox"></i> Mon atelier</a>{% endif %}
+    {% if profile.can_deliver %}<a href="{% url 'delivery_dashboard' %}" class="btn btn-primary"><i class="fas fa-motorcycle"></i> Mes livraisons</a>{% endif %}
+  </div>
+</div>
+
+<div class="detail-grid">
+  <form method="post" enctype="multipart/form-data" class="panel">{% csrf_token %}
+    <div class="panel-head"><h3>Mes informations</h3></div>
+    <div class="form-grid">
+      <div class="field"><label>Prénom</label>{{ form.first_name }}</div>
+      <div class="field"><label>Nom</label>{{ form.last_name }}</div>
+      <div class="field"><label>E-mail</label>{{ form.email }}</div>
+      <div class="field"><label>Téléphone</label>{{ form.phone }}</div>
+      <div class="field"><label>WhatsApp</label>{{ form.whatsapp }}</div>
+      <div class="field"><label>Pays</label>{{ form.country }}</div>
+      <div class="field"><label>Ville</label>{{ form.city }}</div>
+      <div class="field"><label>Quartier</label>{{ form.quartier }}</div>
+    </div>
+    <div class="field"><label>Adresse / repère</label>{{ form.address }}</div>
+    <div class="field"><label>Photo de profil</label>{{ form.profile_picture }}</div>
+
+    {% if profile.can_sell %}
+      <div class="panel-head mt-6"><h3>Ma boutique</h3></div>
+      <div class="field"><label>Nom de la boutique</label>{{ form.store_name }}</div>
+      <div class="field"><label>Description</label>{{ form.store_description }}</div>
+      <div class="field"><label>Logo</label>{{ form.store_logo }}</div>
+    {% endif %}
+    {% if profile.can_deliver %}
+      <div class="panel-head mt-6"><h3>Ma livraison</h3></div>
+      <div class="form-grid">
+        <div class="field"><label>Véhicule</label>{{ form.vehicle_type }}</div>
+        <div class="field"><label>Zone couverte</label>{{ form.delivery_zone }}</div>
+      </div>
+    {% endif %}
+
+    <button class="btn btn-primary mt-4">Enregistrer</button>
+  </form>
+
+  <aside class="stack">
+    <div class="panel">
+      <div class="panel-head"><h3>Dernières commandes</h3><a href="{% url 'my_orders' %}" class="small">Tout voir</a></div>
+      {% for order in orders %}
+        <a href="{% url 'order_detail' order.id %}" class="row-between" style="padding:10px 0;border-bottom:1px solid var(--ink-100)">
+          <div><div class="small bold">{{ order.order_number }}</div><div class="tiny muted">{{ order.created_at|date:"d/m/Y" }}</div></div>
+          <div class="center"><div class="small bold">{{ order.total|intcomma }} F</div><span class="badge badge-{{ order.status_badge }} tiny">{{ order.get_status_display }}</span></div>
+        </a>
+      {% empty %}<p class="muted small">Aucune commande pour l'instant.</p>{% endfor %}
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h3>Mes demandes de service</h3><a href="{% url 'my_service_requests' %}" class="small">Tout voir</a></div>
+      {% for sr in requests %}
+        <a href="{% url 'service_request_detail' sr.id %}" class="row-between" style="padding:10px 0;border-bottom:1px solid var(--ink-100)">
+          <div><div class="small bold">{{ sr.title|truncatechars:30 }}</div><div class="tiny muted">{{ sr.artisan.full_name }}</div></div>
+          <span class="badge badge-neutral tiny">{{ sr.get_status_display }}</span>
+        </a>
+      {% empty %}<p class="muted small">Aucune demande pour l'instant.</p>{% endfor %}
+    </div>
+  </aside>
+</div>
+{% endblock %}

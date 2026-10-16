@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Conditions Générales - EazyMarket{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-family: 'Orbitron', sans-serif; font-size: 36px; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <i class="fas fa-file-contract"></i> Conditions Générales
+        </h1>
+        <p style="color: rgba(255, 215, 0, 0.4); font-size: 18px;">Veuillez lire attentivement nos conditions</p>
+    </div>
+
+    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255, 215, 0, 0.08);">
+        
+        <h2 style="color: #FFD700; font-size: 18px; margin-top: 20px;">1. Acceptation des conditions</h2>
+        <p style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; font-size: 14px;">
+            En utilisant EazyMarket, vous acceptez pleinement les présentes conditions générales. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser notre plateforme.
+        </p>
+
+        <h2 style="color: #FFD700; font-size: 18px; margin-top: 25px;">2. Création de compte</h2>
+        <p style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; font-size: 14px;">
+            Vous devez créer un compte pour utiliser nos services. Vous êtes responsable de la confidentialité de vos identifiants. Toute activité sous votre compte est de votre responsabilité.
+        </p>
+
+        <h2 style="color: #FFD700; font-size: 18px; margin-top: 25px;">3. Rôles et responsabilités</h2>
+        <ul style="color: rgba(255, 255, 255, 0.5); line-height: 2; font-size: 14px; padding-left: 20px;">
+            <li><strong style="color: #FFD700;">Vendeurs :</strong> Vous êtes responsable de la qualité et de l'exactitude de vos produits. Le prix inclut automatiquement une commission de 5% pour EazyMarket.</li>
+            <li><strong style="color: #FFD700;">Artisans :</strong> Vous devez fournir des services de qualité professionnelle. L'abonnement est de 500 FCFA tous les 2 mois.</li>
+            <li><strong style="color: #FFD700;">Livreurs :</strong> Vous devez effectuer les livraisons dans les délais impartis. L'accès est gratuit après parrainage de 5 personnes.</li>
+            <li><strong style="color: #FFD700;">Acheteurs :</strong> Vous vous engagez à payer vos commandes et à respecter les délais de paiement.</li>
+        </ul>
+
+        <h2 style="color: #FFD700; font-size: 18px; margin-top: 25px;">4. Paiements</h2>
+        <p style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; font-size: 14px;">
+            Tous les paiements sont effectués en <strong style="color: #FFD700;">FCFA</strong>. Les frais de création de boutique sont de 2500 FCFA (unique). Les commissions sont de 5% par vente.
+        </p>
+
+        <h2 style="color: #FFD700; font-size: 18px; margin-top: 25px;">5. Annulation et remboursement</h2>
+        <p style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; font-size: 14px;">
+            Les annulations sont possibles avant la confirmation de la commande. Une fois la commande validée, veuillez contacter le vendeur ou l'artisan directement.
+        </p>
+
+        <h2 style="color: #FFD700; font-size: 18px; margin-top: 25px;">6. Protection des données</h2>
+        <p style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; font-size: 14px;">
+            Vos données personnelles sont protégées et ne seront jamais partagées avec des tiers sans votre consentement.
+        </p>
+
+        <h2 style="color: #FFD700; font-size: 18px; margin-top: 25px;">7. Modification des conditions</h2>
+        <p style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; font-size: 14px;">
+            EazyMarket se réserve le droit de modifier ces conditions à tout moment. Les modifications prendront effet dès leur publication.
+        </p>
+
+        <h2 style="color: #FFD700; font-size: 18px; margin-top: 25px;">8. Contact</h2>
+        <p style="color: rgba(255, 255, 255, 0.5); line-height: 1.8; font-size: 14px;">
+            Pour toute question, contactez-nous via notre page <a href="{% url 'contact' %}" style="color: #FFD700; text-decoration: none;">Contact</a>.
+        </p>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{% url 'home' %}" class="nav-btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Retour à l'accueil
+        </a>
+    </div>
+</div>
+{% endblock %}
